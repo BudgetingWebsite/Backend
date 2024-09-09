@@ -1,14 +1,16 @@
 package org.amoseman.budgetingwebsitebackend.pojo;
 
+import org.amoseman.budgetingwebsitebackend.pojo.update.AccountUpdate;
+
 import java.time.LocalDateTime;
 import java.util.Set;
 
 /**
  * Represents a user account.
  */
-public class Account extends Updatable {
-    private final String passwordHash;
-    private final Set<String> roles;
+public class Account extends Updatable<AccountUpdate> {
+    private String passwordHash;
+    private Set<String> roles;
 
     /**
      * Instantiate a user account.
@@ -22,6 +24,12 @@ public class Account extends Updatable {
         super(username, created, updated);
         this.passwordHash = passwordHash;
         this.roles = roles;
+    }
+
+    @Override
+    public void updateData(AccountUpdate update) {
+        this.passwordHash = update.getPasswordHash();
+        this.roles = update.getRoles();
     }
 
     /**
