@@ -8,11 +8,12 @@ public class Updatable extends Creatable {
     private final LocalDateTime updated;
 
     public Updatable() {
+        super();
         this.updated = LocalDateTime.now(ZoneId.of("UCT"));
     }
 
-    public Updatable(LocalDateTime timestamp, LocalDateTime updated) {
-        super(timestamp);
+    public Updatable(String identifier, LocalDateTime created, LocalDateTime updated) {
+        super(identifier, created);
         this.updated = updated;
     }
 
