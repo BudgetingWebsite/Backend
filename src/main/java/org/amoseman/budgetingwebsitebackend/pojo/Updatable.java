@@ -1,10 +1,13 @@
 package org.amoseman.budgetingwebsitebackend.pojo;
 
+import org.amoseman.budgetingwebsitebackend.pojo.update.PartitionUpdate;
+import org.amoseman.budgetingwebsitebackend.pojo.update.Update;
+
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
-public class Updatable extends Creatable {
+public abstract class Updatable<U extends Update> extends Creatable {
     private LocalDateTime updated;
 
     public Updatable() {
@@ -17,9 +20,12 @@ public class Updatable extends Creatable {
         this.updated = updated;
     }
 
-    public void update(LocalDateTime updated) {
-        this.updated = updated;
+    public void update(U update) {
+        this.updated = update.getUpdated();
+        updateData(update);
     }
+
+    public abstract void updateData(U update);
 
     public LocalDateTime getUpdated() {
         return updated;
