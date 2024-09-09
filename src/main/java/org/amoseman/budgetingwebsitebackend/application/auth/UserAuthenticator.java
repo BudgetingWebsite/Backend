@@ -21,13 +21,11 @@ public class UserAuthenticator implements Authenticator<BasicCredentials, User> 
 
     @Override
     public Optional<User> authenticate(BasicCredentials credentials) throws AuthenticationException {
-        Account account;
-        try {
-            account = accountDAO.getAccount(credentials.getUsername());
-        }
-        catch (UserDoesNotExistException e) {
+        Optional<Account> maybe = accountDAO.getAccount(credentials.getUsername());
+        if (maybe.isEmpty()) {
             return Optional.empty();
         }
+        Account account = maybe.get();
         if (!validate(account, credentials.getPassword())) {
             return Optional.empty();
         }

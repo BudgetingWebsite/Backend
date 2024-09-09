@@ -11,6 +11,7 @@ import org.amoseman.budgetingwebsitebackend.pojo.update.AccountUpdate;
 import org.amoseman.budgetingwebsitebackend.time.Now;
 import org.bouncycastle.util.encoders.Base64;
 
+import java.util.Optional;
 import java.util.Set;
 
 public class AccountService<C> {
@@ -34,12 +35,16 @@ public class AccountService<C> {
         accountDAO.removeAccount(username);
     }
 
-    public Account getAccount(String username) throws UserDoesNotExistException {
+    public Optional<Account> getAccount(String username) {
         return accountDAO.getAccount(username);
     }
 
     public void changePassword(String username, String password) throws UserDoesNotExistException {
-        Account account = accountDAO.getAccount(username);
+        Optional<Account> maybe = accountDAO.getAccount(username);
+        if (maybe.isEmpty()) {
+            throw new UserDoesNotExistException("change password", username);
+        }
+        Account account = maybe.get();
         byte[] salt = hasher.salt();
         String salt64 = Base64.toBase64String(salt);
         String hash64 = hasher.hash(password, salt);
@@ -48,7 +53,11 @@ public class AccountService<C> {
     }
 
     public void changeRoles(String username, Set<String> roles) throws UserDoesNotExistException {
-        Account account = accountDAO.getAccount(username);
+        Optional<Account> maybe = accountDAO.getAccount(username);
+        if (maybe.isEmpty()) {
+            throw new UserDoesNotExistException("change password", username);
+        }
+        Account account = maybe.get();
         account.update(new AccountUpdate(Now.get(), account.getPasswordHash(), account.getPasswordSalt(), roles));
         accountDAO.updateAccount(account);
     }

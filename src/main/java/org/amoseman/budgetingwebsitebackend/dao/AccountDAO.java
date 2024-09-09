@@ -5,6 +5,8 @@ import org.amoseman.budgetingwebsitebackend.exception.UserAlreadyExistsException
 import org.amoseman.budgetingwebsitebackend.exception.UserDoesNotExistException;
 import org.amoseman.budgetingwebsitebackend.pojo.Account;
 
+import java.util.Optional;
+
 /**
  * Represents a data access object for a user account.
  * @param <C> the client type.
@@ -36,9 +38,8 @@ public abstract class AccountDAO<C> extends DAO<C> {
      * Get the account of a user.
      * @param username the username of the account.
      * @return the account.
-     * @throws UserDoesNotExistException if the account does not exist.
      */
-    public abstract Account getAccount(String username) throws UserDoesNotExistException;
+    public abstract Optional<Account> getAccount(String username) ;
 
     /**
      * Update the account of a user.

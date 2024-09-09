@@ -11,6 +11,7 @@ import org.jooq.Record;
 import org.jooq.Result;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.table;
@@ -60,23 +61,23 @@ public class SQLAccountDAO extends AccountDAO<DSLContext> {
     }
 
     @Override
-    public Account getAccount(String username) throws UserDoesNotExistException {
+    public Optional<Account> getAccount(String username) {
         Result<Record> result = connection.get()
                 .selectFrom(table("accounts"))
                 .where(field("username").eq(username))
                 .fetch();
         if (result.isEmpty()) {
-            throw new UserDoesNotExistException("retrieve", username);
+            return Optional.empty();
         }
         Record record = result.get(0);
-        return new Account(
+        return Optional.of(new Account(
                 record.get(field("username"), String.class),
                 record.get(field("created"), LocalDateTime.class),
                 record.get(field("updated"), LocalDateTime.class),
                 record.get(field("hash"), String.class),
                 record.get(field("salt"), String.class),
                 Roles.fromString(record.get(field("roles"), String.class))
-                );
+                ));
     }
 
     @Override
