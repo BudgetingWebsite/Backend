@@ -7,7 +7,6 @@ import org.amoseman.budgetingwebsitebackend.exception.UserDoesNotExistException;
 import org.amoseman.budgetingwebsitebackend.pojo.FinanceEvent;
 import org.amoseman.budgetingwebsitebackend.pojo.TimeRange;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
