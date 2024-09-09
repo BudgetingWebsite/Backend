@@ -5,6 +5,7 @@ import io.dropwizard.auth.AuthValueFactoryProvider;
 import io.dropwizard.auth.basic.BasicCredentialAuthFilter;
 import io.dropwizard.core.Application;
 import io.dropwizard.core.setup.Environment;
+import org.amoseman.budgetingwebsitebackend.application.auth.Hasher;
 import org.amoseman.budgetingwebsitebackend.application.auth.User;
 import org.amoseman.budgetingwebsitebackend.application.auth.UserAuthenticator;
 import org.amoseman.budgetingwebsitebackend.application.auth.UserAuthorizer;
@@ -17,16 +18,21 @@ import org.amoseman.budgetingwebsitebackend.database.implementation.SQLDatabaseI
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.jooq.DSLContext;
 
+import java.security.SecureRandom;
+
 public class BudgetingApplication extends Application<BudgetingConfiguration> {
     @Override
     public void run(BudgetingConfiguration configuration, Environment environment) throws Exception {
+        SecureRandom random = new SecureRandom();
+        Hasher hasher = new Hasher(random, 16, 16, 2, 8192, 1);
+
         DatabaseConnection<DSLContext> connection = new SQLDatabaseConnection(configuration.getDatabaseURL());
         DatabaseInitializer<DSLContext> initializer = new SQLDatabaseInitializer(connection, configuration);
         initializer.initialize();
         AccountDAO<DSLContext> accountDAO = new SQLAccountDAO(connection);
 
         environment.jersey().register(new AuthDynamicFeature(new BasicCredentialAuthFilter.Builder<User>()
-                .setAuthenticator(new UserAuthenticator(accountDAO))
+                .setAuthenticator(new UserAuthenticator(accountDAO, hasher))
                 .setAuthorizer(new UserAuthorizer())
                 .setRealm("BASIC-AUTH-REALM")
                 .buildAuthFilter()
