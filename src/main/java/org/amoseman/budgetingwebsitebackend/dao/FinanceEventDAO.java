@@ -3,7 +3,6 @@ package org.amoseman.budgetingwebsitebackend.dao;
 import org.amoseman.budgetingwebsitebackend.database.DatabaseConnection;
 import org.amoseman.budgetingwebsitebackend.exception.FinanceEventAlreadyExistsException;
 import org.amoseman.budgetingwebsitebackend.exception.FinanceEventDoesNotExistException;
-import org.amoseman.budgetingwebsitebackend.exception.UserDoesNotExistException;
 import org.amoseman.budgetingwebsitebackend.pojo.FinanceEvent;
 import org.amoseman.budgetingwebsitebackend.pojo.TimeRange;
 
