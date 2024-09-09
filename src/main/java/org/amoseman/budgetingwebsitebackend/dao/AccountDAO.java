@@ -44,5 +44,5 @@ public abstract class AccountDAO<C> extends DAO<C> {
      * Update the account of a user.
      * @param account the account.
      */
-    public abstract void updateAccount(Account account);
+    public abstract void updateAccount(Account account) throws UserDoesNotExistException;
 }
