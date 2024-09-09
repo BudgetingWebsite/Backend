@@ -1,10 +1,9 @@
 package org.amoseman.budgetingwebsitebackend;
 
-import org.amoseman.budgetingwebsitebackend.pojo.Creatable;
+import org.amoseman.budgetingwebsitebackend.application.BudgetingApplication;
 
 public class Main {
-    public static void main(String[] args) {
-        Creatable creatable = new Creatable();
-        System.out.println(creatable.getCreatedFormatted());
+    public static void main(String[] args) throws Exception {
+        new BudgetingApplication().run(args);
     }
 }

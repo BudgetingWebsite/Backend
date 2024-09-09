@@ -13,6 +13,8 @@ dependencies {
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
 
+    // https://mvnrepository.com/artifact/org.bouncycastle/bcpkix-jdk18on
+    implementation 'org.bouncycastle:bcpkix-jdk18on:1.78.1'
     // https://mvnrepository.com/artifact/org.jooq/jooq
     implementation 'org.jooq:jooq:3.19.11'
     // https://mvnrepository.com/artifact/io.dropwizard/dropwizard-core
