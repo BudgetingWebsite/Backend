@@ -12,11 +12,12 @@ public class FinanceEvent extends Creatable {
 
     /**
      * Instantiate a finance event.
+     * @param identifier the identifier of the event.
      * @param created when the event occurred.
      * @param amount the amount of the event in cents.
      */
-    public FinanceEvent(LocalDateTime created, long amount) throws NegativeValueException {
-        super(created);
+    public FinanceEvent(String identifier, LocalDateTime created, long amount) throws NegativeValueException {
+        super(identifier, created);
         if (amount < 0) {
             throw new NegativeValueException(amount);
         }
