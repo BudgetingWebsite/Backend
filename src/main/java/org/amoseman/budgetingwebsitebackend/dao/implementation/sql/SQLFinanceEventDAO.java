@@ -84,7 +84,7 @@ public class SQLFinanceEventDAO extends FinanceEventDAO<DSLContext> {
     }
 
     @Override
-    public List<FinanceEvent> getEvents(String user, String type) throws UserDoesNotExistException {
+    public List<FinanceEvent> getEvents(String user, String type) {
         Result<Record> result = connection.get()
                 .selectFrom(getTable(type))
                 .where(field("user").eq(user))
@@ -93,7 +93,7 @@ public class SQLFinanceEventDAO extends FinanceEventDAO<DSLContext> {
     }
 
     @Override
-    public List<FinanceEvent> getEvents(String user, String type, TimeRange range) throws UserDoesNotExistException {
+    public List<FinanceEvent> getEvents(String user, String type, TimeRange range) {
         Condition rangeCondition = field("when").greaterOrEqual(range.getStart()).and(field("when").lessOrEqual(range));
         Result<Record> result = connection.get()
                 .selectFrom(getTable(type))

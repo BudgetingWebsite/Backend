@@ -41,9 +41,8 @@ public abstract class FinanceEventDAO<C> extends DAO<C> {
      * @param user the ID of the user.
      * @param type the type of events.
      * @return the finance events.
-     * @throws UserDoesNotExistException if the user does not exist.
      */
-    public abstract List<FinanceEvent> getEvents(String user, String type) throws UserDoesNotExistException;
+    public abstract List<FinanceEvent> getEvents(String user, String type) ;
 
     /**
      * Get all finance events of a user in a time range.
@@ -51,7 +50,6 @@ public abstract class FinanceEventDAO<C> extends DAO<C> {
      * @param type the type of events.
      * @param range the time range of use.
      * @return the finance events.
-     * @throws UserDoesNotExistException if the user does not exist.
      */
-    public abstract List<FinanceEvent> getEvents(String user, String type, TimeRange range) throws UserDoesNotExistException;
+    public abstract List<FinanceEvent> getEvents(String user, String type, TimeRange range) ;
 }
