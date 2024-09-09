@@ -5,7 +5,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 public class Updatable extends Creatable {
-    private final LocalDateTime updated;
+    private LocalDateTime updated;
 
     public Updatable() {
         super();
@@ -14,6 +14,10 @@ public class Updatable extends Creatable {
 
     public Updatable(String identifier, LocalDateTime created, LocalDateTime updated) {
         super(identifier, created);
+        this.updated = updated;
+    }
+
+    public void update(LocalDateTime updated) {
         this.updated = updated;
     }
 
