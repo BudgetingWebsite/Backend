@@ -66,7 +66,7 @@ public class SQLDatabaseInitializer extends DatabaseInitializer<DSLContext> {
         connection.get()
                 .createTableIfNotExists("partitions")
                 .column(field("id"), VARCHAR)
-                .column(field("user"), VARCHAR)
+                .column(field("owner"), VARCHAR)
                 .column(field("share"), DOUBLE)
                 .column(field("amount"), BIGINT)
                 .column(field("created"), LOCALDATETIME)

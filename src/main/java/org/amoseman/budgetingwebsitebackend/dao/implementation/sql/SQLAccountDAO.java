@@ -44,7 +44,7 @@ public class SQLAccountDAO extends AccountDAO<DSLContext> {
                     .execute();
         }
         catch (Exception e) {
-            throw new UserAlreadyExistsException("add account", account.getIdentifier());
+            throw new UserAlreadyExistsException("add", account.getIdentifier());
         }
     }
 
@@ -55,7 +55,7 @@ public class SQLAccountDAO extends AccountDAO<DSLContext> {
                 .where(field("username").eq(username))
                 .execute();
         if (0 == result) {
-            throw new UserDoesNotExistException("remove account", username);
+            throw new UserDoesNotExistException("remove", username);
         }
     }
 
@@ -66,7 +66,7 @@ public class SQLAccountDAO extends AccountDAO<DSLContext> {
                 .where(field("username").eq(username))
                 .fetch();
         if (result.isEmpty()) {
-            throw new UserDoesNotExistException("retrieve account", username);
+            throw new UserDoesNotExistException("retrieve", username);
         }
         Record record = result.get(0);
         return new Account(
@@ -90,7 +90,7 @@ public class SQLAccountDAO extends AccountDAO<DSLContext> {
                 .where(field("username").eq(account.getIdentifier()))
                 .execute();
         if (0 == result) {
-            throw new UserDoesNotExistException("update account", account.getIdentifier());
+            throw new UserDoesNotExistException("update", account.getIdentifier());
         }
     }
 }

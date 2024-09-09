@@ -1,6 +1,8 @@
 package org.amoseman.budgetingwebsitebackend.dao;
 
 import org.amoseman.budgetingwebsitebackend.database.DatabaseConnection;
+import org.amoseman.budgetingwebsitebackend.exception.PartitionAlreadyExistsException;
+import org.amoseman.budgetingwebsitebackend.exception.PartitionDoesNotExistException;
 import org.amoseman.budgetingwebsitebackend.pojo.Partition;
 
 /**
@@ -20,17 +22,17 @@ public abstract class PartitionDAO<C> extends DAO<C> {
      * Add a partition.
      * @param partition the partition.
      */
-    public abstract void addPartition(Partition partition);
+    public abstract void addPartition(Partition partition) throws PartitionAlreadyExistsException;
 
     /**
      * Remove a partition.
      * @param id the ID of the partition.
      */
-    public abstract void removePartition(String id);
+    public abstract void removePartition(String id) throws PartitionDoesNotExistException;
 
     /**
      * Update a partition.
      * @param partition the partition.
      */
-    public abstract void updatePartition(Partition partition);
+    public abstract void updatePartition(Partition partition) throws PartitionDoesNotExistException;
 }
