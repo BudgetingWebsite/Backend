@@ -9,12 +9,18 @@ import org.amoseman.budgetingwebsitebackend.application.auth.User;
 import org.amoseman.budgetingwebsitebackend.application.auth.UserAuthenticator;
 import org.amoseman.budgetingwebsitebackend.application.auth.UserAuthorizer;
 import org.amoseman.budgetingwebsitebackend.dao.AccountDAO;
+import org.amoseman.budgetingwebsitebackend.database.DatabaseConnection;
+import org.amoseman.budgetingwebsitebackend.database.DatabaseInitializer;
+import org.amoseman.budgetingwebsitebackend.database.implementation.SQLDatabaseConnection;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.jooq.DSLContext;
 
 public class BudgetingApplication extends Application<BudgetingConfiguration> {
     @Override
-    public void run(BudgetingConfiguration budgetingConfiguration, Environment environment) throws Exception {
+    public void run(BudgetingConfiguration configuration, Environment environment) throws Exception {
+        DatabaseConnection<DSLContext> connection = new SQLDatabaseConnection(configuration.getDatabaseURL());
+        DatabaseInitializer<DSLContext> initializer = null;
+        initializer.initialize();
         AccountDAO<DSLContext> accountDAO = null;
 
         environment.jersey().register(new AuthDynamicFeature(new BasicCredentialAuthFilter.Builder<User>()

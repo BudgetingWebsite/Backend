@@ -21,7 +21,7 @@ public class SQLDatabaseConnection extends DatabaseConnection<DSLContext> {
     }
 
     @Override
-    protected DSLContext getClient(String url) {
+    protected DSLContext initialize(String url) {
         try {
             connection = DriverManager.getConnection(url);
         }

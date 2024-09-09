@@ -11,6 +11,7 @@ public class BudgetingConfiguration extends Configuration {
     private String adminUsername;
     @NotEmpty
     private String adminPassword;
+    private int maxUsernameLength;
 
     @JsonProperty("database-url")
     public String getDatabaseURL() {
@@ -25,5 +26,10 @@ public class BudgetingConfiguration extends Configuration {
     @JsonProperty("admin-password")
     public String getAdminPassword() {
         return adminPassword;
+    }
+
+    @JsonProperty("max-username-length")
+    public int getMaxUsernameLength() {
+        return maxUsernameLength;
     }
 }

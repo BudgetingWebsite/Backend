@@ -12,18 +12,26 @@ public abstract class DatabaseConnection<C> {
      * @param url the URL of the database.
      */
     public DatabaseConnection(String url) {
-        this.client = getClient(url);
+        this.client = initialize(url);
     }
 
     /**
-     * Get the client for the database.
+     * Initialize the client for the database.
      * @param url the URL of the database.
      * @return the client.
      */
-    protected abstract C getClient(String url);
+    protected abstract C initialize(String url);
 
     /**
      * Close the connection to the database.
      */
     protected abstract void close();
+
+    /**
+     * Get the client for the database.
+     * @return
+     */
+    public C get() {
+        return client;
+    }
 }
