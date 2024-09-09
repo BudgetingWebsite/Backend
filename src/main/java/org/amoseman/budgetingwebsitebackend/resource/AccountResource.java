@@ -15,7 +15,7 @@ import org.amoseman.budgetingwebsitebackend.service.AccountService;
 @Path("/account")
 @Produces(MediaType.APPLICATION_JSON)
 public class AccountResource<C> {
-    privte final AccountService<C> accountService;
+    private final AccountService<C> accountService;
 
     public AccountResource(AccountService<C> accountService) {
         this.accountService = accountService;
