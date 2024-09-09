@@ -11,10 +11,6 @@ import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.table;
 
 public class SQLPartitionDAO extends PartitionDAO<DSLContext> {
-    /**
-     * Instantiate a partition data access object.
-     * @param connection the database connection to use.
-     */
     public SQLPartitionDAO(DatabaseConnection<DSLContext> connection) {
         super(connection);
     }

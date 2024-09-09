@@ -38,10 +38,11 @@ public class SQLDatabaseInitializer extends DatabaseInitializer<DSLContext> {
 
     private void initIncomeEventsTable() {
         connection.get()
-                .createTableIfNotExists("income")
+                .createTableIfNotExists("income-events")
                 .column(field("id"), VARCHAR)
                 .column(field("user"), VARCHAR)
                 .column(field("amount"), VARCHAR)
+                .column(field("when"), LOCALDATETIME)
                 .column(field("created"), LOCALDATETIME)
                 .constraints(
                         primaryKey(field("id"))
@@ -51,10 +52,11 @@ public class SQLDatabaseInitializer extends DatabaseInitializer<DSLContext> {
 
     private void initExpenseEventsTable() {
         connection.get()
-                .createTableIfNotExists("expenses")
+                .createTableIfNotExists("expense-events")
                 .column(field("id"), VARCHAR)
                 .column(field("user"), VARCHAR)
                 .column(field("amount"), VARCHAR)
+                .column(field("when"), VARCHAR)
                 .column(field("created"), LOCALDATETIME)
                 .constraints(
                         primaryKey(field("id"))

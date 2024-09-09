@@ -1,8 +1,8 @@
 package org.amoseman.budgetingwebsitebackend.dao;
 
 import org.amoseman.budgetingwebsitebackend.database.DatabaseConnection;
-import org.amoseman.budgetingwebsitebackend.exception.ExpenseEventDoesNotExistException;
-import org.amoseman.budgetingwebsitebackend.exception.IncomeEventDoesNotExistException;
+import org.amoseman.budgetingwebsitebackend.exception.FinanceEventAlreadyExistsException;
+import org.amoseman.budgetingwebsitebackend.exception.FinanceEventDoesNotExistException;
 import org.amoseman.budgetingwebsitebackend.exception.UserDoesNotExistException;
 import org.amoseman.budgetingwebsitebackend.pojo.FinanceEvent;
 import org.amoseman.budgetingwebsitebackend.pojo.TimeRange;
@@ -23,63 +23,35 @@ public abstract class FinanceEventDAO<C> extends DAO<C> {
     }
 
     /**
-     * Add an income event.
-     * @param event the income event.
+     * Add a finance event.
+     * @param event the finance event.
      */
-    public abstract void addIncomeEvent(FinanceEvent event);
+    public abstract void addEvent(FinanceEvent event) throws FinanceEventAlreadyExistsException;
 
     /**
-     * Add an expense event.
-     * @param event the expense event.
+     * Remove a finance event.
+     * @param id the ID of the event.
+     * @param type the type of the event.
+     * @throws FinanceEventDoesNotExistException if the event does not exist.
      */
-    public abstract void addExpenseEvent(FinanceEvent event);
+    public abstract void removeEvent(String id, String type) throws FinanceEventDoesNotExistException;
 
     /**
-     * Remove an income event.
-     * @param id the ID of the income event.
-     * @throws IncomeEventDoesNotExistException if the income event does not exist.
-     */
-    public abstract void removeIncomeEvent(String id) throws IncomeEventDoesNotExistException;
-
-    /**
-     * Remove an expense event.
-     * @param id the ID of the expense event.
-     * @throws ExpenseEventDoesNotExistException if the expense event does not exist.
-     */
-    public abstract void removeExpenseEvent(String id) throws ExpenseEventDoesNotExistException;
-
-    /**
-     * Get all income events of a user.
+     * Get all finance events of a user.
      * @param user the ID of the user.
-     * @return the income events.
+     * @param type the type of events.
+     * @return the finance events.
      * @throws UserDoesNotExistException if the user does not exist.
      */
-    public abstract List<FinanceEvent> getIncomeEvents(String user) throws UserDoesNotExistException;
+    public abstract List<FinanceEvent> getEvents(String user, String type) throws UserDoesNotExistException;
 
     /**
-     * Get all expense events of a user.
+     * Get all finance events of a user in a time range.
      * @param user the ID of the user.
-     * @return the expense events.
-     * @throws UserDoesNotExistException if the user does not exist.
-     */
-    public abstract List<FinanceEvent> getExpenseEvents(String user) throws UserDoesNotExistException;
-
-    /**
-     * Get all income events of a user in a time range.
-     * @param user the ID of the user.
+     * @param type the type of events.
      * @param range the time range of use.
-     * @return the income events.
+     * @return the finance events.
      * @throws UserDoesNotExistException if the user does not exist.
      */
-    public abstract List<FinanceEvent> getIncomeEvents(String user, TimeRange range) throws UserDoesNotExistException;
-
-    /**
-     * Get all expense events of a user in a time range.
-     * @param user the ID of the user.
-     * @param range the time range of use.
-     * @return the expense events.
-     * @throws UserDoesNotExistException if the user does not exist.
-     */
-    public abstract List<FinanceEvent> getExpenseEvents(String user, TimeRange range) throws UserDoesNotExistException;
-
+    public abstract List<FinanceEvent> getEvents(String user, String type, TimeRange range) throws UserDoesNotExistException;
 }
