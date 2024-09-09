@@ -2,6 +2,7 @@ package org.amoseman.budgetingwebsitebackend.resource;
 
 import io.dropwizard.auth.Auth;
 import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -11,6 +12,8 @@ import org.amoseman.budgetingwebsitebackend.exception.UserAlreadyExistsException
 import org.amoseman.budgetingwebsitebackend.exception.UserDoesNotExistException;
 import org.amoseman.budgetingwebsitebackend.pojo.CreateAccount;
 import org.amoseman.budgetingwebsitebackend.service.AccountService;
+
+import java.util.Set;
 
 @Path("/account")
 @Produces(MediaType.APPLICATION_JSON)
@@ -42,6 +45,33 @@ public class AccountResource<C> {
         }
         try {
             accountService.removeAccount(username);
+            return Response.ok().build();
+        }
+        catch (UserDoesNotExistException e) {
+            String reason = String.format("User %s does not exist", username);
+            return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), reason).build();
+        }
+    }
+
+    @PermitAll
+    @POST
+    @Path("/password")
+    public Response changePassword(@Auth User user, String password) {
+        try {
+            accountService.changePassword(user.getName(), password);
+            return Response.ok().build();
+        }
+        catch (UserDoesNotExistException e) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+    }
+
+    @RolesAllowed(Roles.ADMIN)
+    @POST
+    @Path("/{username}/roles")
+    public Response changeRoles(@Auth User user, @PathParam("username") String username, Set<String> roles) {
+        try {
+            accountService.changeRoles(username, roles);
             return Response.ok().build();
         }
         catch (UserDoesNotExistException e) {
