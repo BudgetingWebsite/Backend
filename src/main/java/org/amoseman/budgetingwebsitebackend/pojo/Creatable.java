@@ -1,7 +1,8 @@
 package org.amoseman.budgetingwebsitebackend.pojo;
 
+import org.amoseman.budgetingwebsitebackend.time.Now;
+
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
@@ -14,7 +15,7 @@ public class Creatable {
 
     public Creatable() {
         this.identifier = UUID.randomUUID().toString();
-        this.created = LocalDateTime.now(ZoneId.of("UCT"));
+        this.created = Now.get();
     }
 
     public Creatable(String identifier, LocalDateTime timestamp) {

@@ -25,6 +25,7 @@ public class Account extends Updatable<AccountUpdate> {
     public Account(String username, LocalDateTime created, LocalDateTime updated, String passwordHash, String passwordSalt, Set<String> roles) {
         super(username, created, updated);
         this.passwordHash = passwordHash;
+        this.passwordSalt = passwordSalt;
         this.roles = roles;
     }
 

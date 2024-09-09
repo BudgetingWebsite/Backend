@@ -2,9 +2,9 @@ package org.amoseman.budgetingwebsitebackend.pojo;
 
 import org.amoseman.budgetingwebsitebackend.pojo.update.PartitionUpdate;
 import org.amoseman.budgetingwebsitebackend.pojo.update.Update;
+import org.amoseman.budgetingwebsitebackend.time.Now;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 public abstract class Updatable<U extends Update> extends Creatable {
@@ -12,7 +12,7 @@ public abstract class Updatable<U extends Update> extends Creatable {
 
     public Updatable() {
         super();
-        this.updated = LocalDateTime.now(ZoneId.of("UCT"));
+        this.updated = Now.get();
     }
 
     public Updatable(String identifier, LocalDateTime created, LocalDateTime updated) {
