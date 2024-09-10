@@ -1,5 +1,6 @@
 package org.amoseman.budgetingwebsitebackend.dao.implementation.sql;
 
+import ch.qos.logback.core.model.TimestampModel;
 import org.amoseman.budgetingwebsitebackend.dao.PartitionDAO;
 import org.amoseman.budgetingwebsitebackend.database.DatabaseConnection;
 import org.amoseman.budgetingwebsitebackend.exception.PartitionAlreadyExistsException;
@@ -9,6 +10,7 @@ import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Result;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -102,8 +104,8 @@ public class SQLPartitionDAO extends PartitionDAO<DSLContext> {
     private Partition asPartition(Record record) {
         return new Partition(
                 record.get(field("id"), String.class),
-                record.get(field("created"), LocalDateTime.class),
-                record.get(field("updated"), LocalDateTime.class),
+                record.get(field("created"), Timestamp.class).toLocalDateTime(),
+                record.get(field("updated"), Timestamp.class).toLocalDateTime(),
                 record.get(field("owner"), String.class),
                 record.get(field("share"), Double.class),
                 record.get(field("amount"), Long.class)

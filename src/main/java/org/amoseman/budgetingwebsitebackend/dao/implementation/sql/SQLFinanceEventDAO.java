@@ -5,9 +5,11 @@ import org.amoseman.budgetingwebsitebackend.database.DatabaseConnection;
 import org.amoseman.budgetingwebsitebackend.exception.*;
 import org.amoseman.budgetingwebsitebackend.pojo.FinanceEvent;
 import org.amoseman.budgetingwebsitebackend.pojo.TimeRange;
+import org.bouncycastle.util.Times;
 import org.jooq.*;
 import org.jooq.Record;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,11 +30,11 @@ public class SQLFinanceEventDAO extends FinanceEventDAO<DSLContext> {
         try {
             return new FinanceEvent(
                     record.get(field("id"), String.class),
-                    record.get(field("created"), LocalDateTime.class),
+                    record.get(field("created"), Timestamp.class).toLocalDateTime(),
                     record.get(field("user"), String.class),
                     record.get(field("amount"), Long.class),
                     record.get(field("type"), String.class),
-                    record.get(field("when"), LocalDateTime.class)
+                    record.get(field("when"), Timestamp.class).toLocalDateTime()
             );
         }
         catch (NegativeValueException | InvalidFinanceEventTypeException e) {

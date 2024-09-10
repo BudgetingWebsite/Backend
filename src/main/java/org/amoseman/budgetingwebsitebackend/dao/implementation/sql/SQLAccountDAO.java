@@ -10,6 +10,7 @@ import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Result;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -72,8 +73,8 @@ public class SQLAccountDAO extends AccountDAO<DSLContext> {
         Record record = result.get(0);
         return Optional.of(new Account(
                 record.get(field("username"), String.class),
-                record.get(field("created"), LocalDateTime.class),
-                record.get(field("updated"), LocalDateTime.class),
+                record.get(field("created"), Timestamp.class).toLocalDateTime(),
+                record.get(field("updated"), Timestamp.class).toLocalDateTime(),
                 record.get(field("hash"), String.class),
                 record.get(field("salt"), String.class),
                 Roles.fromString(record.get(field("roles"), String.class))
