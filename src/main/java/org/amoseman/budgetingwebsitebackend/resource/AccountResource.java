@@ -25,6 +25,7 @@ public class AccountResource<C> {
     }
 
     @POST
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response createAccount(CreateAccount account) {
         try {
             accountService.addAccount(account);
@@ -55,6 +56,7 @@ public class AccountResource<C> {
 
     @PermitAll
     @POST
+    @Consumes(MediaType.APPLICATION_JSON)
     @Path("/password")
     public Response changePassword(@Auth User user, String password) {
         try {
@@ -68,6 +70,7 @@ public class AccountResource<C> {
 
     @RolesAllowed(Roles.ADMIN)
     @POST
+    @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{username}/roles")
     public Response changeRoles(@Auth User user, @PathParam("username") String username, Set<String> roles) {
         try {

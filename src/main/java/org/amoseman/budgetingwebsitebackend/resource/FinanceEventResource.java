@@ -27,6 +27,7 @@ public class FinanceEventResource<C> {
     }
 
     @POST
+    @Consumes(MediaType.APPLICATION_JSON)
     @PermitAll
     public Response addEvent(@Auth User user, CreateFinanceEvent event) {
         try {
@@ -47,6 +48,7 @@ public class FinanceEventResource<C> {
     }
 
     @DELETE
+    @Consumes(MediaType.APPLICATION_JSON)
     @PermitAll
     public Response removeEvent(@Auth User user, RemoveFinanceEvent event) {
         try {

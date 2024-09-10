@@ -24,6 +24,7 @@ public class PartitionResource<C> {
     }
 
     @POST
+    @Consumes(MediaType.APPLICATION_JSON)
     @PermitAll
     public Response addPartition(@Auth User user, CreatePartition create) {
         try {
