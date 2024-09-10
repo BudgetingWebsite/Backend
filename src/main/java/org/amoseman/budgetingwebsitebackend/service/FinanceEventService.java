@@ -10,8 +10,8 @@ import org.amoseman.budgetingwebsitebackend.pojo.FinanceEvent;
 import org.amoseman.budgetingwebsitebackend.pojo.RemoveFinanceEvent;
 import org.amoseman.budgetingwebsitebackend.pojo.TimeRange;
 import org.amoseman.budgetingwebsitebackend.time.Now;
-import org.jooq.impl.QOM;
 
+import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -23,7 +23,7 @@ public class FinanceEventService<C> {
         this.financeEventDAO = financeEventDAO;
     }
 
-    public void addEvent(String user, CreateFinanceEvent create) throws NegativeValueException, InvalidFinanceEventTypeException, FinanceEventAlreadyExistsException {
+    public void addEvent(String user, CreateFinanceEvent create) throws NegativeValueException, InvalidFinanceEventTypeException, FinanceEventAlreadyExistsException, DateTimeException {
         String id = UUID.randomUUID().toString();
         LocalDateTime now = Now.get();
         LocalDateTime when = LocalDateTime.of(create.getYear(), create.getMonth(), create.getDay(), 0, 0);
