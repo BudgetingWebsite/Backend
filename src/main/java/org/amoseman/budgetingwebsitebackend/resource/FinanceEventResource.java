@@ -12,7 +12,6 @@ import org.amoseman.budgetingwebsitebackend.exception.InvalidFinanceEventTypeExc
 import org.amoseman.budgetingwebsitebackend.exception.NegativeValueException;
 import org.amoseman.budgetingwebsitebackend.pojo.CreateFinanceEvent;
 import org.amoseman.budgetingwebsitebackend.pojo.FinanceEvent;
-import org.amoseman.budgetingwebsitebackend.pojo.RemoveFinanceEvent;
 import org.amoseman.budgetingwebsitebackend.service.FinanceEventService;
 
 import java.time.DateTimeException;
@@ -32,8 +31,8 @@ public class FinanceEventResource<C> {
     @PermitAll
     public Response addEvent(@Auth User user, CreateFinanceEvent event) {
         try {
-            financeEventService.addEvent(user.getName(), event);
-            return Response.ok().build();
+            String uuid = financeEventService.addEvent(user.getName(), event);
+            return Response.ok(uuid).build();
         }
         catch (NegativeValueException e) {
             String reason = String.format("Negative amount: %s", event.getAmount());
@@ -57,13 +56,14 @@ public class FinanceEventResource<C> {
     @DELETE
     @Consumes(MediaType.APPLICATION_JSON)
     @PermitAll
-    public Response removeEvent(@Auth User user, RemoveFinanceEvent event) {
+    @Path("/{type}/{uuid}")
+    public Response removeEvent(@Auth User user, @PathParam("type") String type, @PathParam("uuid") String uuid) {
         try {
-            financeEventService.removeEvent(user.getName(), event);
+            financeEventService.removeEvent(user.getName(), uuid, type);
             return Response.ok().build();
         }
         catch (FinanceEventDoesNotExistException e) {
-            String reason = String.format("Event %s does not exist", event.getId());
+            String reason = String.format("Event %s does not exist", uuid);
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), reason).build();
         }
     }

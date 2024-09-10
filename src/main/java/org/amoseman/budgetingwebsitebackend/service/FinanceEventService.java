@@ -21,12 +21,12 @@ public class FinanceEventService<C> {
         this.financeEventDAO = financeEventDAO;
     }
 
-    public void addEvent(String user, CreateFinanceEvent create) throws NegativeValueException, InvalidFinanceEventTypeException, FinanceEventAlreadyExistsException, DateTimeException {
-        String id = UUID.randomUUID().toString();
+    public String addEvent(String user, CreateFinanceEvent create) throws NegativeValueException, InvalidFinanceEventTypeException, FinanceEventAlreadyExistsException, DateTimeException {
+        String uuid = UUID.randomUUID().toString();
         LocalDateTime now = Now.get();
         LocalDateTime when = LocalDateTime.of(create.getYear(), create.getMonth(), create.getDay(), 0, 0);
         FinanceEvent event = new FinanceEvent(
-                id,
+                uuid,
                 now,
                 user,
                 create.getAmount(),
@@ -34,10 +34,11 @@ public class FinanceEventService<C> {
                 when
         );
         financeEventDAO.addEvent(event);
+        return uuid;
     }
 
-    public void removeEvent(String user, RemoveFinanceEvent remove) throws FinanceEventDoesNotExistException {
-        financeEventDAO.removeEvent(user, remove.getId(), remove.getType());
+    public void removeEvent(String user, String id, String type) throws FinanceEventDoesNotExistException {
+        financeEventDAO.removeEvent(user, id, type);
     }
 
     public List<FinanceEvent> getEvents(
