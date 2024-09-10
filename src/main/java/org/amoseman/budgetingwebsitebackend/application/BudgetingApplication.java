@@ -27,7 +27,7 @@ public class BudgetingApplication extends Application<BudgetingConfiguration> {
         Hasher hasher = new Hasher(random, 16, 16, 2, 8192, 1);
 
         DatabaseConnection<DSLContext> connection = new SQLDatabaseConnection(configuration.getDatabaseURL());
-        DatabaseInitializer<DSLContext> initializer = new SQLDatabaseInitializer(connection, configuration);
+        DatabaseInitializer<DSLContext> initializer = new SQLDatabaseInitializer(connection, configuration, hasher);
         initializer.initialize();
         AccountDAO<DSLContext> accountDAO = new SQLAccountDAO(connection);
 
