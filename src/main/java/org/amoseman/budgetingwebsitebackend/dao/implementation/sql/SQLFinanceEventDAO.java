@@ -73,10 +73,10 @@ public class SQLFinanceEventDAO extends FinanceEventDAO<DSLContext> {
     }
 
     @Override
-    public void removeEvent(String id, String type) throws FinanceEventDoesNotExistException {
+    public void removeEvent(String user, String id, String type) throws FinanceEventDoesNotExistException {
         int result = connection.get()
                 .deleteFrom(getTable(type))
-                .where(field("id").eq(id))
+                .where(field("id").eq(id).and(field("user").eq(user)))
                 .execute();
         if (0 == result) {
             throw new FinanceEventDoesNotExistException("remove", id);
