@@ -1,11 +1,13 @@
 package org.amoseman.fetch;
 
+import org.apache.http.HttpHeaders;
 import org.apache.http.HttpHost;
-import org.apache.http.RequestLine;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.*;
+import org.apache.http.entity.EntityTemplate;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -13,6 +15,8 @@ import org.apache.http.impl.client.HttpClientBuilder;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 public class Fetch {
     public static class Builder {
@@ -41,21 +45,18 @@ public class Fetch {
     }
 
     private final String domain;
+    private final String auth;
     private final CloseableHttpClient client;
 
     private Fetch(String domain, String username, String password) {
         this.domain = domain;
         if (null != username && null != password) {
-            BasicCredentialsProvider provider = new BasicCredentialsProvider();
-            AuthScope scope = new AuthScope(new HttpHost(domain));
-            provider.setCredentials(scope, new UsernamePasswordCredentials(username, password));
-            this.client = HttpClientBuilder.create()
-                    .setDefaultCredentialsProvider(provider)
-                    .build();
+            this.auth = Base64.getEncoder().encodeToString((username + ":" + password).getBytes(StandardCharsets.UTF_8));
         }
         else {
-            this.client = HttpClientBuilder.create().build();
+            this.auth = null;
         }
+        this.client = HttpClientBuilder.create().build();
     }
 
     public void close() {
@@ -69,6 +70,9 @@ public class Fetch {
 
     private String execute(HttpRequestBase request, ResponseHandler<String> handler) {
         try {
+            if (null != auth) {
+                request.setHeader(HttpHeaders.AUTHORIZATION, "Basic " + auth);
+            }
             return client.execute(request, handler);
         }
         catch (IOException e) {
@@ -85,7 +89,7 @@ public class Fetch {
             return null;
         }
         try {
-            return new StringEntity(contents);
+            return new StringEntity(contents, "application/json", "UTF-8");
         }
         catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
