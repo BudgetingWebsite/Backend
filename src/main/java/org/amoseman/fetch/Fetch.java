@@ -130,4 +130,8 @@ public class Fetch {
         HttpRequestBase base = toBase(uri, method, entity);
         return execute(base, handler);
     }
+
+    public String request(String path, String method, ResponseHandler<String> handler) {
+        return request(path, method, null, handler);
+    }
 }
