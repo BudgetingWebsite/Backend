@@ -35,7 +35,7 @@ class BudgetingApplicationTest {
     private void startApplication(String configurationLocation, String databaseLocation) {
         try {
             new BudgetingApplication().run("server", configurationLocation);
-            new File(databaseLocation).deleteOnExit();
+            new File(databaseLocation.split(":")[2]).deleteOnExit();
         }
         catch (Exception e) {
             throw new RuntimeException(e);
