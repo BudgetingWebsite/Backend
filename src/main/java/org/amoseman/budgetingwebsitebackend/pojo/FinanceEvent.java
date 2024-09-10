@@ -4,6 +4,7 @@ import org.amoseman.budgetingwebsitebackend.exception.InvalidFinanceEventTypeExc
 import org.amoseman.budgetingwebsitebackend.exception.NegativeValueException;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Represents a income or expense event.

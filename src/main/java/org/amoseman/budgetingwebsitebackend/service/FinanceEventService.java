@@ -5,14 +5,12 @@ import org.amoseman.budgetingwebsitebackend.exception.FinanceEventAlreadyExistsE
 import org.amoseman.budgetingwebsitebackend.exception.FinanceEventDoesNotExistException;
 import org.amoseman.budgetingwebsitebackend.exception.InvalidFinanceEventTypeException;
 import org.amoseman.budgetingwebsitebackend.exception.NegativeValueException;
-import org.amoseman.budgetingwebsitebackend.pojo.CreateFinanceEvent;
-import org.amoseman.budgetingwebsitebackend.pojo.FinanceEvent;
-import org.amoseman.budgetingwebsitebackend.pojo.RemoveFinanceEvent;
-import org.amoseman.budgetingwebsitebackend.pojo.TimeRange;
+import org.amoseman.budgetingwebsitebackend.pojo.*;
 import org.amoseman.budgetingwebsitebackend.time.Now;
 
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 

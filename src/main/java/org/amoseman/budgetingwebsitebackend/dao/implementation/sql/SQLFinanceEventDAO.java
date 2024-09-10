@@ -24,14 +24,14 @@ public class SQLFinanceEventDAO extends FinanceEventDAO<DSLContext> {
         return table(String.format("%s_events", type));
     }
 
-    private FinanceEvent fromRecord(Record record) {
+    private FinanceEvent fromRecord(String type, Record record) {
         try {
             return new FinanceEvent(
                     record.get(field("uuid"), String.class),
                     record.get(field("created"), Timestamp.class).toLocalDateTime(),
                     record.get(field("username"), String.class),
                     record.get(field("amount"), Long.class),
-                    record.get(field("type"), String.class),
+                    type,
                     record.get(field("occurred"), Timestamp.class).toLocalDateTime()
             );
         }
@@ -40,9 +40,9 @@ public class SQLFinanceEventDAO extends FinanceEventDAO<DSLContext> {
         }
     }
 
-    private List<FinanceEvent> fromRecords(Result<Record> results) {
+    private List<FinanceEvent> fromRecords(String type, Result<Record> results) {
         List<FinanceEvent> events = new ArrayList<>();
-        results.forEach(record -> events.add(fromRecord(record)));
+        results.forEach(record -> events.add(fromRecord(type, record)));
         return events;
     }
 
@@ -68,7 +68,6 @@ public class SQLFinanceEventDAO extends FinanceEventDAO<DSLContext> {
                     .execute();
         }
         catch (Exception e) {
-            e.printStackTrace();
             throw new FinanceEventAlreadyExistsException("add", event.getIdentifier());
         }
     }
@@ -90,7 +89,7 @@ public class SQLFinanceEventDAO extends FinanceEventDAO<DSLContext> {
                 .selectFrom(getTable(type))
                 .where(field("username").eq(user))
                 .fetch();
-        return fromRecords(result);
+        return fromRecords(type, result);
     }
 
     @Override
@@ -100,6 +99,6 @@ public class SQLFinanceEventDAO extends FinanceEventDAO<DSLContext> {
                 .selectFrom(getTable(type))
                 .where(field("username").eq(user).and(rangeCondition))
                 .fetch();
-        return fromRecords(result);
+        return fromRecords(type, result);
     }
 }
