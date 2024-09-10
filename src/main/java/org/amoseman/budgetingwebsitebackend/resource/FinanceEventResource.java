@@ -15,6 +15,7 @@ import org.amoseman.budgetingwebsitebackend.pojo.FinanceEvent;
 import org.amoseman.budgetingwebsitebackend.pojo.RemoveFinanceEvent;
 import org.amoseman.budgetingwebsitebackend.service.FinanceEventService;
 
+import java.time.DateTimeException;
 import java.util.List;
 
 @Path("/event")
@@ -37,12 +38,18 @@ public class FinanceEventResource<C> {
         catch (NegativeValueException e) {
             String reason = String.format("Negative amount: %s", event.getAmount());
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), reason).build();
-        } catch (FinanceEventAlreadyExistsException e) {
+        }
+        catch (FinanceEventAlreadyExistsException e) {
             // todo: this should never occur, so make it re-attempt once in the service if the UUID already exists
             String reason = "Congratulations, you won the UUID v4 lottery as the UUID generated is already in use!";
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), reason).build();
-        } catch (InvalidFinanceEventTypeException e) {
+        }
+        catch (InvalidFinanceEventTypeException e) {
             String reason = String.format("%s is not a valid finance event type", event.getType());
+            return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), reason).build();
+        }
+        catch (DateTimeException e) {
+            String reason = "Not a valid date";
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), reason).build();
         }
     }

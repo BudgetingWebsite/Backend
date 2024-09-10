@@ -1,11 +1,15 @@
 package org.amoseman.budgetingwebsitebackend.pojo;
 
 public class CreateFinanceEvent {
-    private final String type;
-    private final long amount;
-    private final int year;
-    private final int month;
-    private final int day;
+    private String type;
+    private long amount;
+    private int year;
+    private int month;
+    private int day;
+
+    public CreateFinanceEvent() {
+
+    }
 
     public CreateFinanceEvent(String type, long amount, int year, int month, int day) {
         this.type = type;
