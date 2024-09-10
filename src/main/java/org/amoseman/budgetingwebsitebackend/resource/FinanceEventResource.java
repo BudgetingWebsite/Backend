@@ -74,12 +74,12 @@ public class FinanceEventResource<C> {
     public Response getEvents(
             @Auth User user,
             @PathParam("type") String type,
-            @DefaultValue("0") @QueryParam("start-year") String startYear,
-            @DefaultValue("0") @QueryParam("start-month") String startMonth,
-            @DefaultValue("0") @QueryParam("start-day") String startDay,
+            @DefaultValue("1") @QueryParam("start-year") String startYear,
+            @DefaultValue("1") @QueryParam("start-month") String startMonth,
+            @DefaultValue("1") @QueryParam("start-day") String startDay,
             @DefaultValue("9999") @QueryParam("end-year") String endYear,
-            @DefaultValue("0") @QueryParam("end-month") String endMonth,
-            @DefaultValue("0") @QueryParam("end-day") String endDay
+            @DefaultValue("1") @QueryParam("end-month") String endMonth,
+            @DefaultValue("1") @QueryParam("end-day") String endDay
             ) {
         try {
             List<FinanceEvent> events = financeEventService.getEvents(
