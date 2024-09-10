@@ -5,6 +5,9 @@ import org.amoseman.budgetingwebsitebackend.exception.PartitionAlreadyExistsExce
 import org.amoseman.budgetingwebsitebackend.exception.PartitionDoesNotExistException;
 import org.amoseman.budgetingwebsitebackend.pojo.Partition;
 
+import java.util.List;
+import java.util.Optional;
+
 /**
  * Represents a partition data access object.
  * @param <C> the client type.
@@ -26,13 +29,29 @@ public abstract class PartitionDAO<C> extends DAO<C> {
 
     /**
      * Remove a partition.
+     * @param owner the owner of the partition.
      * @param id the ID of the partition.
      */
-    public abstract void removePartition(String id) throws PartitionDoesNotExistException;
+    public abstract void removePartition(String owner, String id) throws PartitionDoesNotExistException;
 
     /**
      * Update a partition.
      * @param partition the partition.
      */
     public abstract void updatePartition(Partition partition) throws PartitionDoesNotExistException;
+
+    /**
+     * Get a partition.
+     * @param owner the owner of the partition.
+     * @param id the ID of the partition.
+     * @return the partition.
+     */
+    public abstract Optional<Partition> getPartition(String owner, String id);
+
+    /**
+     * Get all partitions.
+     * @param owner the owner of the partitions.
+     * @return the partitions.
+     */
+    public abstract List<Partition> listPartitions(String owner);
 }

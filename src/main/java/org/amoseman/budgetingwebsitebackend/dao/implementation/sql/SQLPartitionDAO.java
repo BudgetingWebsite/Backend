@@ -6,6 +6,13 @@ import org.amoseman.budgetingwebsitebackend.exception.PartitionAlreadyExistsExce
 import org.amoseman.budgetingwebsitebackend.exception.PartitionDoesNotExistException;
 import org.amoseman.budgetingwebsitebackend.pojo.Partition;
 import org.jooq.DSLContext;
+import org.jooq.Record;
+import org.jooq.Result;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.table;
@@ -44,10 +51,10 @@ public class SQLPartitionDAO extends PartitionDAO<DSLContext> {
     }
 
     @Override
-    public void removePartition(String id) throws PartitionDoesNotExistException {
+    public void removePartition(String owner, String id) throws PartitionDoesNotExistException {
         int result = connection.get()
                 .deleteFrom(table("partitions"))
-                .where(field("id").eq(id))
+                .where(field("id").eq(id).and(field("owner").eq(owner)))
                 .execute();
         if (0 == result) {
             throw new PartitionDoesNotExistException("remove", id);
@@ -66,5 +73,40 @@ public class SQLPartitionDAO extends PartitionDAO<DSLContext> {
         if (0 == result) {
             throw new PartitionDoesNotExistException("update", partition.getIdentifier());
         }
+    }
+
+    @Override
+    public Optional<Partition> getPartition(String owner, String id) {
+        Result<Record> result = connection.get()
+                .selectFrom(table("partitions"))
+                .where(field("id").eq(id).and(field("owner").eq(owner)))
+                .fetch();
+        if (result.isEmpty()) {
+            return Optional.empty();
+        }
+        Record record = result.get(0);
+        return Optional.of(asPartition(record));
+    }
+
+    @Override
+    public List<Partition> listPartitions(String owner) {
+        Result<Record> result = connection.get()
+                .selectFrom(table("partitions"))
+                .where(field("owner").eq(owner))
+                .fetch();
+        List<Partition> partitions = new ArrayList<>();
+        result.forEach(record -> partitions.add(asPartition(record)));
+        return partitions;
+    }
+
+    private Partition asPartition(Record record) {
+        return new Partition(
+                record.get(field("id"), String.class),
+                record.get(field("created"), LocalDateTime.class),
+                record.get(field("updated"), LocalDateTime.class),
+                record.get(field("owner"), String.class),
+                record.get(field("share"), Double.class),
+                record.get(field("amount"), Long.class)
+        );
     }
 }

@@ -21,8 +21,10 @@ import org.amoseman.budgetingwebsitebackend.database.implementation.SQLDatabaseC
 import org.amoseman.budgetingwebsitebackend.database.implementation.SQLDatabaseInitializer;
 import org.amoseman.budgetingwebsitebackend.resource.AccountResource;
 import org.amoseman.budgetingwebsitebackend.resource.FinanceEventResource;
+import org.amoseman.budgetingwebsitebackend.resource.PartitionResource;
 import org.amoseman.budgetingwebsitebackend.service.AccountService;
 import org.amoseman.budgetingwebsitebackend.service.FinanceEventService;
+import org.amoseman.budgetingwebsitebackend.service.PartitionService;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
@@ -45,15 +47,15 @@ public class BudgetingApplication extends Application<BudgetingConfiguration> {
 
         AccountService<DSLContext> accountService = new AccountService<>(accountDAO, hasher);
         FinanceEventService<DSLContext> financeEventService = new FinanceEventService<>(financeEventDAO);
-        // todo: partitionService
+        PartitionService<DSLContext> partitionService =  new PartitionService<>(partitionDAO);
 
         AccountResource<DSLContext> accountResource = new AccountResource<>(accountService);
         FinanceEventResource<DSLContext> financeEventResource = new FinanceEventResource<>(financeEventService);
-        // todo: partitionResource
+        PartitionResource<DSLContext> partitionResource = new PartitionResource<>(partitionService);
 
         environment.jersey().register(accountResource);
         environment.jersey().register(financeEventResource);
-        // todo: register partitionResource
+        environment.jersey().register(partitionResource);
 
         environment.jersey().register(new AuthDynamicFeature(new BasicCredentialAuthFilter.Builder<User>()
                 .setAuthenticator(new UserAuthenticator(accountDAO, hasher))

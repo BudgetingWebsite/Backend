@@ -22,7 +22,7 @@ class BudgetingApplicationTest {
             BufferedWriter writer = new BufferedWriter(new FileWriter(file));
             String contents =   "database-url: " + databaseLocation + "\n" +
                                 "admin-username: " + username + "\n" +
-                                "admin-password" + password + "\n" +
+                                "admin-password: " + password + "\n" +
                                 "max-username-length: 32";
             writer.write(contents);
             writer.close();
@@ -34,7 +34,7 @@ class BudgetingApplicationTest {
 
     private void startApplication(String configurationLocation) {
         try {
-            new BudgetingApplication().run(configurationLocation);
+            new BudgetingApplication().run("server", configurationLocation);
         }
         catch (Exception e) {
             throw new RuntimeException(e);
@@ -45,7 +45,7 @@ class BudgetingApplicationTest {
     void test() {
         String address = "127.0.0.1:8080";
         String configurationLocation = "test-config.yaml";
-        String databaseLocation = "test-database.db";
+        String databaseLocation = "jdbc:sqlite:test-database.db";
         String adminUsername = "admin_user";
         String adminPassword = "admin_pass";
         generateConfigurationFile(configurationLocation, databaseLocation, adminUsername, adminPassword);
@@ -56,7 +56,5 @@ class BudgetingApplicationTest {
                 .setUsername(adminUsername)
                 .setPassword(adminPassword)
                 .build();
-
-        String response = fetch.request("/");
     }
 }
