@@ -30,7 +30,7 @@ public class SQLPartitionDAO extends PartitionDAO<DSLContext> {
             connection.get()
                     .insertInto(
                             table("partitions"),
-                            field("id"),
+                            field("uuid"),
                             field("owner"),
                             field("share"),
                             field("amount"),
@@ -56,7 +56,7 @@ public class SQLPartitionDAO extends PartitionDAO<DSLContext> {
     public void removePartition(String owner, String id) throws PartitionDoesNotExistException {
         int result = connection.get()
                 .deleteFrom(table("partitions"))
-                .where(field("id").eq(id).and(field("owner").eq(owner)))
+                .where(field("uuid").eq(id).and(field("owner").eq(owner)))
                 .execute();
         if (0 == result) {
             throw new PartitionDoesNotExistException("remove", id);
@@ -70,7 +70,7 @@ public class SQLPartitionDAO extends PartitionDAO<DSLContext> {
                 .set(field("share"), partition.getShare())
                 .set(field("amount"), partition.getAmount())
                 .set(field("updated"), partition.getUpdated())
-                .where(field("id").eq(partition.getIdentifier()))
+                .where(field("uuid").eq(partition.getIdentifier()))
                 .execute();
         if (0 == result) {
             throw new PartitionDoesNotExistException("update", partition.getIdentifier());
@@ -81,7 +81,7 @@ public class SQLPartitionDAO extends PartitionDAO<DSLContext> {
     public Optional<Partition> getPartition(String owner, String id) {
         Result<Record> result = connection.get()
                 .selectFrom(table("partitions"))
-                .where(field("id").eq(id).and(field("owner").eq(owner)))
+                .where(field("uuid").eq(id).and(field("owner").eq(owner)))
                 .fetch();
         if (result.isEmpty()) {
             return Optional.empty();
@@ -103,7 +103,7 @@ public class SQLPartitionDAO extends PartitionDAO<DSLContext> {
 
     private Partition asPartition(Record record) {
         return new Partition(
-                record.get(field("id"), String.class),
+                record.get(field("uuid"), String.class),
                 record.get(field("created"), Timestamp.class).toLocalDateTime(),
                 record.get(field("updated"), Timestamp.class).toLocalDateTime(),
                 record.get(field("owner"), String.class),

@@ -48,28 +48,28 @@ public class SQLDatabaseInitializer extends DatabaseInitializer<DSLContext> {
 
     private void initIncomeEventsTable() {
         connection.get()
-                .createTableIfNotExists("income-events")
-                .column(field("id"), VARCHAR)
-                .column(field("user"), VARCHAR)
+                .createTableIfNotExists("income_events")
+                .column(field("uuid"), VARCHAR)
+                .column(field("username"), VARCHAR)
                 .column(field("amount"), VARCHAR)
-                .column(field("when"), LOCALDATETIME)
+                .column(field("occurred"), LOCALDATETIME)
                 .column(field("created"), LOCALDATETIME)
                 .constraints(
-                        primaryKey(field("id"))
+                        primaryKey(field("uuid"))
                 )
                 .execute();
     }
 
     private void initExpenseEventsTable() {
         connection.get()
-                .createTableIfNotExists("expense-events")
-                .column(field("id"), VARCHAR)
-                .column(field("user"), VARCHAR)
+                .createTableIfNotExists("expense_events")
+                .column(field("uuid"), VARCHAR)
+                .column(field("username"), VARCHAR)
                 .column(field("amount"), VARCHAR)
-                .column(field("when"), VARCHAR)
+                .column(field("occurred"), VARCHAR)
                 .column(field("created"), LOCALDATETIME)
                 .constraints(
-                        primaryKey(field("id"))
+                        primaryKey(field("uuid"))
                 )
                 .execute();
     }
@@ -77,14 +77,14 @@ public class SQLDatabaseInitializer extends DatabaseInitializer<DSLContext> {
     private void initPartitionsTable() {
         connection.get()
                 .createTableIfNotExists("partitions")
-                .column(field("id"), VARCHAR)
+                .column(field("uuid"), VARCHAR)
                 .column(field("owner"), VARCHAR)
                 .column(field("share"), DOUBLE)
                 .column(field("amount"), BIGINT)
                 .column(field("created"), LOCALDATETIME)
                 .column(field("updated"), LOCALDATETIME)
                 .constraints(
-                        primaryKey(field("id"))
+                        primaryKey(field("uuid"))
                 )
                 .execute();
     }

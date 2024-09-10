@@ -11,7 +11,6 @@ import org.jooq.Record;
 import org.jooq.Result;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.jooq.impl.DSL.field;

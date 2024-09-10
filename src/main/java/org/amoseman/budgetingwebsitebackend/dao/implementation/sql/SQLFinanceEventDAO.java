@@ -5,12 +5,10 @@ import org.amoseman.budgetingwebsitebackend.database.DatabaseConnection;
 import org.amoseman.budgetingwebsitebackend.exception.*;
 import org.amoseman.budgetingwebsitebackend.pojo.FinanceEvent;
 import org.amoseman.budgetingwebsitebackend.pojo.TimeRange;
-import org.bouncycastle.util.Times;
 import org.jooq.*;
 import org.jooq.Record;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,18 +21,18 @@ public class SQLFinanceEventDAO extends FinanceEventDAO<DSLContext> {
     }
 
     private Table<Record> getTable(String type) {
-        return table(String.format("%s-events", type));
+        return table(String.format("%s_events", type));
     }
 
     private FinanceEvent fromRecord(Record record) {
         try {
             return new FinanceEvent(
-                    record.get(field("id"), String.class),
+                    record.get(field("uuid"), String.class),
                     record.get(field("created"), Timestamp.class).toLocalDateTime(),
-                    record.get(field("user"), String.class),
+                    record.get(field("username"), String.class),
                     record.get(field("amount"), Long.class),
                     record.get(field("type"), String.class),
-                    record.get(field("when"), Timestamp.class).toLocalDateTime()
+                    record.get(field("occurred"), Timestamp.class).toLocalDateTime()
             );
         }
         catch (NegativeValueException | InvalidFinanceEventTypeException e) {
@@ -54,10 +52,10 @@ public class SQLFinanceEventDAO extends FinanceEventDAO<DSLContext> {
             connection.get()
                     .insertInto(
                             getTable(event.getType()),
-                            field("id"),
-                            field("user"),
+                            field("uuid"),
+                            field("username"),
                             field("amount"),
-                            field("when"),
+                            field("occurred"),
                             field("created")
                     )
                     .values(
@@ -70,6 +68,7 @@ public class SQLFinanceEventDAO extends FinanceEventDAO<DSLContext> {
                     .execute();
         }
         catch (Exception e) {
+            e.printStackTrace();
             throw new FinanceEventAlreadyExistsException("add", event.getIdentifier());
         }
     }
@@ -78,7 +77,7 @@ public class SQLFinanceEventDAO extends FinanceEventDAO<DSLContext> {
     public void removeEvent(String user, String id, String type) throws FinanceEventDoesNotExistException {
         int result = connection.get()
                 .deleteFrom(getTable(type))
-                .where(field("id").eq(id).and(field("user").eq(user)))
+                .where(field("uuid").eq(id).and(field("username").eq(user)))
                 .execute();
         if (0 == result) {
             throw new FinanceEventDoesNotExistException("remove", id);
@@ -89,17 +88,17 @@ public class SQLFinanceEventDAO extends FinanceEventDAO<DSLContext> {
     public List<FinanceEvent> getEvents(String user, String type) {
         Result<Record> result = connection.get()
                 .selectFrom(getTable(type))
-                .where(field("user").eq(user))
+                .where(field("username").eq(user))
                 .fetch();
         return fromRecords(result);
     }
 
     @Override
     public List<FinanceEvent> getEvents(String user, String type, TimeRange range) {
-        Condition rangeCondition = field("when").greaterOrEqual(range.getStart()).and(field("when").lessOrEqual(range));
+        Condition rangeCondition = field("occurred").greaterOrEqual(range.getStart()).and(field("occurred").lessOrEqual(range));
         Result<Record> result = connection.get()
                 .selectFrom(getTable(type))
-                .where(field("user").eq(user).and(rangeCondition))
+                .where(field("username").eq(user).and(rangeCondition))
                 .fetch();
         return fromRecords(result);
     }
