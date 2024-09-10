@@ -95,7 +95,7 @@ public class SQLFinanceEventDAO extends FinanceEventDAO<DSLContext> {
 
     @Override
     public List<FinanceEvent> getEvents(String user, String type, TimeRange range) {
-        Condition rangeCondition = field("occurred").greaterOrEqual(range.getStart()).and(field("occurred").lessOrEqual(range));
+        Condition rangeCondition = field("occurred").greaterOrEqual(range.getStart()).and(field("occurred").lessOrEqual(range.getEnd()));
         Result<Record> result = connection.get()
                 .selectFrom(getTable(type))
                 .where(field("username").eq(user).and(rangeCondition))
