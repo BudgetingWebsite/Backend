@@ -4,7 +4,6 @@ import io.dropwizard.auth.AuthenticationException;
 import io.dropwizard.auth.Authenticator;
 import io.dropwizard.auth.basic.BasicCredentials;
 import org.amoseman.budgetingwebsitebackend.dao.AccountDAO;
-import org.amoseman.budgetingwebsitebackend.exception.UserDoesNotExistException;
 import org.amoseman.budgetingwebsitebackend.pojo.Account;
 
 import java.util.Base64;
