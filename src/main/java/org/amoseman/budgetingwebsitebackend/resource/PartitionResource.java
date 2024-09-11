@@ -10,6 +10,7 @@ import org.amoseman.budgetingwebsitebackend.exception.PartitionAlreadyExistsExce
 import org.amoseman.budgetingwebsitebackend.exception.PartitionDoesNotExistException;
 import org.amoseman.budgetingwebsitebackend.pojo.partition.Partition;
 import org.amoseman.budgetingwebsitebackend.pojo.partition.op.CreatePartition;
+import org.amoseman.budgetingwebsitebackend.pojo.partition.op.UpdatePartition;
 import org.amoseman.budgetingwebsitebackend.service.PartitionService;
 
 import java.util.List;
@@ -57,5 +58,19 @@ public class PartitionResource<C> {
     public Response getPartitions(@Auth User user) {
         List<Partition> partitions = partitionService.listPartitions(user.getName());
         return Response.ok(partitions).build();
+    }
+
+    @PUT
+    @PermitAll
+    @Path("/{uuid}")
+    public Response updatePartition(@Auth User user, @PathParam("uuid") String uuid, UpdatePartition update) {
+        try {
+            partitionService.updatePartition(user.getName(), uuid, update);
+            return Response.ok().build();
+        }
+        catch (PartitionDoesNotExistException e) {
+            String reason = String.format("Partition %s does not exist", uuid);
+            return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), reason).build();
+        }
     }
 }
