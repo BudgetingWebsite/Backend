@@ -39,6 +39,7 @@ public class PartitionService<C> {
                 0
         );
         partitionDAO.addPartition(partition);
+        recalculate(owner);
     }
 
     public void removePartition(String owner, String id) throws PartitionDoesNotExistException {
