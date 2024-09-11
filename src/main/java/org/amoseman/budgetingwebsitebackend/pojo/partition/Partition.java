@@ -2,7 +2,7 @@ package org.amoseman.budgetingwebsitebackend.pojo.partition;
 
 import org.amoseman.budgetingwebsitebackend.pojo.OwnedEntity;
 import org.amoseman.budgetingwebsitebackend.pojo.partition.op.UpdatePartition;
-import org.amoseman.budgetingwebsitebackend.time.Now;
+import org.amoseman.budgetingwebsitebackend.util.Now;
 
 import java.time.LocalDateTime;
 
@@ -16,6 +16,10 @@ public class Partition extends OwnedEntity {
         this.name = name;
         this.share = share;
         this.amount = amount;
+    }
+
+    public Partition add(long amount) {
+        return update(new UpdatePartition(name, share, this.amount + amount));
     }
 
     public Partition update(UpdatePartition update) {

@@ -1,28 +1,32 @@
 package org.amoseman.budgetingwebsitebackend.service;
 
 import org.amoseman.budgetingwebsitebackend.dao.FinanceEventDAO;
-import org.amoseman.budgetingwebsitebackend.exception.FinanceEventAlreadyExistsException;
-import org.amoseman.budgetingwebsitebackend.exception.FinanceEventDoesNotExistException;
-import org.amoseman.budgetingwebsitebackend.exception.InvalidFinanceEventTypeException;
-import org.amoseman.budgetingwebsitebackend.exception.NegativeValueException;
+import org.amoseman.budgetingwebsitebackend.dao.PartitionDAO;
+import org.amoseman.budgetingwebsitebackend.exception.*;
 import org.amoseman.budgetingwebsitebackend.pojo.*;
 import org.amoseman.budgetingwebsitebackend.pojo.event.ExpenseEvent;
 import org.amoseman.budgetingwebsitebackend.pojo.event.FinanceEvent;
 import org.amoseman.budgetingwebsitebackend.pojo.event.IncomeEvent;
 import org.amoseman.budgetingwebsitebackend.pojo.event.op.CreateExpenseEvent;
 import org.amoseman.budgetingwebsitebackend.pojo.event.op.CreateIncomeEvent;
-import org.amoseman.budgetingwebsitebackend.time.Now;
+import org.amoseman.budgetingwebsitebackend.pojo.partition.Partition;
+import org.amoseman.budgetingwebsitebackend.util.Now;
+import org.amoseman.budgetingwebsitebackend.util.Split;
+import org.amoseman.budgetingwebsitebackend.util.Splitter;
 
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class FinanceEventService<C> {
     private final FinanceEventDAO<C> financeEventDAO;
+    private final PartitionDAO<C> partitionDAO;
 
-    public FinanceEventService(FinanceEventDAO<C> financeEventDAO) {
+    public FinanceEventService(FinanceEventDAO<C> financeEventDAO, PartitionDAO<C> partitionDAO) {
         this.financeEventDAO = financeEventDAO;
+        this.partitionDAO = partitionDAO;
     }
 
     public String addEvent(String user, CreateIncomeEvent create) throws NegativeValueException, InvalidFinanceEventTypeException, FinanceEventAlreadyExistsException, DateTimeException {
@@ -40,6 +44,22 @@ public class FinanceEventService<C> {
                 create.getDescription()
         );
         financeEventDAO.addEvent(event);
+
+        List<Partition> partitions = partitionDAO.listPartitions(user);
+        double[] shares = new double[partitions.size()];
+        for (int i = 0; i < partitions.size(); i++) {
+            shares[i] = partitions.get(i).getShare();
+        }
+        Split split = Splitter.get(shares, event.getAmount());
+        for (int i = 0; i < partitions.size(); i++) {
+            long x = split.getAmounts()[i];
+            try {
+                partitionDAO.updatePartition(partitions.get(i).add(x));
+            }
+            catch (PartitionDoesNotExistException e) {
+                // IMPOSSIBLE
+            }
+        }
         return uuid;
     }
 
@@ -59,6 +79,19 @@ public class FinanceEventService<C> {
                 create.getPartition()
         );
         financeEventDAO.addEvent(event);
+
+        Optional<Partition> maybe =  partitionDAO.getPartition(user, create.getPartition());
+        if (maybe.isEmpty()) {
+            return uuid;
+        }
+        Partition partition = maybe.get();
+        partition = partition.add(-event.getAmount());
+        try {
+            partitionDAO.updatePartition(partition);
+        }
+        catch (PartitionDoesNotExistException e) {
+            // IS NOT POSSIBLE
+        }
         return uuid;
     }
 

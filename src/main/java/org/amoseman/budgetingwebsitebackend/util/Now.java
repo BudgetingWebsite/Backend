@@ -1,4 +1,4 @@
-package org.amoseman.budgetingwebsitebackend.time;
+package org.amoseman.budgetingwebsitebackend.util;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;

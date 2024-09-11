@@ -2,7 +2,7 @@ package org.amoseman.budgetingwebsitebackend.pojo.account;
 
 import org.amoseman.budgetingwebsitebackend.pojo.Entity;
 import org.amoseman.budgetingwebsitebackend.pojo.account.op.UpdateAccount;
-import org.amoseman.budgetingwebsitebackend.time.Now;
+import org.amoseman.budgetingwebsitebackend.util.Now;
 
 import java.time.LocalDateTime;
 import java.util.Set;

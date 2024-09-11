@@ -5,7 +5,7 @@ import org.amoseman.budgetingwebsitebackend.application.auth.Hasher;
 import org.amoseman.budgetingwebsitebackend.application.auth.Roles;
 import org.amoseman.budgetingwebsitebackend.database.DatabaseConnection;
 import org.amoseman.budgetingwebsitebackend.database.DatabaseInitializer;
-import org.amoseman.budgetingwebsitebackend.time.Now;
+import org.amoseman.budgetingwebsitebackend.util.Now;
 import org.bouncycastle.util.encoders.Base64;
 import org.jooq.DSLContext;
 

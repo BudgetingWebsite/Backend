@@ -46,7 +46,7 @@ public class BudgetingApplication extends Application<BudgetingConfiguration> {
         PartitionDAO<DSLContext> partitionDAO = new SQLPartitionDAO(connection);
 
         AccountService<DSLContext> accountService = new AccountService<>(accountDAO, hasher);
-        FinanceEventService<DSLContext> financeEventService = new FinanceEventService<>(financeEventDAO);
+        FinanceEventService<DSLContext> financeEventService = new FinanceEventService<>(financeEventDAO, partitionDAO);
         PartitionService<DSLContext> partitionService =  new PartitionService<>(partitionDAO);
 
         AccountResource<DSLContext> accountResource = new AccountResource<>(accountService);

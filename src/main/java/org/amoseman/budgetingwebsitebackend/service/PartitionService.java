@@ -6,7 +6,7 @@ import org.amoseman.budgetingwebsitebackend.exception.PartitionDoesNotExistExcep
 import org.amoseman.budgetingwebsitebackend.pojo.partition.Partition;
 import org.amoseman.budgetingwebsitebackend.pojo.partition.op.CreatePartition;
 import org.amoseman.budgetingwebsitebackend.pojo.partition.op.UpdatePartition;
-import org.amoseman.budgetingwebsitebackend.time.Now;
+import org.amoseman.budgetingwebsitebackend.util.Now;
 
 import java.time.LocalDateTime;
 import java.util.List;

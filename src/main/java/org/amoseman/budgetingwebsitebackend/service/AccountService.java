@@ -8,7 +8,7 @@ import org.amoseman.budgetingwebsitebackend.exception.UserDoesNotExistException;
 import org.amoseman.budgetingwebsitebackend.pojo.CreateAccount;
 import org.amoseman.budgetingwebsitebackend.pojo.account.Account;
 import org.amoseman.budgetingwebsitebackend.pojo.account.op.UpdateAccount;
-import org.amoseman.budgetingwebsitebackend.time.Now;
+import org.amoseman.budgetingwebsitebackend.util.Now;
 import org.bouncycastle.util.encoders.Base64;
 
 import java.util.Optional;
