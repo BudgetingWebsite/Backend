@@ -17,7 +17,23 @@ public class Splitter {
             remainder += differences[i];
             indices.add(i);
         }
+        sortIndices(indices, differences);
 
+        long r = Math.round(remainder);
+        long[] out = new long[len];
+        long total = 0;
+        for (Integer index : indices) {
+            out[index] = (long) floored[index];
+            if (r > 0) {
+                r--;
+                out[index]++;
+            }
+            total += out[index];
+        }
+        return new Split(out, amount - total);
+    }
+
+    public static void sortIndices(List<Integer> indices, double[] differences) {
         List<Integer> sortedIndices = new ArrayList<>();
         while (!indices.isEmpty()) {
             int largest = 0;
@@ -30,18 +46,7 @@ public class Splitter {
             }
             sortedIndices.add(indices.remove(largest));
         }
-        long r = Math.round(remainder);
-        long[] out = new long[len];
-        long total = 0;
-        for (Integer index : sortedIndices) {
-            out[index] = (long) floored[index];
-            if (r > 0) {
-                r--;
-                out[index]++;
-            }
-            total += out[index];
-        }
-        return new Split(out, amount - total);
+        indices.addAll(sortedIndices);
     }
 
     public static long sum(long[] x) {
