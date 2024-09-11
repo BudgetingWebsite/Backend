@@ -19,7 +19,7 @@ public class TestHandler implements ResponseHandler<String> {
     }
 
     @Override
-    public String handleResponse(HttpResponse response) throws ClientProtocolException, IOException {
+    public String handleResponse(HttpResponse response) throws IOException {
         StatusLine line = response.getStatusLine();
         boolean success = condition.check(line.getStatusCode());
         String content = EntityUtils.toString(response.getEntity());
