@@ -34,7 +34,6 @@ public class Splitter {
         long[] out = new long[len];
         long total = 0;
         for (Integer index : sortedIndices) {
-            System.out.println(differences[index]);
             out[index] = (long) floored[index];
             if (r > 0) {
                 r--;
