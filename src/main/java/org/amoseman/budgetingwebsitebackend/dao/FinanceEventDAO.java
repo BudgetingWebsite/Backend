@@ -32,12 +32,14 @@ public abstract class FinanceEventDAO<C> extends DAO<C> {
 
     /**
      * Remove a finance event.
+     *
      * @param user the user of the event.
-     * @param id the ID of the event.
+     * @param id   the ID of the event.
      * @param type the type of the event.
+     * @return
      * @throws FinanceEventDoesNotExistException if the event does not exist.
      */
-    public abstract void removeEvent(String user, String id, String type) throws FinanceEventDoesNotExistException;
+    public abstract FinanceEvent removeEvent(String user, String id, String type) throws FinanceEventDoesNotExistException;
 
     /**
      * Get all finance events of a user.

@@ -134,7 +134,8 @@ public class SQLFinanceEventDAO extends FinanceEventDAO<DSLContext> {
     }
 
     @Override
-    public void removeEvent(String user, String id, String type) throws FinanceEventDoesNotExistException {
+    public FinanceEvent removeEvent(String user, String id, String type) throws FinanceEventDoesNotExistException {
+        FinanceEvent event = getEvent(user, id, type);
         int result = connection.get()
                 .deleteFrom(getTable(type))
                 .where(field("uuid").eq(id).and(field("owner").eq(user)))
@@ -142,6 +143,7 @@ public class SQLFinanceEventDAO extends FinanceEventDAO<DSLContext> {
         if (0 == result) {
             throw new FinanceEventDoesNotExistException("remove", id);
         }
+        return event;
     }
 
     @Override
@@ -161,5 +163,18 @@ public class SQLFinanceEventDAO extends FinanceEventDAO<DSLContext> {
                 .where(field("owner").eq(user).and(rangeCondition))
                 .fetch();
         return fromRecords(type, result);
+    }
+
+    private FinanceEvent getEvent(String owner, String uuid, String type) throws FinanceEventDoesNotExistException {
+        Result<Record> result = connection.get()
+                .selectFrom(getTable(type))
+                .where(field("owner").eq(owner).and(field("uuid").eq(uuid)))
+                .fetch();
+        if (result.isEmpty()) {
+            throw new FinanceEventDoesNotExistException("get", uuid);
+        }
+        Record record = result.get(0);
+        return fromRecord(type, record);
+
     }
 }

@@ -13,6 +13,7 @@ import org.amoseman.budgetingwebsitebackend.pojo.partition.Partition;
 import org.amoseman.budgetingwebsitebackend.util.Now;
 import org.amoseman.budgetingwebsitebackend.util.Split;
 import org.amoseman.budgetingwebsitebackend.util.Splitter;
+import org.jooq.impl.QOM;
 
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
@@ -44,22 +45,7 @@ public class FinanceEventService<C> {
                 create.getDescription()
         );
         financeEventDAO.addEvent(event);
-
-        List<Partition> partitions = partitionDAO.listPartitions(user);
-        double[] shares = new double[partitions.size()];
-        for (int i = 0; i < partitions.size(); i++) {
-            shares[i] = partitions.get(i).getShare();
-        }
-        Split split = Splitter.get(shares, event.getAmount());
-        for (int i = 0; i < partitions.size(); i++) {
-            long x = split.getAmounts()[i];
-            try {
-                partitionDAO.updatePartition(partitions.get(i).add(x));
-            }
-            catch (PartitionDoesNotExistException e) {
-                // IMPOSSIBLE
-            }
-        }
+        addToPartitions(user, event.getAmount());
         return uuid;
     }
 
@@ -79,24 +65,52 @@ public class FinanceEventService<C> {
                 create.getPartition()
         );
         financeEventDAO.addEvent(event);
+        addToPartition(user, create.getPartition(), -create.getAmount());
+        return uuid;
+    }
 
-        Optional<Partition> maybe =  partitionDAO.getPartition(user, create.getPartition());
+    private void addToPartitions(String owner, long amount) {
+        List<Partition> partitions = partitionDAO.listPartitions(owner);
+        double[] shares = new double[partitions.size()];
+        for (int i = 0; i < partitions.size(); i++) {
+            shares[i] = partitions.get(i).getShare();
+        }
+        Split split = Splitter.get(shares, amount);
+        for (int i = 0; i < partitions.size(); i++) {
+            long x = split.getAmounts()[i];
+            try {
+                partitionDAO.updatePartition(partitions.get(i).add(x));
+            }
+            catch (PartitionDoesNotExistException e) {
+                // IMPOSSIBLE
+            }
+        }
+    }
+
+    private void addToPartition(String owner, String uuid, long amount) {
+        Optional<Partition> maybe =  partitionDAO.getPartition(owner, uuid);
         if (maybe.isEmpty()) {
-            return uuid;
+            return;
         }
         Partition partition = maybe.get();
-        partition = partition.add(-event.getAmount());
+        partition = partition.add(amount);
         try {
             partitionDAO.updatePartition(partition);
         }
         catch (PartitionDoesNotExistException e) {
             // IS NOT POSSIBLE
         }
-        return uuid;
     }
 
     public void removeEvent(String user, String id, String type) throws FinanceEventDoesNotExistException {
-        financeEventDAO.removeEvent(user, id, type);
+        FinanceEvent event = financeEventDAO.removeEvent(user, id, type);
+        if ("income".equals(type)) {
+            addToPartitions(user, -event.getAmount());
+        }
+        if ("expense".equals(type)) {
+            ExpenseEvent expense = (ExpenseEvent) event;
+            addToPartition(user, expense.getPartition(), expense.getAmount());
+        }
     }
 
     public List<FinanceEvent> getEvents(

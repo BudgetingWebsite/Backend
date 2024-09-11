@@ -79,16 +79,23 @@ class BudgetingApplicationTest {
         fetch.request("/partition/" + uuidPartitionA, "PUT", "{\"name\":\"essential\",\"share\":0.2}", testSuccess);
         fetch.request("/partition/" + uuidPartitionB, "PUT", "{\"name\":\"savings\",\"share\":0.7}", testSuccess);
         partitions = fetch.request("/partition", "GET", testSuccess);
-        assertTrue(partitions.contains("\"name\":\"essential\",\"share\":0.2,\"amount\":20}"));
+        assertTrue(partitions.contains("\"name\":\"essential\",\"share\":0.2,\"amount\":20"));
         assertTrue(partitions.contains("\"name\":\"savings\",\"share\":0.7,\"amount\":70"));
         // add partition after event
         String uuidPartitionC = fetch.request("/partition", "POST", "{\"name\":\"other\",\"share\":0.1}", testSuccess);
         partitions = fetch.request("/partition", "GET", testSuccess);
-        assertTrue(partitions.contains("\"name\":\"essential\",\"share\":0.2,\"amount\":20}"));
+        assertTrue(partitions.contains("\"name\":\"essential\",\"share\":0.2,\"amount\":20"));
         assertTrue(partitions.contains("\"name\":\"savings\",\"share\":0.7,\"amount\":70"));
         assertTrue(partitions.contains("\"name\":\"other\",\"share\":0.1,\"amount\":10"));
         // add partition to exceed share limit
         String uuidPartitionD = fetch.request("/partition", "POST", "{\"name\":\"other\",\"share\":0.1}", testFailure);
+        // remove event to change partition amounts
+        fetch.request("/event/income/" + uuid, "DELETE", testSuccess);
+        partitions = fetch.request("/partition", "GET", testSuccess);
+        System.out.println(partitions);
+        assertTrue(partitions.contains("\"name\":\"essential\",\"share\":0.2,\"amount\":0"));
+        assertTrue(partitions.contains("\"name\":\"savings\",\"share\":0.7,\"amount\":0"));
+        assertTrue(partitions.contains("\"name\":\"other\",\"share\":0.1,\"amount\":0"));
 
         fail("Integration test not fully implemented");
     }
