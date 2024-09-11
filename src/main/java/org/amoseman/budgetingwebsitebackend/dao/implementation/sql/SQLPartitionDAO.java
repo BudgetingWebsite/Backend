@@ -7,15 +7,16 @@ import org.amoseman.budgetingwebsitebackend.exception.PartitionDoesNotExistExcep
 import org.amoseman.budgetingwebsitebackend.pojo.partition.Partition;
 import org.jooq.DSLContext;
 import org.jooq.Record;
+import org.jooq.Record1;
 import org.jooq.Result;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.jooq.impl.DSL.field;
-import static org.jooq.impl.DSL.table;
+import static org.jooq.impl.DSL.*;
 
 public class SQLPartitionDAO extends PartitionDAO<DSLContext> {
     public SQLPartitionDAO(DatabaseConnection<DSLContext> connection) {
@@ -100,6 +101,22 @@ public class SQLPartitionDAO extends PartitionDAO<DSLContext> {
         List<Partition> partitions = new ArrayList<>();
         result.forEach(record -> partitions.add(asPartition(record)));
         return partitions;
+    }
+
+    @Override
+    public double totalShare(String owner) {
+        Result<Record1<BigDecimal>> results = connection.get()
+                .select(sum(field("share", Double.class)))
+                .from(table("partitions"))
+                .where(field("owner").eq(owner))
+                .fetch();
+        Record1<BigDecimal> record = results.get(0);
+        BigDecimal component =  record.component1();
+        if (null == component) {
+            // because the owner has no partitions
+            return 0;
+        }
+        return component.doubleValue();
     }
 
     private Partition asPartition(Record record) {

@@ -8,6 +8,7 @@ import jakarta.ws.rs.core.Response;
 import org.amoseman.budgetingwebsitebackend.application.auth.User;
 import org.amoseman.budgetingwebsitebackend.exception.PartitionAlreadyExistsException;
 import org.amoseman.budgetingwebsitebackend.exception.PartitionDoesNotExistException;
+import org.amoseman.budgetingwebsitebackend.exception.TotalPartitionShareExceededException;
 import org.amoseman.budgetingwebsitebackend.pojo.partition.Partition;
 import org.amoseman.budgetingwebsitebackend.pojo.partition.op.CreatePartition;
 import org.amoseman.budgetingwebsitebackend.pojo.partition.op.UpdatePartition;
@@ -35,6 +36,10 @@ public class PartitionResource<C> {
         catch (PartitionAlreadyExistsException e) {
             // todo: this should never occur, so make it re-attempt once in the service if the UUID already exists
             String reason = "Congratulations, you won the UUID v4 lottery as the UUID generated is already in use!";
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), reason).build();
+        }
+        catch (TotalPartitionShareExceededException e) {
+            String reason = "Attempted to add partition that would cause the current share total to be exceeded";
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), reason).build();
         }
     }

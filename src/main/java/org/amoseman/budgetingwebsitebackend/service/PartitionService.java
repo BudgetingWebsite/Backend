@@ -4,6 +4,7 @@ import org.amoseman.budgetingwebsitebackend.dao.FinanceEventDAO;
 import org.amoseman.budgetingwebsitebackend.dao.PartitionDAO;
 import org.amoseman.budgetingwebsitebackend.exception.PartitionAlreadyExistsException;
 import org.amoseman.budgetingwebsitebackend.exception.PartitionDoesNotExistException;
+import org.amoseman.budgetingwebsitebackend.exception.TotalPartitionShareExceededException;
 import org.amoseman.budgetingwebsitebackend.pojo.event.ExpenseEvent;
 import org.amoseman.budgetingwebsitebackend.pojo.event.FinanceEvent;
 import org.amoseman.budgetingwebsitebackend.pojo.event.IncomeEvent;
@@ -26,7 +27,11 @@ public class PartitionService<C> {
         this.financeEventDAO = financeEventDAO;
     }
 
-    public String addPartition(String owner, CreatePartition create) throws PartitionAlreadyExistsException {
+    public String addPartition(String owner, CreatePartition create) throws PartitionAlreadyExistsException, TotalPartitionShareExceededException {
+        double totalShare = partitionDAO.totalShare(owner);
+        if (totalShare + create.getShare() > 1) {
+            throw new TotalPartitionShareExceededException(totalShare, create.getShare());
+        }
         String uuid = UUID.randomUUID().toString();
         LocalDateTime now = Now.get();
         Partition partition = new Partition(

@@ -54,4 +54,11 @@ public abstract class PartitionDAO<C> extends DAO<C> {
      * @return the partitions.
      */
     public abstract List<Partition> listPartitions(String owner);
+
+    /**
+     * Calculate the total share of all partitions.
+     * @param owner the owner of the partitions.
+     * @return the total share.
+     */
+    public abstract double totalShare(String owner);
 }
