@@ -89,6 +89,7 @@ public class SQLDatabaseInitializer extends DatabaseInitializer<DSLContext> {
                 .column(field("owner"), VARCHAR)
                 .column(field("share"), DOUBLE)
                 .column(field("amount"), BIGINT)
+                .column(field("name"), VARCHAR)
                 .column(field("created"), LOCALDATETIME)
                 .column(field("updated"), LOCALDATETIME)
                 .constraints(

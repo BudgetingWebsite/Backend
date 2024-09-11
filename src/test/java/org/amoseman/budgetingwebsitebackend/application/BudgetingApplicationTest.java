@@ -64,6 +64,10 @@ class BudgetingApplicationTest {
         String events = fetch.request("/event/income", "GET", testSuccess);
         assertTrue(events.contains("\"owner\":\"admin_user\",\"type\":\"income\",\"amount\":100,\"occurred\":[2024,1,1,0,0],\"category\":\"example\",\"description\":\"example\""));
         fetch.request("/event/income/" + uuid, "DELETE", testSuccess);
+        events = fetch.request("/event/income", "GET", testSuccess);
+        assertFalse(events.contains("\"owner\":\"admin_user\",\"type\":\"income\",\"amount\":100,\"occurred\":[2024,1,1,0,0],\"category\":\"example\",\"description\":\"example\""));
+
+        fetch.request("/partition", "POST", "{\"name\":\"essential\",\"share\":0.5}", testSuccess);
 
         fail("Integration test not fully implemented");
     }
