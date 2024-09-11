@@ -70,7 +70,7 @@ public class PartitionResource<C> {
         }
         catch (PartitionDoesNotExistException e) {
             String reason = String.format("Partition %s does not exist", uuid);
-            return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), reason).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), reason).build();
         }
     }
 }

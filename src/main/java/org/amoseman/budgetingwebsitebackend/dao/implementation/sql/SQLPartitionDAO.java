@@ -37,7 +37,7 @@ public class SQLPartitionDAO extends PartitionDAO<DSLContext> {
                             field("updated")
                     )
                     .values(
-                            partition.getUpdated(),
+                            partition.getUuid(),
                             partition.getOwner(),
                             partition.getShare(),
                             partition.getAmount(),

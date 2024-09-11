@@ -19,7 +19,15 @@ public class Partition extends OwnedEntity {
     }
 
     public Partition add(long amount) {
-        return update(new UpdatePartition(name, share, this.amount + amount));
+        return new Partition(
+                uuid,
+                created,
+                updated,
+                owner,
+                name,
+                share,
+                this.amount + amount
+        );
     }
 
     public Partition update(UpdatePartition update) {
@@ -30,7 +38,7 @@ public class Partition extends OwnedEntity {
                 owner,
                 update.getName(),
                 update.getShare(),
-                update.getAmount()
+                amount
         );
     }
 
