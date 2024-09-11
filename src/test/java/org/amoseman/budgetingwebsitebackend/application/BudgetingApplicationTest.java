@@ -59,15 +59,28 @@ class BudgetingApplicationTest {
                 .build();
 
         TestHandler testSuccess = new TestHandler((code) -> code < 300);
-
-        String uuid = fetch.request("/event/income", "POST", "{\"type\":\"income\",\"amount\":100,\"year\":2024,\"month\":1,\"day\":1,\"category\":\"example\",\"description\":\"example\"}", testSuccess);
+        // event create, retrieve, and delete
+        String json = "{\"type\":\"income\",\"amount\":100,\"year\":2024,\"month\":1,\"day\":1,\"category\":\"example\",\"description\":\"example\"}";
+        String uuid = fetch.request("/event/income", "POST", json, testSuccess);
         String events = fetch.request("/event/income", "GET", testSuccess);
         assertTrue(events.contains("\"owner\":\"admin_user\",\"type\":\"income\",\"amount\":100,\"occurred\":[2024,1,1,0,0],\"category\":\"example\",\"description\":\"example\""));
         fetch.request("/event/income/" + uuid, "DELETE", testSuccess);
         events = fetch.request("/event/income", "GET", testSuccess);
         assertFalse(events.contains("\"owner\":\"admin_user\",\"type\":\"income\",\"amount\":100,\"occurred\":[2024,1,1,0,0],\"category\":\"example\",\"description\":\"example\""));
-
-        fetch.request("/partition", "POST", "{\"name\":\"essential\",\"share\":0.5}", testSuccess);
+        // partition create and event amount effect
+        String uuidPartitionA = fetch.request("/partition", "POST", "{\"name\":\"essential\",\"share\":0.5}", testSuccess);
+        String uuidPartitionB = fetch.request("/partition", "POST", "{\"name\":\"savings\",\"share\":0.2}", testSuccess);
+        uuid = fetch.request("/event/income", "POST", json, testSuccess);
+        String partitions = fetch.request("/partition", "GET", testSuccess);
+        assertTrue(partitions.contains("\"name\":\"essential\",\"share\":0.5,\"amount\":50"));
+        assertTrue(partitions.contains("\"name\":\"savings\",\"share\":0.2,\"amount\":20"));
+        // partition update
+        fetch.request("/partition/" + uuidPartitionA, "PUT", "{\"name\":\"essential\",\"share\":0.2}", testSuccess);
+        fetch.request("/partition/" + uuidPartitionB, "PUT", "{\"name\":\"savings\",\"share\":0.8}", testSuccess);
+        partitions = fetch.request("/partition", "GET", testSuccess);
+        System.out.println(partitions);
+        assertTrue(partitions.contains("\"name\":\"essential\",\"share\":0.2,\"amount\":20}"));
+        assertTrue(partitions.contains("\"name\":\"savings\",\"share\":0.8,\"amount\":80"));
 
         fail("Integration test not fully implemented");
     }
