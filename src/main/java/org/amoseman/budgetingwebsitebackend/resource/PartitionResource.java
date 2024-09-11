@@ -29,8 +29,8 @@ public class PartitionResource<C> {
     @PermitAll
     public Response addPartition(@Auth User user, CreatePartition create) {
         try {
-            partitionService.addPartition(user.getName(), create);
-            return Response.ok().build();
+            String uuid = partitionService.addPartition(user.getName(), create);
+            return Response.ok(uuid).build();
         }
         catch (PartitionAlreadyExistsException e) {
             // todo: this should never occur, so make it re-attempt once in the service if the UUID already exists

@@ -26,7 +26,7 @@ public class PartitionService<C> {
         this.financeEventDAO = financeEventDAO;
     }
 
-    public void addPartition(String owner, CreatePartition create) throws PartitionAlreadyExistsException {
+    public String addPartition(String owner, CreatePartition create) throws PartitionAlreadyExistsException {
         String uuid = UUID.randomUUID().toString();
         LocalDateTime now = Now.get();
         Partition partition = new Partition(
@@ -40,6 +40,7 @@ public class PartitionService<C> {
         );
         partitionDAO.addPartition(partition);
         recalculate(owner);
+        return uuid;
     }
 
     public void removePartition(String owner, String id) throws PartitionDoesNotExistException {
