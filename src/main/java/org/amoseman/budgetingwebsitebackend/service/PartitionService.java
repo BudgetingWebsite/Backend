@@ -43,6 +43,7 @@ public class PartitionService<C> {
 
     public void removePartition(String owner, String id) throws PartitionDoesNotExistException {
         partitionDAO.removePartition(owner, id);
+        recalculate(owner);
     }
 
     public void updatePartition(String owner, String id, UpdatePartition update) throws PartitionDoesNotExistException {
