@@ -3,8 +3,10 @@ package org.amoseman.budgetingwebsitebackend.dao.implementation.sql;
 import org.amoseman.budgetingwebsitebackend.dao.FinanceEventDAO;
 import org.amoseman.budgetingwebsitebackend.database.DatabaseConnection;
 import org.amoseman.budgetingwebsitebackend.exception.*;
-import org.amoseman.budgetingwebsitebackend.pojo.FinanceEvent;
 import org.amoseman.budgetingwebsitebackend.pojo.TimeRange;
+import org.amoseman.budgetingwebsitebackend.pojo.event.ExpenseEvent;
+import org.amoseman.budgetingwebsitebackend.pojo.event.FinanceEvent;
+import org.amoseman.budgetingwebsitebackend.pojo.event.IncomeEvent;
 import org.jooq.*;
 import org.jooq.Record;
 
@@ -26,14 +28,33 @@ public class SQLFinanceEventDAO extends FinanceEventDAO<DSLContext> {
 
     private FinanceEvent fromRecord(String type, Record record) {
         try {
-            return new FinanceEvent(
-                    record.get(field("uuid"), String.class),
-                    record.get(field("created"), Timestamp.class).toLocalDateTime(),
-                    record.get(field("username"), String.class),
-                    record.get(field("amount"), Long.class),
-                    type,
-                    record.get(field("occurred"), Timestamp.class).toLocalDateTime()
-            );
+            if ("income".equals(type)) {
+                return new IncomeEvent(
+                        record.get(field("uuid"), String.class),
+                        record.get(field("created"), Timestamp.class).toLocalDateTime(),
+                        record.get(field("updated"), Timestamp.class).toLocalDateTime(),
+                        record.get(field("owner"), String.class),
+                        record.get(field("amount"), Long.class),
+                        record.get(field("occurred"), Timestamp.class).toLocalDateTime(),
+                        record.get(field("category"), String.class),
+                        record.get(field("description"), String.class)
+                );
+            }
+            else {
+                return new ExpenseEvent(
+                        record.get(field("uuid"), String.class),
+                        record.get(field("created"), Timestamp.class).toLocalDateTime(),
+                        record.get(field("updated"), Timestamp.class).toLocalDateTime(),
+                        record.get(field("owner"), String.class),
+                        record.get(field("amount"), Long.class),
+                        record.get(field("occurred"), Timestamp.class).toLocalDateTime(),
+                        record.get(field("category"), String.class),
+                        record.get(field("description"), String.class),
+                        record.get(field("partition"), String.class)
+                        );
+            }
+
+
         }
         catch (NegativeValueException | InvalidFinanceEventTypeException e) {
             throw new RuntimeException(e);
@@ -47,28 +68,68 @@ public class SQLFinanceEventDAO extends FinanceEventDAO<DSLContext> {
     }
 
     @Override
-    public void addEvent(FinanceEvent event) throws FinanceEventAlreadyExistsException {
+    public void addEvent(IncomeEvent event) throws FinanceEventAlreadyExistsException {
         try {
             connection.get()
                     .insertInto(
                             getTable(event.getType()),
                             field("uuid"),
-                            field("username"),
+                            field("owner"),
                             field("amount"),
                             field("occurred"),
-                            field("created")
+                            field("category"),
+                            field("description"),
+                            field("created"),
+                            field("updated")
                     )
                     .values(
-                            event.getIdentifier(),
-                            event.getUser(),
+                            event.getUuid(),
+                            event.getOwner(),
                             event.getAmount(),
-                            event.getWhen(),
-                            event.getCreated()
+                            event.getOccurred(),
+                            event.getCategory(),
+                            event.getDescription(),
+                            event.getCreated(),
+                            event.getUpdated()
                     )
                     .execute();
         }
         catch (Exception e) {
-            throw new FinanceEventAlreadyExistsException("add", event.getIdentifier());
+            throw new FinanceEventAlreadyExistsException("add", event.getUuid());
+        }
+    }
+
+    @Override
+    public void addEvent(ExpenseEvent event) throws FinanceEventAlreadyExistsException {
+        try {
+            connection.get()
+                    .insertInto(
+                            getTable(event.getType()),
+                            field("uuid"),
+                            field("owner"),
+                            field("amount"),
+                            field("occurred"),
+                            field("category"),
+                            field("description"),
+                            field("partition"),
+                            field("created"),
+                            field("updated")
+                    )
+                    .values(
+                            event.getUuid(),
+                            event.getOwner(),
+                            event.getAmount(),
+                            event.getOccurred(),
+                            event.getCategory(),
+                            event.getDescription(),
+                            event.getPartition(),
+                            event.getCreated(),
+                            event.getUpdated()
+                    )
+                    .execute();
+        }
+        catch (Exception e) {
+            throw new FinanceEventAlreadyExistsException("add", event.getUuid());
         }
     }
 
@@ -76,7 +137,7 @@ public class SQLFinanceEventDAO extends FinanceEventDAO<DSLContext> {
     public void removeEvent(String user, String id, String type) throws FinanceEventDoesNotExistException {
         int result = connection.get()
                 .deleteFrom(getTable(type))
-                .where(field("uuid").eq(id).and(field("username").eq(user)))
+                .where(field("uuid").eq(id).and(field("owner").eq(user)))
                 .execute();
         if (0 == result) {
             throw new FinanceEventDoesNotExistException("remove", id);
@@ -87,7 +148,7 @@ public class SQLFinanceEventDAO extends FinanceEventDAO<DSLContext> {
     public List<FinanceEvent> getEvents(String user, String type) {
         Result<Record> result = connection.get()
                 .selectFrom(getTable(type))
-                .where(field("username").eq(user))
+                .where(field("owner").eq(user))
                 .fetch();
         return fromRecords(type, result);
     }
@@ -97,7 +158,7 @@ public class SQLFinanceEventDAO extends FinanceEventDAO<DSLContext> {
         Condition rangeCondition = field("occurred").greaterOrEqual(range.getStart()).and(field("occurred").lessOrEqual(range.getEnd()));
         Result<Record> result = connection.get()
                 .selectFrom(getTable(type))
-                .where(field("username").eq(user).and(rangeCondition))
+                .where(field("owner").eq(user).and(rangeCondition))
                 .fetch();
         return fromRecords(type, result);
     }

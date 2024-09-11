@@ -60,10 +60,11 @@ class BudgetingApplicationTest {
 
         TestHandler testSuccess = new TestHandler((code) -> code < 300);
 
-        String uuid = fetch.request("/event", "POST", "{\"type\":\"income\",\"amount\":100,\"year\":2024,\"month\":1,\"day\":1}", testSuccess);
+        String uuid = fetch.request("/event/income", "POST", "{\"type\":\"income\",\"amount\":100,\"year\":2024,\"month\":1,\"day\":1,\"category\":\"example\",\"description\":\"example\"}", testSuccess);
         String events = fetch.request("/event/income", "GET", testSuccess);
-        assertTrue(events.contains("\"user\":\"admin_user\",\"amount\":100,\"type\":\"income\",\"when\":[2024,1,1,0,0]"));
+        assertTrue(events.contains("\"owner\":\"admin_user\",\"type\":\"income\",\"amount\":100,\"occurred\":[2024,1,1,0,0],\"category\":\"example\",\"description\":\"example\""));
         fetch.request("/event/income/" + uuid, "DELETE", testSuccess);
+
         fail("Integration test not fully implemented");
     }
 }

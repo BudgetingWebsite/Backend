@@ -1,4 +1,4 @@
-package org.amoseman.budgetingwebsitebackend.pojo;
+package org.amoseman.budgetingwebsitebackend.pojo.event.op;
 
 public class CreateFinanceEvent {
     private String type;
@@ -6,17 +6,21 @@ public class CreateFinanceEvent {
     private int year;
     private int month;
     private int day;
+    private String category;
+    private String description;
 
     public CreateFinanceEvent() {
 
     }
 
-    public CreateFinanceEvent(String type, long amount, int year, int month, int day) {
+    public CreateFinanceEvent(String type, long amount, int year, int month, int day, String category, String description) {
         this.type = type;
         this.amount = amount;
         this.year = year;
         this.month = month;
         this.day = day;
+        this.category = category;
+        this.description = description;
     }
 
     public String getType() {
@@ -37,5 +41,13 @@ public class CreateFinanceEvent {
 
     public int getDay() {
         return day;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }

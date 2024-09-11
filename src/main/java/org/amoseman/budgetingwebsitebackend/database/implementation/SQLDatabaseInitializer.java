@@ -50,10 +50,13 @@ public class SQLDatabaseInitializer extends DatabaseInitializer<DSLContext> {
         connection.get()
                 .createTableIfNotExists("income_events")
                 .column(field("uuid"), VARCHAR)
-                .column(field("username"), VARCHAR)
+                .column(field("owner"), VARCHAR)
                 .column(field("amount"), VARCHAR)
                 .column(field("occurred"), LOCALDATETIME)
+                .column(field("category"), VARCHAR)
+                .column(field("description"), VARCHAR)
                 .column(field("created"), LOCALDATETIME)
+                .column(field("updated"), LOCALDATETIME)
                 .constraints(
                         primaryKey(field("uuid"))
                 )
@@ -64,12 +67,17 @@ public class SQLDatabaseInitializer extends DatabaseInitializer<DSLContext> {
         connection.get()
                 .createTableIfNotExists("expense_events")
                 .column(field("uuid"), VARCHAR)
-                .column(field("username"), VARCHAR)
+                .column(field("owner"), VARCHAR)
                 .column(field("amount"), VARCHAR)
                 .column(field("occurred"), VARCHAR)
+                .column(field("category"), VARCHAR)
+                .column(field("description"), VARCHAR)
+                .column(field("partition"), VARCHAR)
                 .column(field("created"), LOCALDATETIME)
+                .column(field("updated"), LOCALDATETIME)
                 .constraints(
-                        primaryKey(field("uuid"))
+                        primaryKey(field("uuid")),
+                        foreignKey(field("partition")).references(table("partitions"))
                 )
                 .execute();
     }

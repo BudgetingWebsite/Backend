@@ -5,9 +5,9 @@ import org.amoseman.budgetingwebsitebackend.application.auth.Roles;
 import org.amoseman.budgetingwebsitebackend.dao.AccountDAO;
 import org.amoseman.budgetingwebsitebackend.exception.UserAlreadyExistsException;
 import org.amoseman.budgetingwebsitebackend.exception.UserDoesNotExistException;
-import org.amoseman.budgetingwebsitebackend.pojo.Account;
 import org.amoseman.budgetingwebsitebackend.pojo.CreateAccount;
-import org.amoseman.budgetingwebsitebackend.pojo.update.AccountUpdate;
+import org.amoseman.budgetingwebsitebackend.pojo.account.Account;
+import org.amoseman.budgetingwebsitebackend.pojo.account.op.UpdateAccount;
 import org.amoseman.budgetingwebsitebackend.time.Now;
 import org.bouncycastle.util.encoders.Base64;
 
@@ -48,7 +48,8 @@ public class AccountService<C> {
         byte[] salt = hasher.salt();
         String salt64 = Base64.toBase64String(salt);
         String hash64 = hasher.hash(password, salt);
-        account.update(new AccountUpdate(Now.get(), hash64, salt64, account.getRoles()));
+        UpdateAccount update = new UpdateAccount(username, hash64, salt64, account.getRoles());
+        account = account.update(update);
         accountDAO.updateAccount(account);
     }
 
@@ -58,7 +59,8 @@ public class AccountService<C> {
             throw new UserDoesNotExistException("change password", username);
         }
         Account account = maybe.get();
-        account.update(new AccountUpdate(Now.get(), account.getPasswordHash(), account.getPasswordSalt(), roles));
+        UpdateAccount update = new UpdateAccount(username, account.getHash(), account.getSalt(), roles);
+        account = account.update(update);
         accountDAO.updateAccount(account);
     }
 }

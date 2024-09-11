@@ -8,8 +8,8 @@ import jakarta.ws.rs.core.Response;
 import org.amoseman.budgetingwebsitebackend.application.auth.User;
 import org.amoseman.budgetingwebsitebackend.exception.PartitionAlreadyExistsException;
 import org.amoseman.budgetingwebsitebackend.exception.PartitionDoesNotExistException;
-import org.amoseman.budgetingwebsitebackend.pojo.CreatePartition;
-import org.amoseman.budgetingwebsitebackend.pojo.Partition;
+import org.amoseman.budgetingwebsitebackend.pojo.partition.Partition;
+import org.amoseman.budgetingwebsitebackend.pojo.partition.op.CreatePartition;
 import org.amoseman.budgetingwebsitebackend.service.PartitionService;
 
 import java.util.List;

@@ -3,8 +3,10 @@ package org.amoseman.budgetingwebsitebackend.dao;
 import org.amoseman.budgetingwebsitebackend.database.DatabaseConnection;
 import org.amoseman.budgetingwebsitebackend.exception.FinanceEventAlreadyExistsException;
 import org.amoseman.budgetingwebsitebackend.exception.FinanceEventDoesNotExistException;
-import org.amoseman.budgetingwebsitebackend.pojo.FinanceEvent;
 import org.amoseman.budgetingwebsitebackend.pojo.TimeRange;
+import org.amoseman.budgetingwebsitebackend.pojo.event.ExpenseEvent;
+import org.amoseman.budgetingwebsitebackend.pojo.event.FinanceEvent;
+import org.amoseman.budgetingwebsitebackend.pojo.event.IncomeEvent;
 
 import java.util.List;
 
@@ -25,7 +27,8 @@ public abstract class FinanceEventDAO<C> extends DAO<C> {
      * Add a finance event.
      * @param event the finance event.
      */
-    public abstract void addEvent(FinanceEvent event) throws FinanceEventAlreadyExistsException;
+    public abstract void addEvent(IncomeEvent event) throws FinanceEventAlreadyExistsException;
+    public abstract void addEvent(ExpenseEvent event) throws FinanceEventAlreadyExistsException;
 
     /**
      * Remove a finance event.

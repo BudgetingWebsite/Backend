@@ -1,17 +1,15 @@
 package org.amoseman.budgetingwebsitebackend.dao.implementation.sql;
 
-import ch.qos.logback.core.model.TimestampModel;
 import org.amoseman.budgetingwebsitebackend.dao.PartitionDAO;
 import org.amoseman.budgetingwebsitebackend.database.DatabaseConnection;
 import org.amoseman.budgetingwebsitebackend.exception.PartitionAlreadyExistsException;
 import org.amoseman.budgetingwebsitebackend.exception.PartitionDoesNotExistException;
-import org.amoseman.budgetingwebsitebackend.pojo.Partition;
+import org.amoseman.budgetingwebsitebackend.pojo.partition.Partition;
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Result;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -34,21 +32,23 @@ public class SQLPartitionDAO extends PartitionDAO<DSLContext> {
                             field("owner"),
                             field("share"),
                             field("amount"),
+                            field("name"),
                             field("created"),
                             field("updated")
                     )
                     .values(
-                            partition.getIdentifier(),
+                            partition.getUpdated(),
                             partition.getOwner(),
                             partition.getShare(),
                             partition.getAmount(),
+                            partition.getName(),
                             partition.getCreated(),
                             partition.getUpdated()
                     )
                     .execute();
         }
         catch (Exception e) {
-            throw new PartitionAlreadyExistsException("add", partition.getIdentifier());
+            throw new PartitionAlreadyExistsException("add", partition.getUuid());
         }
     }
 
@@ -69,11 +69,12 @@ public class SQLPartitionDAO extends PartitionDAO<DSLContext> {
                 .update(table("partitions"))
                 .set(field("share"), partition.getShare())
                 .set(field("amount"), partition.getAmount())
+                .set(field("name"), partition.getName())
                 .set(field("updated"), partition.getUpdated())
-                .where(field("uuid").eq(partition.getIdentifier()))
+                .where(field("uuid").eq(partition.getUuid()))
                 .execute();
         if (0 == result) {
-            throw new PartitionDoesNotExistException("update", partition.getIdentifier());
+            throw new PartitionDoesNotExistException("update", partition.getUuid());
         }
     }
 
@@ -107,6 +108,7 @@ public class SQLPartitionDAO extends PartitionDAO<DSLContext> {
                 record.get(field("created"), Timestamp.class).toLocalDateTime(),
                 record.get(field("updated"), Timestamp.class).toLocalDateTime(),
                 record.get(field("owner"), String.class),
+                record.get(field("name"), String.class),
                 record.get(field("share"), Double.class),
                 record.get(field("amount"), Long.class)
         );

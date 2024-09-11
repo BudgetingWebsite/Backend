@@ -5,7 +5,7 @@ import org.amoseman.budgetingwebsitebackend.dao.AccountDAO;
 import org.amoseman.budgetingwebsitebackend.database.DatabaseConnection;
 import org.amoseman.budgetingwebsitebackend.exception.UserAlreadyExistsException;
 import org.amoseman.budgetingwebsitebackend.exception.UserDoesNotExistException;
-import org.amoseman.budgetingwebsitebackend.pojo.Account;
+import org.amoseman.budgetingwebsitebackend.pojo.account.Account;
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Result;
@@ -35,17 +35,17 @@ public class SQLAccountDAO extends AccountDAO<DSLContext> {
                             field("updated")
                     )
                     .values(
-                            account.getIdentifier(),
+                            account.getUuid(),
                             Roles.asString(account.getRoles()),
-                            account.getPasswordHash(),
-                            account.getPasswordSalt(),
+                            account.getHash(),
+                            account.getSalt(),
                             account.getCreated(),
                             account.getUpdated()
                     )
                     .execute();
         }
         catch (Exception e) {
-            throw new UserAlreadyExistsException("add", account.getIdentifier());
+            throw new UserAlreadyExistsException("add", account.getUuid());
         }
     }
 
@@ -85,13 +85,13 @@ public class SQLAccountDAO extends AccountDAO<DSLContext> {
         int result = connection.get()
                 .update(table("accounts"))
                 .set(field("roles"), Roles.asString(account.getRoles()))
-                .set(field("hash"), account.getPasswordHash())
-                .set(field("salt"), account.getPasswordSalt())
+                .set(field("hash"), account.getHash())
+                .set(field("salt"), account.getSalt())
                 .set(field("updated"), account.getUpdated())
-                .where(field("username").eq(account.getIdentifier()))
+                .where(field("username").eq(account.getUuid()))
                 .execute();
         if (0 == result) {
-            throw new UserDoesNotExistException("update", account.getIdentifier());
+            throw new UserDoesNotExistException("update", account.getUuid());
         }
     }
 }

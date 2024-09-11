@@ -3,10 +3,9 @@ package org.amoseman.budgetingwebsitebackend.service;
 import org.amoseman.budgetingwebsitebackend.dao.PartitionDAO;
 import org.amoseman.budgetingwebsitebackend.exception.PartitionAlreadyExistsException;
 import org.amoseman.budgetingwebsitebackend.exception.PartitionDoesNotExistException;
-import org.amoseman.budgetingwebsitebackend.pojo.CreatePartition;
-import org.amoseman.budgetingwebsitebackend.pojo.Partition;
-import org.amoseman.budgetingwebsitebackend.pojo.UpdatePartition;
-import org.amoseman.budgetingwebsitebackend.pojo.update.PartitionUpdate;
+import org.amoseman.budgetingwebsitebackend.pojo.partition.Partition;
+import org.amoseman.budgetingwebsitebackend.pojo.partition.op.CreatePartition;
+import org.amoseman.budgetingwebsitebackend.pojo.partition.op.UpdatePartition;
 import org.amoseman.budgetingwebsitebackend.time.Now;
 
 import java.time.LocalDateTime;
@@ -22,13 +21,14 @@ public class PartitionService<C> {
     }
 
     public void addPartition(String owner, CreatePartition create) throws PartitionAlreadyExistsException {
-        String id = UUID.randomUUID().toString();
+        String uuid = UUID.randomUUID().toString();
         LocalDateTime now = Now.get();
         Partition partition = new Partition(
-                id,
+                uuid,
                 now,
                 now,
                 owner,
+                create.getName(),
                 create.getShare(),
                 0
         );
@@ -45,7 +45,7 @@ public class PartitionService<C> {
             throw new PartitionDoesNotExistException("update", id);
         }
         Partition partition = maybe.get();
-        partition.update(new PartitionUpdate(Now.get(), update.getShare(), update.getAmount()));
+        partition = partition.update(update);
         partitionDAO.updatePartition(partition);
     }
 

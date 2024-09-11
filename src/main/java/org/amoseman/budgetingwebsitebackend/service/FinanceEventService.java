@@ -6,11 +6,15 @@ import org.amoseman.budgetingwebsitebackend.exception.FinanceEventDoesNotExistEx
 import org.amoseman.budgetingwebsitebackend.exception.InvalidFinanceEventTypeException;
 import org.amoseman.budgetingwebsitebackend.exception.NegativeValueException;
 import org.amoseman.budgetingwebsitebackend.pojo.*;
+import org.amoseman.budgetingwebsitebackend.pojo.event.ExpenseEvent;
+import org.amoseman.budgetingwebsitebackend.pojo.event.FinanceEvent;
+import org.amoseman.budgetingwebsitebackend.pojo.event.IncomeEvent;
+import org.amoseman.budgetingwebsitebackend.pojo.event.op.CreateExpenseEvent;
+import org.amoseman.budgetingwebsitebackend.pojo.event.op.CreateIncomeEvent;
 import org.amoseman.budgetingwebsitebackend.time.Now;
 
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,17 +25,38 @@ public class FinanceEventService<C> {
         this.financeEventDAO = financeEventDAO;
     }
 
-    public String addEvent(String user, CreateFinanceEvent create) throws NegativeValueException, InvalidFinanceEventTypeException, FinanceEventAlreadyExistsException, DateTimeException {
+    public String addEvent(String user, CreateIncomeEvent create) throws NegativeValueException, InvalidFinanceEventTypeException, FinanceEventAlreadyExistsException, DateTimeException {
         String uuid = UUID.randomUUID().toString();
         LocalDateTime now = Now.get();
         LocalDateTime when = LocalDateTime.of(create.getYear(), create.getMonth(), create.getDay(), 0, 0);
-        FinanceEvent event = new FinanceEvent(
+        IncomeEvent event = new IncomeEvent(
                 uuid,
+                now,
                 now,
                 user,
                 create.getAmount(),
-                create.getType(),
-                when
+                when,
+                create.getCategory(),
+                create.getDescription()
+        );
+        financeEventDAO.addEvent(event);
+        return uuid;
+    }
+
+    public String addEvent(String user, CreateExpenseEvent create) throws NegativeValueException, InvalidFinanceEventTypeException, FinanceEventAlreadyExistsException, DateTimeException {
+        String uuid = UUID.randomUUID().toString();
+        LocalDateTime now = Now.get();
+        LocalDateTime when = LocalDateTime.of(create.getYear(), create.getMonth(), create.getDay(), 0, 0);
+        ExpenseEvent event = new ExpenseEvent(
+                uuid,
+                now,
+                now,
+                user,
+                create.getAmount(),
+                when,
+                create.getCategory(),
+                create.getDescription(),
+                create.getPartition()
         );
         financeEventDAO.addEvent(event);
         return uuid;

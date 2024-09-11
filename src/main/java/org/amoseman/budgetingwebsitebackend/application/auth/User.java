@@ -1,6 +1,6 @@
 package org.amoseman.budgetingwebsitebackend.application.auth;
 
-import org.amoseman.budgetingwebsitebackend.pojo.Account;
+import org.amoseman.budgetingwebsitebackend.pojo.account.Account;
 
 import java.security.Principal;
 import java.util.Set;
@@ -15,7 +15,7 @@ public class User implements Principal {
     }
 
     public User(Account account) {
-        this.username = account.getIdentifier();
+        this.username = account.getUuid();
         this.roles = account.getRoles();
     }
 

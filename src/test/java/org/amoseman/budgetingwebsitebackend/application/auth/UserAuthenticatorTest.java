@@ -3,7 +3,7 @@ package org.amoseman.budgetingwebsitebackend.application.auth;
 import io.dropwizard.auth.AuthenticationException;
 import io.dropwizard.auth.basic.BasicCredentials;
 import org.amoseman.budgetingwebsitebackend.dao.AccountDAO;
-import org.amoseman.budgetingwebsitebackend.pojo.Account;
+import org.amoseman.budgetingwebsitebackend.pojo.account.Account;
 import org.bouncycastle.util.encoders.Base64;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

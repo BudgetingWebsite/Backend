@@ -3,7 +3,7 @@ package org.amoseman.budgetingwebsitebackend.dao;
 import org.amoseman.budgetingwebsitebackend.database.DatabaseConnection;
 import org.amoseman.budgetingwebsitebackend.exception.PartitionAlreadyExistsException;
 import org.amoseman.budgetingwebsitebackend.exception.PartitionDoesNotExistException;
-import org.amoseman.budgetingwebsitebackend.pojo.Partition;
+import org.amoseman.budgetingwebsitebackend.pojo.partition.Partition;
 
 import java.util.List;
 import java.util.Optional;

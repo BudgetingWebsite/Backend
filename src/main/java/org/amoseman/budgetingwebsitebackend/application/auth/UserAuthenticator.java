@@ -4,7 +4,7 @@ import io.dropwizard.auth.AuthenticationException;
 import io.dropwizard.auth.Authenticator;
 import io.dropwizard.auth.basic.BasicCredentials;
 import org.amoseman.budgetingwebsitebackend.dao.AccountDAO;
-import org.amoseman.budgetingwebsitebackend.pojo.Account;
+import org.amoseman.budgetingwebsitebackend.pojo.account.Account;
 
 import java.util.Base64;
 import java.util.Optional;
@@ -32,8 +32,8 @@ public class UserAuthenticator implements Authenticator<BasicCredentials, User> 
     }
 
     private boolean validate(Account account, String attempt) {
-        byte[] salt = Base64.getDecoder().decode(account.getPasswordSalt());
+        byte[] salt = Base64.getDecoder().decode(account.getSalt());
         String hash = hasher.hash(attempt, salt);
-        return hash.equals(account.getPasswordHash());
+        return hash.equals(account.getHash());
     }
 }
