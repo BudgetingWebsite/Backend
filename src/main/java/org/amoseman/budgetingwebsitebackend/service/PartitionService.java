@@ -44,7 +44,12 @@ public class PartitionService<C> {
                 0
         );
         partitionDAO.addPartition(partition);
-        recalculate(owner);
+        try {
+            recalculate(owner, uuid);
+        }
+        catch (PartitionDoesNotExistException e) {
+            throw new RuntimeException(e); // SHOULD NEVER happen
+        }
         return uuid;
     }
 
@@ -106,5 +111,28 @@ public class PartitionService<C> {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    private void recalculate(String owner, String uuid) throws PartitionDoesNotExistException {
+        Optional<Partition> maybe = partitionDAO.getPartition(owner, uuid);
+        if (maybe.isEmpty()) {
+            throw new PartitionDoesNotExistException("recalculate", uuid);
+        }
+        Partition partition = maybe.get();
+        List<FinanceEvent> income = financeEventDAO.getEvents(owner, "income");
+        List<FinanceEvent> expenses = financeEventDAO.getEvents(owner, "expense");
+        for (FinanceEvent e : income) {
+            IncomeEvent event = (IncomeEvent) e;
+            Split split = Splitter.get(new double[]{partition.getShare()}, event.getAmount());
+            partition = partition.add(split.getAmounts()[0]);
+        }
+        for (FinanceEvent e : expenses) {
+            ExpenseEvent event = (ExpenseEvent) e;
+            if (!event.getPartition().equals(partition.getUuid())) {
+                continue;
+            }
+            partition = partition.add(-event.getAmount());
+        }
+        partitionDAO.updatePartition(partition);
     }
 }
