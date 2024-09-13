@@ -10,7 +10,7 @@ import org.amoseman.budgetingwebsitebackend.application.auth.Roles;
 import org.amoseman.budgetingwebsitebackend.application.auth.User;
 import org.amoseman.budgetingwebsitebackend.exception.UserAlreadyExistsException;
 import org.amoseman.budgetingwebsitebackend.exception.UserDoesNotExistException;
-import org.amoseman.budgetingwebsitebackend.pojo.CreateAccount;
+import org.amoseman.budgetingwebsitebackend.pojo.account.op.CreateAccount;
 import org.amoseman.budgetingwebsitebackend.service.AccountService;
 
 import java.util.Set;

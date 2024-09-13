@@ -1,13 +1,14 @@
 package org.amoseman.budgetingwebsitebackend.pojo.account.op;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class CreateAccount {
     private String username;
     private String password;
 
-    public CreateAccount() {
-    }
-
-    public CreateAccount(String username, String password) {
+    @JsonCreator
+    public CreateAccount(@JsonProperty("username") String username, @JsonProperty("password") String password) {
         this.username = username;
         this.password = password;
     }
