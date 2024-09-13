@@ -99,41 +99,48 @@ class BudgetingApplicationTest {
         String incomeJSON = toJSON(new CreateIncomeEvent(100, 2024, 1, 1, "example", "example"));
         String uuid = fetch.request("/event/income", "POST", incomeJSON, testSuccess);
         String events = fetch.request("/event/income", "GET", testSuccess);
-        assertEquals(toNode(events).size(), 1);
+        assertEquals(1, toNode(events).size());
         fetch.request("/event/income/" + uuid, "DELETE", testSuccess);
         events = fetch.request("/event/income", "GET", testSuccess);
-        assertEquals(toNode(events).size(), 0);
+        assertEquals(0, toNode(events).size());
         // partition create and event amount effect
         String uuidPartitionA = fetch.request("/partition", "POST", toJSON(new CreatePartition("essential", 0.5)), testSuccess);
         String uuidPartitionB = fetch.request("/partition", "POST", toJSON(new CreatePartition("savings", 0.2)), testSuccess);
         uuid = fetch.request("/event/income", "POST", incomeJSON, testSuccess);
         String partitions = fetch.request("/partition", "GET", testSuccess);
-        assertEquals(get(partitions, 0, "amount"), "50");
-        assertEquals(get(partitions, 1, "amount"), "20");
+        assertEquals("50", get(partitions, 0, "amount"));
+        assertEquals("20", get(partitions, 1, "amount"));
         // partition update
         fetch.request("/partition/" + uuidPartitionA, "PUT", toJSON(new UpdatePartition("essential", 0.2)), testSuccess);
         fetch.request("/partition/" + uuidPartitionB, "PUT", toJSON(new UpdatePartition("savings", 0.7)), testSuccess);
         partitions = fetch.request("/partition", "GET", testSuccess);
-        assertEquals(get(partitions, 0, "amount"), "20");
-        assertEquals(get(partitions, 1, "amount"), "70");
+        assertEquals("20", get(partitions, 0, "amount"));
+        assertEquals("70", get(partitions, 1, "amount"));
         // add partition after event
         String uuidPartitionC = fetch.request("/partition", "POST", toJSON(new CreatePartition("other", 0.1)), testSuccess);
         partitions = fetch.request("/partition", "GET", testSuccess);
-        assertEquals(get(partitions, 0, "amount"), "20");
-        assertEquals(get(partitions, 1, "amount"), "70");
-        assertEquals(get(partitions, 2, "amount"), "10");
+        assertEquals("20", get(partitions, 0, "amount"));
+        assertEquals("70", get(partitions, 1, "amount"));
+        assertEquals("10", get(partitions, 2, "amount"));
+        // statistics resource
+        String totalFunds = fetch.request("/stats/total", "GET", testSuccess);
+        assertEquals("100", totalFunds);
         // add partition to exceed share limit
         String uuidPartitionD = fetch.request("/partition", "POST", toJSON(new CreatePartition("exceeds", 0.1)), testFailure);
         // add expense event
-        String expenseJSON = toJSON(new CreateExpenseEvent(50, 2024, 1, 1, "example", "example", "savings"));
-        String expense = fetch.request("/partition", "POST", expenseJSON, testSuccess);
+        String expenseJSON = toJSON(new CreateExpenseEvent(50, 2024, 1, 1, "example", "example", uuidPartitionB));
+        String expense = fetch.request("/event/expense", "POST", expenseJSON, testSuccess);
+        events = fetch.request("/event/expense", "GET", testSuccess);
+        assertEquals(1, toNode(events).size());
+        totalFunds = fetch.request("/stats/total", "GET", testSuccess);
+        assertEquals("50", totalFunds);
         // remove event to change partition amounts
         fetch.request("/event/income/" + uuid, "DELETE", testSuccess);
         partitions = fetch.request("/partition", "GET", testSuccess);
         System.out.println(partitions);
-        assertEquals(get(partitions, 0, "amount"), "0");
-        assertEquals(get(partitions, 1, "amount"), "0");
-        assertEquals(get(partitions, 2, "amount"), "0");
+        assertEquals("0", get(partitions, 0, "amount"));
+        assertEquals("-50", get(partitions, 1, "amount"));
+        assertEquals("0", get(partitions, 2, "amount"));
 
         //fail("Integration test not fully implemented");
     }
