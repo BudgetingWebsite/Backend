@@ -20,7 +20,6 @@ import org.amoseman.budgetingwebsitebackend.database.impl.sql.sqlite.DatabaseCon
 import org.amoseman.budgetingwebsitebackend.resource.AccountResource;
 import org.amoseman.budgetingwebsitebackend.resource.FinanceRecordResource;
 import org.amoseman.budgetingwebsitebackend.resource.PartitionResource;
-import org.amoseman.budgetingwebsitebackend.resource.StatisticsResource;
 import org.amoseman.budgetingwebsitebackend.service.AccountService;
 import org.amoseman.budgetingwebsitebackend.service.FinanceRecordService;
 import org.amoseman.budgetingwebsitebackend.service.PartitionService;
@@ -40,22 +39,18 @@ public class BudgetingApplication extends Application<BudgetingConfiguration> {
         AccountDAO<DSLContext> accountDAO = new SQLAccountDAO(connection);
         FinanceRecordDAO<DSLContext> financeRecordDAO = new SQLFinanceRecordDAO(connection);
         PartitionDAO<DSLContext> partitionDAO = new SQLPartitionDAO(connection);
-        StatisticsDAO<DSLContext> statisticsDAO = new SQLStatisticsDAO(connection);
 
         AccountService<DSLContext> accountService = new AccountService<>(accountDAO, hasher);
         FinanceRecordService<DSLContext> financeRecordService = new FinanceRecordService<>(financeRecordDAO);
         PartitionService<DSLContext> partitionService =  new PartitionService<>(partitionDAO, financeRecordDAO);
-        StatisticsService<DSLContext> statisticsService = new StatisticsService<>(statisticsDAO);
 
         AccountResource<DSLContext> accountResource = new AccountResource<>(accountService);
         FinanceRecordResource<DSLContext> financeRecordResource = new FinanceRecordResource<>(financeRecordService);
         PartitionResource<DSLContext> partitionResource = new PartitionResource<>(partitionService);
-        StatisticsResource<DSLContext> statisticsResource = new StatisticsResource<>(statisticsService);
 
         environment.jersey().register(accountResource);
         environment.jersey().register(financeRecordResource);
         environment.jersey().register(partitionResource);
-        environment.jersey().register(statisticsResource);
 
         environment.jersey().register(new AuthDynamicFeature(new BasicCredentialAuthFilter.Builder<User>()
                 .setAuthenticator(new UserAuthenticator(accountDAO, hasher))
