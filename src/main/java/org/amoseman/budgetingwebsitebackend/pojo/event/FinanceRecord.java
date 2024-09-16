@@ -3,19 +3,18 @@ package org.amoseman.budgetingwebsitebackend.pojo.event;
 
 import org.amoseman.budgetingwebsitebackend.exception.InvalidFinanceEventTypeException;
 import org.amoseman.budgetingwebsitebackend.exception.NegativeValueException;
-import org.amoseman.budgetingwebsitebackend.pojo.Entity;
 import org.amoseman.budgetingwebsitebackend.pojo.OwnedEntity;
 
 import java.time.LocalDateTime;
 
-public abstract class FinanceEvent extends OwnedEntity {
+public abstract class FinanceRecord extends OwnedEntity {
     private final String type;
     private final long amount;
     private final LocalDateTime occurred;
     private final String category;
     private final String description;
 
-    public FinanceEvent(String uuid, LocalDateTime created, LocalDateTime updated, String owner, String type, long amount, LocalDateTime occurred, String category, String description) throws NegativeValueException, InvalidFinanceEventTypeException {
+    public FinanceRecord(String uuid, LocalDateTime created, LocalDateTime updated, String owner, String type, long amount, LocalDateTime occurred, String category, String description) throws NegativeValueException, InvalidFinanceEventTypeException {
         super(uuid, created, updated, owner);
         if (amount < 0) {
             throw new NegativeValueException(amount);

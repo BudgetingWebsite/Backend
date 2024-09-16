@@ -6,41 +6,41 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.amoseman.budgetingwebsitebackend.application.auth.User;
-import org.amoseman.budgetingwebsitebackend.exception.FinanceEventAlreadyExistsException;
-import org.amoseman.budgetingwebsitebackend.exception.FinanceEventDoesNotExistException;
+import org.amoseman.budgetingwebsitebackend.exception.FinanceRecordAlreadyExistsException;
+import org.amoseman.budgetingwebsitebackend.exception.FinanceRecordDoesNotExistException;
 import org.amoseman.budgetingwebsitebackend.exception.InvalidFinanceEventTypeException;
 import org.amoseman.budgetingwebsitebackend.exception.NegativeValueException;
-import org.amoseman.budgetingwebsitebackend.pojo.event.FinanceEvent;
-import org.amoseman.budgetingwebsitebackend.pojo.event.op.CreateExpenseEvent;
-import org.amoseman.budgetingwebsitebackend.pojo.event.op.CreateIncomeEvent;
-import org.amoseman.budgetingwebsitebackend.service.FinanceEventService;
+import org.amoseman.budgetingwebsitebackend.pojo.event.FinanceRecord;
+import org.amoseman.budgetingwebsitebackend.pojo.event.op.CreateExpense;
+import org.amoseman.budgetingwebsitebackend.pojo.event.op.CreateIncome;
+import org.amoseman.budgetingwebsitebackend.service.FinanceRecordService;
 
 import java.time.DateTimeException;
 import java.util.List;
 
 @Path("/event")
 @Produces(MediaType.APPLICATION_JSON)
-public class FinanceEventResource<C> {
-    private final FinanceEventService<C> financeEventService;
+public class FinanceRecordResource<C> {
+    private final FinanceRecordService<C> financeRecordService;
 
-    public FinanceEventResource(FinanceEventService<C> financeEventService) {
-        this.financeEventService = financeEventService;
+    public FinanceRecordResource(FinanceRecordService<C> financeRecordService) {
+        this.financeRecordService = financeRecordService;
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @PermitAll
     @Path("/income")
-    public Response addEvent(@Auth User user, CreateIncomeEvent event) {
+    public Response addEvent(@Auth User user, CreateIncome event) {
         try {
-            String uuid = financeEventService.addEvent(user.getName(), event);
+            String uuid = financeRecordService.addEvent(user.getName(), event);
             return Response.ok(uuid).build();
         }
         catch (NegativeValueException e) {
             String reason = String.format("Negative amount: %s", event.getAmount());
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), reason).build();
         }
-        catch (FinanceEventAlreadyExistsException e) {
+        catch (FinanceRecordAlreadyExistsException e) {
             // todo: this should never occur, so make it re-attempt once in the service if the UUID already exists
             String reason = "Congratulations, you won the UUID v4 lottery as the UUID generated is already in use!";
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), reason).build();
@@ -59,16 +59,16 @@ public class FinanceEventResource<C> {
     @Consumes(MediaType.APPLICATION_JSON)
     @PermitAll
     @Path("/expense")
-    public Response addEvent(@Auth User user, CreateExpenseEvent event) {
+    public Response addEvent(@Auth User user, CreateExpense event) {
         try {
-            String uuid = financeEventService.addEvent(user.getName(), event);
+            String uuid = financeRecordService.addEvent(user.getName(), event);
             return Response.ok(uuid).build();
         }
         catch (NegativeValueException e) {
             String reason = String.format("Negative amount: %s", event.getAmount());
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), reason).build();
         }
-        catch (FinanceEventAlreadyExistsException e) {
+        catch (FinanceRecordAlreadyExistsException e) {
             // todo: this should never occur, so make it re-attempt once in the service if the UUID already exists
             String reason = "Congratulations, you won the UUID v4 lottery as the UUID is already in use! ";
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), reason).build();
@@ -89,10 +89,10 @@ public class FinanceEventResource<C> {
     @Path("/{type}/{uuid}")
     public Response removeEvent(@Auth User user, @PathParam("type") String type, @PathParam("uuid") String uuid) {
         try {
-            financeEventService.removeEvent(user.getName(), uuid, type);
+            financeRecordService.removeEvent(user.getName(), uuid, type);
             return Response.ok().build();
         }
-        catch (FinanceEventDoesNotExistException e) {
+        catch (FinanceRecordDoesNotExistException e) {
             String reason = String.format("Event %s does not exist", uuid);
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), reason).build();
         }
@@ -112,7 +112,7 @@ public class FinanceEventResource<C> {
             @DefaultValue("1") @QueryParam("end-day") String endDay
             ) {
         try {
-            List<FinanceEvent> events = financeEventService.getEvents(
+            List<FinanceRecord> events = financeRecordService.getEvents(
                     user.getName(), type,
                     startYear, startMonth, startDay,
                     endYear, endMonth, endDay

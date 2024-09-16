@@ -10,11 +10,11 @@ import org.amoseman.budgetingwebsitebackend.application.auth.User;
 import org.amoseman.budgetingwebsitebackend.application.auth.UserAuthenticator;
 import org.amoseman.budgetingwebsitebackend.application.auth.UserAuthorizer;
 import org.amoseman.budgetingwebsitebackend.dao.AccountDAO;
-import org.amoseman.budgetingwebsitebackend.dao.FinanceEventDAO;
+import org.amoseman.budgetingwebsitebackend.dao.FinanceRecordDAO;
 import org.amoseman.budgetingwebsitebackend.dao.PartitionDAO;
 import org.amoseman.budgetingwebsitebackend.dao.StatisticsDAO;
 import org.amoseman.budgetingwebsitebackend.dao.implementation.sql.SQLAccountDAO;
-import org.amoseman.budgetingwebsitebackend.dao.implementation.sql.SQLFinanceEventDAO;
+import org.amoseman.budgetingwebsitebackend.dao.implementation.sql.SQLFinanceRecordDAO;
 import org.amoseman.budgetingwebsitebackend.dao.implementation.sql.SQLPartitionDAO;
 import org.amoseman.budgetingwebsitebackend.dao.implementation.sql.SQLStatisticsDAO;
 import org.amoseman.budgetingwebsitebackend.database.DatabaseConnection;
@@ -22,16 +22,15 @@ import org.amoseman.budgetingwebsitebackend.database.DatabaseInitializer;
 import org.amoseman.budgetingwebsitebackend.database.implementation.SQLDatabaseConnection;
 import org.amoseman.budgetingwebsitebackend.database.implementation.SQLDatabaseInitializer;
 import org.amoseman.budgetingwebsitebackend.resource.AccountResource;
-import org.amoseman.budgetingwebsitebackend.resource.FinanceEventResource;
+import org.amoseman.budgetingwebsitebackend.resource.FinanceRecordResource;
 import org.amoseman.budgetingwebsitebackend.resource.PartitionResource;
 import org.amoseman.budgetingwebsitebackend.resource.StatisticsResource;
 import org.amoseman.budgetingwebsitebackend.service.AccountService;
-import org.amoseman.budgetingwebsitebackend.service.FinanceEventService;
+import org.amoseman.budgetingwebsitebackend.service.FinanceRecordService;
 import org.amoseman.budgetingwebsitebackend.service.PartitionService;
 import org.amoseman.budgetingwebsitebackend.service.StatisticsService;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.jooq.DSLContext;
-import org.jooq.impl.DSL;
 
 import java.security.SecureRandom;
 
@@ -46,22 +45,22 @@ public class BudgetingApplication extends Application<BudgetingConfiguration> {
         initializer.initialize();
 
         AccountDAO<DSLContext> accountDAO = new SQLAccountDAO(connection);
-        FinanceEventDAO<DSLContext> financeEventDAO = new SQLFinanceEventDAO(connection);
+        FinanceRecordDAO<DSLContext> financeRecordDAO = new SQLFinanceRecordDAO(connection);
         PartitionDAO<DSLContext> partitionDAO = new SQLPartitionDAO(connection);
         StatisticsDAO<DSLContext> statisticsDAO = new SQLStatisticsDAO(connection);
 
         AccountService<DSLContext> accountService = new AccountService<>(accountDAO, hasher);
-        FinanceEventService<DSLContext> financeEventService = new FinanceEventService<>(financeEventDAO, partitionDAO);
-        PartitionService<DSLContext> partitionService =  new PartitionService<>(partitionDAO, financeEventDAO);
+        FinanceRecordService<DSLContext> financeRecordService = new FinanceRecordService<>(financeRecordDAO, partitionDAO);
+        PartitionService<DSLContext> partitionService =  new PartitionService<>(partitionDAO, financeRecordDAO);
         StatisticsService<DSLContext> statisticsService = new StatisticsService<>(statisticsDAO);
 
         AccountResource<DSLContext> accountResource = new AccountResource<>(accountService);
-        FinanceEventResource<DSLContext> financeEventResource = new FinanceEventResource<>(financeEventService);
+        FinanceRecordResource<DSLContext> financeRecordResource = new FinanceRecordResource<>(financeRecordService);
         PartitionResource<DSLContext> partitionResource = new PartitionResource<>(partitionService);
         StatisticsResource<DSLContext> statisticsResource = new StatisticsResource<>(statisticsService);
 
         environment.jersey().register(accountResource);
-        environment.jersey().register(financeEventResource);
+        environment.jersey().register(financeRecordResource);
         environment.jersey().register(partitionResource);
         environment.jersey().register(statisticsResource);
 

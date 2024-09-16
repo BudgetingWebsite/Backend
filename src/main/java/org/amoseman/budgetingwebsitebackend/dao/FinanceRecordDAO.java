@@ -1,12 +1,12 @@
 package org.amoseman.budgetingwebsitebackend.dao;
 
 import org.amoseman.budgetingwebsitebackend.database.DatabaseConnection;
-import org.amoseman.budgetingwebsitebackend.exception.FinanceEventAlreadyExistsException;
-import org.amoseman.budgetingwebsitebackend.exception.FinanceEventDoesNotExistException;
+import org.amoseman.budgetingwebsitebackend.exception.FinanceRecordAlreadyExistsException;
+import org.amoseman.budgetingwebsitebackend.exception.FinanceRecordDoesNotExistException;
 import org.amoseman.budgetingwebsitebackend.pojo.TimeRange;
-import org.amoseman.budgetingwebsitebackend.pojo.event.ExpenseEvent;
-import org.amoseman.budgetingwebsitebackend.pojo.event.FinanceEvent;
-import org.amoseman.budgetingwebsitebackend.pojo.event.IncomeEvent;
+import org.amoseman.budgetingwebsitebackend.pojo.event.Expense;
+import org.amoseman.budgetingwebsitebackend.pojo.event.FinanceRecord;
+import org.amoseman.budgetingwebsitebackend.pojo.event.Income;
 
 import java.util.List;
 
@@ -14,12 +14,12 @@ import java.util.List;
  * Represents a data access object for income and expense events.
  * @param <C> the client type.
  */
-public abstract class FinanceEventDAO<C> extends DAO<C> {
+public abstract class FinanceRecordDAO<C> extends DAO<C> {
     /**
      * Instantiate a data access object for income and expense events.
      * @param connection the database connection to use.
      */
-    public FinanceEventDAO(DatabaseConnection<C> connection) {
+    public FinanceRecordDAO(DatabaseConnection<C> connection) {
         super(connection);
     }
 
@@ -27,8 +27,8 @@ public abstract class FinanceEventDAO<C> extends DAO<C> {
      * Add a finance event.
      * @param event the finance event.
      */
-    public abstract void addEvent(IncomeEvent event) throws FinanceEventAlreadyExistsException;
-    public abstract void addEvent(ExpenseEvent event) throws FinanceEventAlreadyExistsException;
+    public abstract void addEvent(Income event) throws FinanceRecordAlreadyExistsException;
+    public abstract void addEvent(Expense event) throws FinanceRecordAlreadyExistsException;
 
     /**
      * Remove a finance event.
@@ -37,9 +37,9 @@ public abstract class FinanceEventDAO<C> extends DAO<C> {
      * @param id   the ID of the event.
      * @param type the type of the event.
      * @return
-     * @throws FinanceEventDoesNotExistException if the event does not exist.
+     * @throws FinanceRecordDoesNotExistException if the event does not exist.
      */
-    public abstract FinanceEvent removeEvent(String user, String id, String type) throws FinanceEventDoesNotExistException;
+    public abstract FinanceRecord removeEvent(String user, String id, String type) throws FinanceRecordDoesNotExistException;
 
     /**
      * Get all finance events of a user.
@@ -47,7 +47,7 @@ public abstract class FinanceEventDAO<C> extends DAO<C> {
      * @param type the type of events.
      * @return the finance events.
      */
-    public abstract List<FinanceEvent> getEvents(String user, String type) ;
+    public abstract List<FinanceRecord> getEvents(String user, String type) ;
 
     /**
      * Get all finance events of a user in a time range.
@@ -56,5 +56,5 @@ public abstract class FinanceEventDAO<C> extends DAO<C> {
      * @param range the time range of use.
      * @return the finance events.
      */
-    public abstract List<FinanceEvent> getEvents(String user, String type, TimeRange range);
+    public abstract List<FinanceRecord> getEvents(String user, String type, TimeRange range);
 }

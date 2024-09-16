@@ -4,8 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.amoseman.budgetingwebsitebackend.TestHandler;
-import org.amoseman.budgetingwebsitebackend.pojo.event.op.CreateExpenseEvent;
-import org.amoseman.budgetingwebsitebackend.pojo.event.op.CreateIncomeEvent;
+import org.amoseman.budgetingwebsitebackend.pojo.event.op.CreateExpense;
+import org.amoseman.budgetingwebsitebackend.pojo.event.op.CreateIncome;
 import org.amoseman.budgetingwebsitebackend.pojo.partition.op.CreatePartition;
 import org.amoseman.budgetingwebsitebackend.pojo.partition.op.UpdatePartition;
 import org.amoseman.fetch.Fetch;
@@ -95,18 +95,25 @@ class BudgetingApplicationTest {
 
         TestHandler testSuccess = new TestHandler((code) -> code <= 299);
         TestHandler testFailure = new TestHandler((code) -> code > 299);
+
         // event create, retrieve, and delete
-        String incomeJSON = toJSON(new CreateIncomeEvent(100, 2024, 1, 1, "example", "example"));
+        String incomeJSON = toJSON(new CreateIncome(100, 2024, 1, 1, "example", "example"));
         String uuid = fetch.request("/event/income", "POST", incomeJSON, testSuccess);
         String events = fetch.request("/event/income", "GET", testSuccess);
         assertEquals(1, toNode(events).size());
         fetch.request("/event/income/" + uuid, "DELETE", testSuccess);
         events = fetch.request("/event/income", "GET", testSuccess);
         assertEquals(0, toNode(events).size());
+
         // partition create and event amount effect
         String uuidPartitionA = fetch.request("/partition", "POST", toJSON(new CreatePartition("essential", 0.5)), testSuccess);
         String uuidPartitionB = fetch.request("/partition", "POST", toJSON(new CreatePartition("savings", 0.2)), testSuccess);
-        uuid = fetch.request("/event/income", "POST", incomeJSON, testSuccess);
+        uuid = fetch.request(
+                "/event/income",
+                "POST",
+                incomeJSON,
+                testSuccess
+        );
         String partitions = fetch.request("/partition", "GET", testSuccess);
         assertEquals("50", get(partitions, 0, "amount"));
         assertEquals("20", get(partitions, 1, "amount"));
@@ -128,7 +135,7 @@ class BudgetingApplicationTest {
         // add partition to exceed share limit
         String uuidPartitionD = fetch.request("/partition", "POST", toJSON(new CreatePartition("exceeds", 0.1)), testFailure);
         // add expense event
-        String expenseJSON = toJSON(new CreateExpenseEvent(50, 2024, 1, 1, "example", "example", uuidPartitionB));
+        String expenseJSON = toJSON(new CreateExpense(50, 2024, 1, 1, "example", "example", uuidPartitionB));
         String expense = fetch.request("/event/expense", "POST", expenseJSON, testSuccess);
         events = fetch.request("/event/expense", "GET", testSuccess);
         assertEquals(1, toNode(events).size());

@@ -1,13 +1,13 @@
 package org.amoseman.budgetingwebsitebackend.service;
 
-import org.amoseman.budgetingwebsitebackend.dao.FinanceEventDAO;
+import org.amoseman.budgetingwebsitebackend.dao.FinanceRecordDAO;
 import org.amoseman.budgetingwebsitebackend.dao.PartitionDAO;
 import org.amoseman.budgetingwebsitebackend.exception.PartitionAlreadyExistsException;
 import org.amoseman.budgetingwebsitebackend.exception.PartitionDoesNotExistException;
 import org.amoseman.budgetingwebsitebackend.exception.TotalPartitionShareExceededException;
-import org.amoseman.budgetingwebsitebackend.pojo.event.ExpenseEvent;
-import org.amoseman.budgetingwebsitebackend.pojo.event.FinanceEvent;
-import org.amoseman.budgetingwebsitebackend.pojo.event.IncomeEvent;
+import org.amoseman.budgetingwebsitebackend.pojo.event.Expense;
+import org.amoseman.budgetingwebsitebackend.pojo.event.FinanceRecord;
+import org.amoseman.budgetingwebsitebackend.pojo.event.Income;
 import org.amoseman.budgetingwebsitebackend.pojo.partition.Partition;
 import org.amoseman.budgetingwebsitebackend.pojo.partition.op.CreatePartition;
 import org.amoseman.budgetingwebsitebackend.pojo.partition.op.UpdatePartition;
@@ -20,11 +20,11 @@ import java.util.*;
 
 public class PartitionService<C> {
     private final PartitionDAO<C> partitionDAO;
-    private final FinanceEventDAO<C> financeEventDAO;
+    private final FinanceRecordDAO<C> financeRecordDAO;
 
-    public PartitionService(PartitionDAO<C> partitionDAO, FinanceEventDAO<C> financeEventDAO) {
+    public PartitionService(PartitionDAO<C> partitionDAO, FinanceRecordDAO<C> financeRecordDAO) {
         this.partitionDAO = partitionDAO;
-        this.financeEventDAO = financeEventDAO;
+        this.financeRecordDAO = financeRecordDAO;
     }
 
     public String addPartition(String owner, CreatePartition create) throws PartitionAlreadyExistsException, TotalPartitionShareExceededException {
@@ -86,20 +86,20 @@ public class PartitionService<C> {
             shares[i] = partition.getShare();
             map.put(partition.getUuid(), i);
         }
-        List<FinanceEvent> incomeEvents = financeEventDAO.getEvents(owner, "income");
-        List<FinanceEvent> expenseEvents = financeEventDAO.getEvents(owner, "expense");
-        List<IncomeEvent> income = new ArrayList<>();
-        List<ExpenseEvent> expenses = new ArrayList<>();
-        incomeEvents.forEach(event -> income.add((IncomeEvent) event));
-        expenseEvents.forEach(event -> expenses.add((ExpenseEvent) event));
-        for (IncomeEvent event : income) {
+        List<FinanceRecord> incomeEvents = financeRecordDAO.getEvents(owner, "income");
+        List<FinanceRecord> expenseEvents = financeRecordDAO.getEvents(owner, "expense");
+        List<Income> income = new ArrayList<>();
+        List<Expense> expenses = new ArrayList<>();
+        incomeEvents.forEach(event -> income.add((Income) event));
+        expenseEvents.forEach(event -> expenses.add((Expense) event));
+        for (Income event : income) {
             Split split = Splitter.get(shares, event.getAmount());
             for (int i = 0; i < partitions.length; i++) {
                 Partition partition = partitions[i];
                 partitions[i] = partition.add(split.getAmounts()[i]);
             }
         }
-        for (ExpenseEvent event : expenses) {
+        for (Expense event : expenses) {
             int i = map .get(event.getPartition());
             Partition partition = partitions[i];
             partitions[i] = partition.add(-event.getAmount());
@@ -119,15 +119,15 @@ public class PartitionService<C> {
             throw new PartitionDoesNotExistException("recalculate", uuid);
         }
         Partition partition = maybe.get();
-        List<FinanceEvent> income = financeEventDAO.getEvents(owner, "income");
-        List<FinanceEvent> expenses = financeEventDAO.getEvents(owner, "expense");
-        for (FinanceEvent e : income) {
-            IncomeEvent event = (IncomeEvent) e;
+        List<FinanceRecord> income = financeRecordDAO.getEvents(owner, "income");
+        List<FinanceRecord> expenses = financeRecordDAO.getEvents(owner, "expense");
+        for (FinanceRecord e : income) {
+            Income event = (Income) e;
             Split split = Splitter.get(new double[]{partition.getShare()}, event.getAmount());
             partition = partition.add(split.getAmounts()[0]);
         }
-        for (FinanceEvent e : expenses) {
-            ExpenseEvent event = (ExpenseEvent) e;
+        for (FinanceRecord e : expenses) {
+            Expense event = (Expense) e;
             if (!event.getPartition().equals(partition.getUuid())) {
                 continue;
             }

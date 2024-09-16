@@ -1,12 +1,12 @@
 package org.amoseman.budgetingwebsitebackend.pojo.event.op;
 
-public class CreateExpenseEvent extends CreateFinanceEvent {
+public class CreateExpense extends CreateFinanceRecord {
     private String partition;
 
-    public CreateExpenseEvent() {
+    public CreateExpense() {
     }
 
-    public CreateExpenseEvent(long amount, int year, int month, int day, String category, String description, String partition) {
+    public CreateExpense(long amount, int year, int month, int day, String category, String description, String partition) {
         super("expense", amount, year, month, day, category, description);
         this.partition = partition;
     }

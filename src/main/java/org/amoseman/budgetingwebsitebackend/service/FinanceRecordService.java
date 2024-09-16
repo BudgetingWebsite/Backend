@@ -1,19 +1,18 @@
 package org.amoseman.budgetingwebsitebackend.service;
 
-import org.amoseman.budgetingwebsitebackend.dao.FinanceEventDAO;
+import org.amoseman.budgetingwebsitebackend.dao.FinanceRecordDAO;
 import org.amoseman.budgetingwebsitebackend.dao.PartitionDAO;
 import org.amoseman.budgetingwebsitebackend.exception.*;
 import org.amoseman.budgetingwebsitebackend.pojo.*;
-import org.amoseman.budgetingwebsitebackend.pojo.event.ExpenseEvent;
-import org.amoseman.budgetingwebsitebackend.pojo.event.FinanceEvent;
-import org.amoseman.budgetingwebsitebackend.pojo.event.IncomeEvent;
-import org.amoseman.budgetingwebsitebackend.pojo.event.op.CreateExpenseEvent;
-import org.amoseman.budgetingwebsitebackend.pojo.event.op.CreateIncomeEvent;
+import org.amoseman.budgetingwebsitebackend.pojo.event.Expense;
+import org.amoseman.budgetingwebsitebackend.pojo.event.FinanceRecord;
+import org.amoseman.budgetingwebsitebackend.pojo.event.Income;
+import org.amoseman.budgetingwebsitebackend.pojo.event.op.CreateExpense;
+import org.amoseman.budgetingwebsitebackend.pojo.event.op.CreateIncome;
 import org.amoseman.budgetingwebsitebackend.pojo.partition.Partition;
 import org.amoseman.budgetingwebsitebackend.util.Now;
 import org.amoseman.budgetingwebsitebackend.util.Split;
 import org.amoseman.budgetingwebsitebackend.util.Splitter;
-import org.jooq.impl.QOM;
 
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
@@ -21,20 +20,20 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class FinanceEventService<C> {
-    private final FinanceEventDAO<C> financeEventDAO;
+public class FinanceRecordService<C> {
+    private final FinanceRecordDAO<C> financeRecordDAO;
     private final PartitionDAO<C> partitionDAO;
 
-    public FinanceEventService(FinanceEventDAO<C> financeEventDAO, PartitionDAO<C> partitionDAO) {
-        this.financeEventDAO = financeEventDAO;
+    public FinanceRecordService(FinanceRecordDAO<C> financeRecordDAO, PartitionDAO<C> partitionDAO) {
+        this.financeRecordDAO = financeRecordDAO;
         this.partitionDAO = partitionDAO;
     }
 
-    public String addEvent(String user, CreateIncomeEvent create) throws NegativeValueException, InvalidFinanceEventTypeException, FinanceEventAlreadyExistsException, DateTimeException {
+    public String addEvent(String user, CreateIncome create) throws NegativeValueException, InvalidFinanceEventTypeException, FinanceRecordAlreadyExistsException, DateTimeException {
         String uuid = UUID.randomUUID().toString();
         LocalDateTime now = Now.get();
         LocalDateTime when = LocalDateTime.of(create.getYear(), create.getMonth(), create.getDay(), 0, 0);
-        IncomeEvent event = new IncomeEvent(
+        Income event = new Income(
                 uuid,
                 now,
                 now,
@@ -44,16 +43,16 @@ public class FinanceEventService<C> {
                 create.getCategory(),
                 create.getDescription()
         );
-        financeEventDAO.addEvent(event);
+        financeRecordDAO.addEvent(event);
         addToPartitions(user, event.getAmount());
         return uuid;
     }
 
-    public String addEvent(String user, CreateExpenseEvent create) throws NegativeValueException, InvalidFinanceEventTypeException, FinanceEventAlreadyExistsException, DateTimeException {
+    public String addEvent(String user, CreateExpense create) throws NegativeValueException, InvalidFinanceEventTypeException, FinanceRecordAlreadyExistsException, DateTimeException {
         String uuid = UUID.randomUUID().toString();
         LocalDateTime now = Now.get();
         LocalDateTime when = LocalDateTime.of(create.getYear(), create.getMonth(), create.getDay(), 0, 0);
-        ExpenseEvent event = new ExpenseEvent(
+        Expense event = new Expense(
                 uuid,
                 now,
                 now,
@@ -64,7 +63,7 @@ public class FinanceEventService<C> {
                 create.getDescription(),
                 create.getPartition()
         );
-        financeEventDAO.addEvent(event);
+        financeRecordDAO.addEvent(event);
         addToPartition(user, create.getPartition(), -create.getAmount());
         return uuid;
     }
@@ -102,18 +101,18 @@ public class FinanceEventService<C> {
         }
     }
 
-    public void removeEvent(String user, String id, String type) throws FinanceEventDoesNotExistException {
-        FinanceEvent event = financeEventDAO.removeEvent(user, id, type);
+    public void removeEvent(String user, String id, String type) throws FinanceRecordDoesNotExistException {
+        FinanceRecord event = financeRecordDAO.removeEvent(user, id, type);
         if ("income".equals(type)) {
             addToPartitions(user, -event.getAmount());
         }
         if ("expense".equals(type)) {
-            ExpenseEvent expense = (ExpenseEvent) event;
+            Expense expense = (Expense) event;
             addToPartition(user, expense.getPartition(), expense.getAmount());
         }
     }
 
-    public List<FinanceEvent> getEvents(
+    public List<FinanceRecord> getEvents(
             String user, String type,
             String yearStartString, String monthStartString, String dayStartString,
             String yearEndString, String monthEndString, String dayEndString) throws NumberFormatException {
@@ -128,10 +127,10 @@ public class FinanceEventService<C> {
         LocalDateTime start = LocalDateTime.of(yearStart, monthStart, dayStart, 0, 0);
         LocalDateTime end = LocalDateTime.of(yearEnd, monthEnd, dayEnd, 0, 0);
         TimeRange range = new TimeRange(start, end);
-        return financeEventDAO.getEvents(user, type, range);
+        return financeRecordDAO.getEvents(user, type, range);
     }
 
-    public List<FinanceEvent> getEvents(String user, String type) {
-        return financeEventDAO.getEvents(user, type);
+    public List<FinanceRecord> getEvents(String user, String type) {
+        return financeRecordDAO.getEvents(user, type);
     }
 }

@@ -1,6 +1,6 @@
 package org.amoseman.budgetingwebsitebackend.pojo.event.op;
 
-public class CreateFinanceEvent {
+public class CreateFinanceRecord {
     private String type;
     private long amount;
     private int year;
@@ -9,11 +9,11 @@ public class CreateFinanceEvent {
     private String category;
     private String description;
 
-    public CreateFinanceEvent() {
+    public CreateFinanceRecord() {
 
     }
 
-    public CreateFinanceEvent(String type, long amount, int year, int month, int day, String category, String description) {
+    public CreateFinanceRecord(String type, long amount, int year, int month, int day, String category, String description) {
         this.type = type;
         this.amount = amount;
         this.year = year;
