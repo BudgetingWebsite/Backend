@@ -17,7 +17,7 @@ import org.amoseman.budgetingwebsitebackend.service.FinanceRecordService;
 import java.time.DateTimeException;
 import java.util.List;
 
-@Path("/event")
+@Path("/record")
 @Produces(MediaType.APPLICATION_JSON)
 public class FinanceRecordResource<C> {
     private final FinanceRecordService<C> financeRecordService;
@@ -75,7 +75,6 @@ public class FinanceRecordResource<C> {
     }
 
     @DELETE
-    @Consumes(MediaType.APPLICATION_JSON)
     @PermitAll
     @Path("/income/{uuid}")
     public Response removeIncome(@Auth User user, @PathParam("uuid") String uuid) {
@@ -87,7 +86,6 @@ public class FinanceRecordResource<C> {
     }
 
     @DELETE
-    @Consumes(MediaType.APPLICATION_JSON)
     @PermitAll
     @Path("/expense/{uuid}")
     public Response removeExpense(@Auth User user, @PathParam("uuid") String uuid) {

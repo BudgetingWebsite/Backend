@@ -5,10 +5,7 @@ import io.dropwizard.auth.AuthValueFactoryProvider;
 import io.dropwizard.auth.basic.BasicCredentialAuthFilter;
 import io.dropwizard.core.Application;
 import io.dropwizard.core.setup.Environment;
-import org.amoseman.budgetingwebsitebackend.application.auth.Hasher;
-import org.amoseman.budgetingwebsitebackend.application.auth.User;
-import org.amoseman.budgetingwebsitebackend.application.auth.UserAuthenticator;
-import org.amoseman.budgetingwebsitebackend.application.auth.UserAuthorizer;
+import org.amoseman.budgetingwebsitebackend.application.auth.*;
 import org.amoseman.budgetingwebsitebackend.dao.AccountDAO;
 import org.amoseman.budgetingwebsitebackend.dao.FinanceRecordDAO;
 import org.amoseman.budgetingwebsitebackend.dao.PartitionDAO;
@@ -17,16 +14,20 @@ import org.amoseman.budgetingwebsitebackend.dao.impl.sql.SQLFinanceRecordDAO;
 import org.amoseman.budgetingwebsitebackend.dao.impl.sql.SQLPartitionDAO;
 import org.amoseman.budgetingwebsitebackend.database.DatabaseConnection;
 import org.amoseman.budgetingwebsitebackend.database.impl.sql.sqlite.DatabaseConnectionImpl;
+import org.amoseman.budgetingwebsitebackend.pojo.account.Account;
 import org.amoseman.budgetingwebsitebackend.resource.AccountResource;
 import org.amoseman.budgetingwebsitebackend.resource.FinanceRecordResource;
 import org.amoseman.budgetingwebsitebackend.resource.PartitionResource;
 import org.amoseman.budgetingwebsitebackend.service.AccountService;
 import org.amoseman.budgetingwebsitebackend.service.FinanceRecordService;
 import org.amoseman.budgetingwebsitebackend.service.PartitionService;
+import org.amoseman.budgetingwebsitebackend.util.Now;
+import org.bouncycastle.util.encoders.Base64;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.jooq.DSLContext;
 
 import java.security.SecureRandom;
+import java.time.LocalDateTime;
 
 public class BudgetingApplication extends Application<BudgetingConfiguration> {
     @Override
@@ -60,5 +61,17 @@ public class BudgetingApplication extends Application<BudgetingConfiguration> {
         ));
         environment.jersey().register(RolesAllowedDynamicFeature.class);
         environment.jersey().register(new AuthValueFactoryProvider.Binder<>(User.class));
+
+        LocalDateTime now = Now.get();
+        byte[] saltBytes = hasher.salt();
+        String hash = hasher.hash(configuration.getAdminPassword(), saltBytes);
+        String salt = Base64.toBase64String(saltBytes);
+        Account admin = new Account(configuration.getAdminUsername(), now, now, hash, salt, Roles.ADMIN);
+        try {
+            accountDAO.addAccount(admin);
+        }
+        catch (Exception e) {
+
+        }
     }
 }

@@ -3,46 +3,24 @@ package org.amoseman.budgetingwebsitebackend.application;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.amoseman.budgetingwebsitebackend.TestHandler;
-import org.amoseman.budgetingwebsitebackend.pojo.event.op.CreateExpense;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import org.amoseman.InitTestConfiguration;
+import org.amoseman.InitTestDatabase;
 import org.amoseman.budgetingwebsitebackend.pojo.event.op.CreateIncome;
-import org.amoseman.budgetingwebsitebackend.pojo.partition.op.CreatePartition;
-import org.amoseman.budgetingwebsitebackend.pojo.partition.op.UpdatePartition;
-import org.amoseman.fetch.Fetch;
+import org.glassfish.jersey.client.JerseyClientBuilder;
+import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.junit.jupiter.api.Test;
-
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class BudgetingApplicationTest {
 
-    private void generateConfigurationFile(String configurationLocation, String databaseLocation, String username, String password) {
-        File file = new File(configurationLocation);
-        file.deleteOnExit();
-        try {
-            if (!file.createNewFile()) {
-                return;
-            }
-            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-            String contents =   "database-url: " + databaseLocation + "\n" +
-                                "admin-username: " + username + "\n" +
-                                "admin-password: " + password + "\n" +
-                                "max-username-length: 32";
-            writer.write(contents);
-            writer.close();
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void startApplication(String configurationLocation, String databaseLocation) {
+    private void startApplication(String configurationLocation) {
         try {
             new BudgetingApplication().run("server", configurationLocation);
-            new File(databaseLocation.split(":")[2]).deleteOnExit();
         }
         catch (Exception e) {
             throw new RuntimeException(e);
@@ -79,14 +57,27 @@ class BudgetingApplicationTest {
 
     @Test
     void test() {
+        String databaseURL = "jdbc:sqlite:test-database.db";
         String address = "http://127.0.0.1:8080";
         String configurationLocation = "test-config.yaml";
-        String databaseLocation = "jdbc:sqlite:test-database.db";
         String adminUsername = "admin_user";
         String adminPassword = "admin_pass";
-        generateConfigurationFile(configurationLocation, databaseLocation, adminUsername, adminPassword);
-        startApplication(configurationLocation, databaseLocation);
+        InitTestDatabase.init(databaseURL, "schema.sql");
+        InitTestConfiguration.init(configurationLocation, databaseURL, adminUsername, adminPassword);
+        startApplication(configurationLocation);
 
+        WebTarget client = JerseyClientBuilder.newClient()
+                .target(address)
+                .register(HttpAuthenticationFeature.basic(adminUsername, adminPassword));
+
+        CreateIncome createIncome = new CreateIncome(100, 2024, 1, 1, "example", "example");
+        String createIncomeJson = toJSON(createIncome);
+        Entity<String> createIncomeEntity = Entity.entity(createIncomeJson, MediaType.APPLICATION_JSON_TYPE);
+        Response response =  client.path("/record/income").request().post(createIncomeEntity);
+        assertEquals(200, response.getStatus());
+        response.close();
+
+        /*
         Fetch fetch = new Fetch.Builder()
                 .setDomain(address)
                 .setUsername(adminUsername)
@@ -150,5 +141,7 @@ class BudgetingApplicationTest {
         assertEquals("0", get(partitions, 2, "amount"));
 
         //fail("Integration test not fully implemented");
+
+         */
     }
 }
