@@ -27,7 +27,7 @@ public class FinanceRecordService<C> {
         this.partitionDAO = partitionDAO;
     }
 
-    public String addIncome(String user, CreateIncome create) throws FinanceRecordAlreadyExistsException, NegativeValueException, InvalidFinanceEventTypeException {
+    public String addIncome(String user, CreateIncome create) throws FinanceRecordAlreadyExistsException, NegativeValueException {
         String uuid = UUID.randomUUID().toString();
         LocalDateTime now = Now.get();
         LocalDateTime occurred = LocalDateTime.of(create.getYear(), create.getMonth(), create.getDay(), 0, 0);
@@ -46,7 +46,7 @@ public class FinanceRecordService<C> {
         return uuid;
     }
 
-    public String addExpense(String user, CreateExpense create) throws FinanceRecordAlreadyExistsException, NegativeValueException, InvalidFinanceEventTypeException {
+    public String addExpense(String user, CreateExpense create) throws FinanceRecordAlreadyExistsException, NegativeValueException {
         String uuid = UUID.randomUUID().toString();
         LocalDateTime now = Now.get();
         LocalDateTime occurred = LocalDateTime.of(create.getYear(), create.getMonth(), create.getDay(), 0, 0);

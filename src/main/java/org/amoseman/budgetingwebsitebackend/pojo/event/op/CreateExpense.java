@@ -7,7 +7,7 @@ public class CreateExpense extends CreateFinanceRecord {
     }
 
     public CreateExpense(long amount, int year, int month, int day, String category, String description, String partition) {
-        super("expense", amount, year, month, day, category, description);
+        super(amount, year, month, day, category, description);
         this.partition = partition;
     }
 

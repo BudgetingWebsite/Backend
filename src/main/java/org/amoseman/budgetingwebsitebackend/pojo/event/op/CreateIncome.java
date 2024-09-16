@@ -6,6 +6,6 @@ public class CreateIncome extends CreateFinanceRecord {
     }
 
     public CreateIncome(long amount, int year, int month, int day, String category, String description) {
-        super("income", amount, year, month, day, category, description);
+        super(amount, year, month, day, category, description);
     }
 }

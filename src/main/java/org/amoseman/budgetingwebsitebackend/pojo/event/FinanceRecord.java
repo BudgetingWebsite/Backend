@@ -15,7 +15,7 @@ public abstract class FinanceRecord extends OwnedEntity {
     public final String description;
 
     @ConstructorProperties({"uuid", "created", "updated", "owner", "amount", "occurred", "category", "description"})
-    public FinanceRecord(String uuid, LocalDateTime created, LocalDateTime updated, String owner, long amount, LocalDateTime occurred, String category, String description) throws NegativeValueException, InvalidFinanceEventTypeException {
+    public FinanceRecord(String uuid, LocalDateTime created, LocalDateTime updated, String owner, long amount, LocalDateTime occurred, String category, String description) throws NegativeValueException {
         super(uuid, created, updated, owner);
         if (amount < 0) {
             throw new NegativeValueException(amount);
