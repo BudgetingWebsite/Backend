@@ -1,4 +1,4 @@
-package org.amoseman.budgetingwebsitebackend.dao.implementation.sql;
+package org.amoseman.budgetingwebsitebackend.dao.impl.sql;
 
 import org.amoseman.budgetingwebsitebackend.dao.FinanceRecordDAO;
 import org.amoseman.budgetingwebsitebackend.database.DatabaseConnection;
@@ -8,7 +8,6 @@ import org.amoseman.budgetingwebsitebackend.pojo.event.Expense;
 import org.amoseman.budgetingwebsitebackend.pojo.event.Income;
 import org.jooq.*;
 import org.jooq.Record;
-import org.jooq.impl.SchemaImpl;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,13 +15,10 @@ import java.util.Optional;
 
 import static org.jooq.impl.DSL.*;
 
-public class SQLFinanceRecordDAO extends FinanceRecordDAO<DSLContext> {
+import static org.jooq.codegen.Tables.*;
+import org.jooq.codegen.tables.records.*;
 
-    private static final Table<?> INCOME_TABLE = table("income");
-    private static final Table<?> EXPENSE_TABLE = table("expense");
-    private static final Field<String> UUID_FIELD = field("uuid", String.class);
-    private static final Field<String> OWNER_FIELD = field("owner", String.class);
-    private static final Field<LocalDateTime> OCCURRED_FIELD = field("occurred", LocalDateTime.class);
+public class SQLFinanceRecordDAO extends FinanceRecordDAO<DSLContext> {
 
     public SQLFinanceRecordDAO(DatabaseConnection<DSLContext> connection) {
         super(connection);
@@ -31,8 +27,8 @@ public class SQLFinanceRecordDAO extends FinanceRecordDAO<DSLContext> {
     @Override
     public void addIncome(Income income) throws FinanceRecordAlreadyExistsException {
         try {
-            Record record = connection.get().newRecord(INCOME_TABLE, income);
-            connection.get().executeInsert((TableRecord<?>) record);
+            IncomeRecord record = connection.get().newRecord(INCOME, income);
+            connection.get().executeInsert(record);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -43,8 +39,8 @@ public class SQLFinanceRecordDAO extends FinanceRecordDAO<DSLContext> {
     @Override
     public void addExpense(Expense expense) throws FinanceRecordAlreadyExistsException {
         try {
-            Record record = connection.get().newRecord(EXPENSE_TABLE, expense);
-            connection.get().executeInsert((TableRecord<?>) record);
+            ExpenseRecord record = connection.get().newRecord(EXPENSE, expense);
+            connection.get().executeInsert(record);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -56,9 +52,9 @@ public class SQLFinanceRecordDAO extends FinanceRecordDAO<DSLContext> {
     public boolean removeIncome(String user, String uuid) {
         try {
             return 1 == connection.get()
-                    .deleteFrom(INCOME_TABLE)
+                    .deleteFrom(INCOME)
                     .where(
-                            UUID_FIELD.eq(uuid).and(OWNER_FIELD.eq(user))
+                            INCOME.UUID.eq(uuid).and(INCOME.OWNER.eq(user))
                     )
                     .execute();
         }
@@ -71,9 +67,9 @@ public class SQLFinanceRecordDAO extends FinanceRecordDAO<DSLContext> {
     public boolean removeExpense(String user, String uuid) {
         try {
             return 1 == connection.get()
-                    .deleteFrom(EXPENSE_TABLE)
+                    .deleteFrom(EXPENSE)
                     .where(
-                            UUID_FIELD.eq(uuid).and(OWNER_FIELD.eq(user))
+                            EXPENSE.UUID.eq(uuid).and(EXPENSE.OWNER.eq(user))
                     )
                     .execute();
         }
@@ -86,8 +82,8 @@ public class SQLFinanceRecordDAO extends FinanceRecordDAO<DSLContext> {
     public List<Income> getAllIncome(String user) {
         try {
             return connection.get()
-                    .selectFrom(INCOME_TABLE)
-                    .where(OWNER_FIELD.eq(user))
+                    .selectFrom(INCOME)
+                    .where(INCOME.OWNER.eq(user))
                     .fetch()
                     .into(Income.class);
         }
@@ -100,8 +96,8 @@ public class SQLFinanceRecordDAO extends FinanceRecordDAO<DSLContext> {
     public List<Expense> getAllExpenses(String user) {
         try {
             return connection.get()
-                    .selectFrom(EXPENSE_TABLE)
-                    .where(OWNER_FIELD.eq(user))
+                    .selectFrom(EXPENSE)
+                    .where(EXPENSE.OWNER.eq(user))
                     .fetch()
                     .into(Expense.class);
         }
@@ -114,12 +110,12 @@ public class SQLFinanceRecordDAO extends FinanceRecordDAO<DSLContext> {
     public List<Income> getIncomeInRange(String user, TimeRange range) {
         try {
             return connection.get()
-                    .selectFrom(INCOME_TABLE)
+                    .selectFrom(INCOME)
                     .where(
-                            OWNER_FIELD.eq(user)
+                            INCOME.OWNER.eq(user)
                                     .and(
-                                            OCCURRED_FIELD.greaterOrEqual(range.getStart())
-                                                    .and(OCCURRED_FIELD.lessOrEqual(range.getEnd()))
+                                            INCOME.OCCURRED.greaterOrEqual(range.getStart())
+                                                    .and(INCOME.OCCURRED.lessOrEqual(range.getEnd()))
                                     )
                     )
                     .fetch()
@@ -134,12 +130,12 @@ public class SQLFinanceRecordDAO extends FinanceRecordDAO<DSLContext> {
     public List<Expense> getExpensesInRange(String user, TimeRange range) {
         try {
             return connection.get()
-                    .selectFrom(EXPENSE_TABLE)
+                    .selectFrom(EXPENSE)
                     .where(
-                            OWNER_FIELD.eq(user)
+                            EXPENSE.OWNER.eq(user)
                                     .and(
-                                            OCCURRED_FIELD.greaterOrEqual(range.getStart())
-                                                    .and(OCCURRED_FIELD.lessOrEqual(range.getEnd()))
+                                            EXPENSE.OCCURRED.greaterOrEqual(range.getStart())
+                                                    .and(EXPENSE.OCCURRED.lessOrEqual(range.getEnd()))
                                     )
                     )
                     .fetch()
@@ -154,9 +150,9 @@ public class SQLFinanceRecordDAO extends FinanceRecordDAO<DSLContext> {
     public Optional<Income> getIncome(String user, String uuid) {
         try {
             List<Income> list = connection.get()
-                    .selectFrom(INCOME_TABLE)
+                    .selectFrom(INCOME)
                     .where(
-                            OWNER_FIELD.eq(user).and(UUID_FIELD.eq(uuid))
+                            INCOME.OWNER.eq(user).and(INCOME.UUID.eq(uuid))
                     )
                     .fetch()
                     .into(Income.class);
@@ -174,9 +170,9 @@ public class SQLFinanceRecordDAO extends FinanceRecordDAO<DSLContext> {
     public Optional<Expense> getExpense(String user, String uuid) {
         try {
             List<Expense> list = connection.get()
-                    .selectFrom(EXPENSE_TABLE)
+                    .selectFrom(EXPENSE)
                     .where(
-                            OWNER_FIELD.eq(user).and(UUID_FIELD.eq(uuid))
+                            EXPENSE.OWNER.eq(user).and(EXPENSE.UUID.eq(uuid))
                     )
                     .fetch()
                     .into(Expense.class);

@@ -8,7 +8,6 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.amoseman.budgetingwebsitebackend.application.auth.User;
-import org.amoseman.budgetingwebsitebackend.service.StatisticsService;
 
 @Path("/stats")
 @Produces(MediaType.APPLICATION_JSON)
