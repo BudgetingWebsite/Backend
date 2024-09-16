@@ -1,18 +1,20 @@
 package org.amoseman.budgetingwebsitebackend.util;
 
+import org.amoseman.budgetingwebsitebackend.pojo.partition.Partition;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class Splitter {
-    public static Split get(double[] shares, long amount) {
-        int len = shares.length;
+    public static Split get(List<Partition> partitions, long amount) {
+        int len = partitions.size();
         double[] floored = new double[len];
         double[] differences = new double[len];
         double remainder = 0;
         List<Integer> indices = new ArrayList<>();
         for (int i = 0; i < len; i++) {
-            double raw = shares[i] * amount;
+            double raw = partitions.get(i).share * amount;
             floored[i] = Math.floor(raw);
             differences[i] = raw - floored[i];
             remainder += differences[i];

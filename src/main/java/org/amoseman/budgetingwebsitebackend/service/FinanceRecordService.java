@@ -1,30 +1,23 @@
 package org.amoseman.budgetingwebsitebackend.service;
 
 import org.amoseman.budgetingwebsitebackend.dao.FinanceRecordDAO;
-import org.amoseman.budgetingwebsitebackend.dao.PartitionDAO;
 import org.amoseman.budgetingwebsitebackend.exception.*;
 import org.amoseman.budgetingwebsitebackend.pojo.*;
 import org.amoseman.budgetingwebsitebackend.pojo.event.Expense;
 import org.amoseman.budgetingwebsitebackend.pojo.event.Income;
 import org.amoseman.budgetingwebsitebackend.pojo.event.op.CreateExpense;
 import org.amoseman.budgetingwebsitebackend.pojo.event.op.CreateIncome;
-import org.amoseman.budgetingwebsitebackend.pojo.partition.Partition;
 import org.amoseman.budgetingwebsitebackend.util.Now;
-import org.amoseman.budgetingwebsitebackend.util.Split;
-import org.amoseman.budgetingwebsitebackend.util.Splitter;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public class FinanceRecordService<C> {
     private final FinanceRecordDAO<C> financeRecordDAO;
-    private final PartitionDAO<C> partitionDAO;
 
-    public FinanceRecordService(FinanceRecordDAO<C> financeRecordDAO, PartitionDAO<C> partitionDAO) {
+    public FinanceRecordService(FinanceRecordDAO<C> financeRecordDAO) {
         this.financeRecordDAO = financeRecordDAO;
-        this.partitionDAO = partitionDAO;
     }
 
     public String addIncome(String user, CreateIncome create) throws FinanceRecordAlreadyExistsException, NegativeValueException {
@@ -42,7 +35,6 @@ public class FinanceRecordService<C> {
                 create.getDescription()
         );
         financeRecordDAO.addIncome(income);
-        addToPartitions(user, income.amount);
         return uuid;
     }
 
@@ -62,67 +54,15 @@ public class FinanceRecordService<C> {
                 create.getPartition()
         );
         financeRecordDAO.addExpense(expense);
-        addToPartition(user, expense.partition, -expense.amount);
         return uuid;
     }
 
-    private void addToPartitions(String owner, long amount) {
-        List<Partition> partitions = partitionDAO.listPartitions(owner);
-        double[] shares = new double[partitions.size()];
-        for (int i = 0; i < partitions.size(); i++) {
-            shares[i] = partitions.get(i).getShare();
-        }
-        Split split = Splitter.get(shares, amount);
-        for (int i = 0; i < partitions.size(); i++) {
-            long x = split.getAmounts()[i];
-            try {
-                partitionDAO.updatePartition(partitions.get(i).add(x));
-            }
-            catch (PartitionDoesNotExistException e) {
-                // IMPOSSIBLE
-            }
-        }
-    }
-
-    private void addToPartition(String owner, String uuid, long amount) {
-        Optional<Partition> maybe =  partitionDAO.getPartition(owner, uuid);
-        if (maybe.isEmpty()) {
-            return;
-        }
-        Partition partition = maybe.get();
-        partition = partition.add(amount);
-        try {
-            partitionDAO.updatePartition(partition);
-        }
-        catch (PartitionDoesNotExistException e) {
-            // IS NOT POSSIBLE
-        }
-    }
-
     public boolean removeIncome(String user, String uuid) {
-        Optional<Income> maybe = financeRecordDAO.getIncome(user, uuid);
-        if (maybe.isEmpty()) {
-            return false;
-        }
-        Income income = maybe.get();
-        if (financeRecordDAO.removeIncome(user, uuid)) {
-            addToPartitions(user, -income.amount);
-            return true;
-        }
-        return false;
+        return financeRecordDAO.removeIncome(user, uuid);
     }
 
     public boolean removeExpense(String user, String uuid) {
-        Optional<Expense> maybe = financeRecordDAO.getExpense(user, uuid);
-        if (maybe.isEmpty()) {
-            return false;
-        }
-        Expense expense = maybe.get();
-        if (financeRecordDAO.removeExpense(user, uuid)) {
-            addToPartition(user, expense.partition, expense.amount);
-            return true;
-        }
-        return false;
+        return financeRecordDAO.removeExpense(user, uuid);
     }
 
     private LocalDateTime toLocalDateTime(String yearString, String monthString, String dayString) throws NumberFormatException {

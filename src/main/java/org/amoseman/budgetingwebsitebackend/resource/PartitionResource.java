@@ -61,7 +61,7 @@ public class PartitionResource<C> {
     @GET
     @PermitAll
     public Response getPartitions(@Auth User user) {
-        List<Partition> partitions = partitionService.listPartitions(user.getName());
+        List<Partition> partitions = partitionService.getPartitions(user.getName());
         return Response.ok(partitions).build();
     }
 

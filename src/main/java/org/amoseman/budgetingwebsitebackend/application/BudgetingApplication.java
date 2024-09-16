@@ -50,7 +50,7 @@ public class BudgetingApplication extends Application<BudgetingConfiguration> {
         StatisticsDAO<DSLContext> statisticsDAO = new SQLStatisticsDAO(connection);
 
         AccountService<DSLContext> accountService = new AccountService<>(accountDAO, hasher);
-        FinanceRecordService<DSLContext> financeRecordService = new FinanceRecordService<>(financeRecordDAO, partitionDAO);
+        FinanceRecordService<DSLContext> financeRecordService = new FinanceRecordService<>(financeRecordDAO);
         PartitionService<DSLContext> partitionService =  new PartitionService<>(partitionDAO, financeRecordDAO);
         StatisticsService<DSLContext> statisticsService = new StatisticsService<>(statisticsDAO);
 

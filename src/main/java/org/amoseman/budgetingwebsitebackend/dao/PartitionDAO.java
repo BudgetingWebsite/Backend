@@ -29,10 +29,10 @@ public abstract class PartitionDAO<C> extends DAO<C> {
 
     /**
      * Remove a partition.
-     * @param owner the owner of the partition.
-     * @param id the ID of the partition.
+     * @param user the UUID of the owning user.
+     * @param uuid the UUID of the partition.
      */
-    public abstract void removePartition(String owner, String id) throws PartitionDoesNotExistException;
+    public abstract void removePartition(String user, String uuid) throws PartitionDoesNotExistException;
 
     /**
      * Update a partition.
@@ -42,23 +42,16 @@ public abstract class PartitionDAO<C> extends DAO<C> {
 
     /**
      * Get a partition.
-     * @param owner the owner of the partition.
-     * @param id the ID of the partition.
+     * @param user the UUID of the owning user.
+     * @param uuid the UUID of the partition.
      * @return the partition.
      */
-    public abstract Optional<Partition> getPartition(String owner, String id);
+    public abstract Optional<Partition> getPartition(String user, String uuid);
 
     /**
      * Get all partitions.
-     * @param owner the owner of the partitions.
+     * @param user the UUID of the owning user.
      * @return the partitions.
      */
-    public abstract List<Partition> listPartitions(String owner);
-
-    /**
-     * Calculate the total share of all partitions.
-     * @param owner the owner of the partitions.
-     * @return the total share.
-     */
-    public abstract double totalShare(String owner);
+    public abstract List<Partition> getPartitions(String user);
 }
