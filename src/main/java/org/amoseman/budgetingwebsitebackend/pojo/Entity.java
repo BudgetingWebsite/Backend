@@ -1,5 +1,8 @@
 package org.amoseman.budgetingwebsitebackend.pojo;
 
+import org.jooq.Record;
+import org.jooq.TableRecord;
+
 import java.beans.ConstructorProperties;
 import java.time.LocalDateTime;
 

@@ -6,12 +6,12 @@ public class UpdateAccount {
     private String uuid;
     private String hash;
     private String salt;
-    private Set<String> roles;
+    private String roles;
 
     public UpdateAccount() {
     }
 
-    public UpdateAccount(String uuid, String hash, String salt, Set<String> roles) {
+    public UpdateAccount(String uuid, String hash, String salt, String roles) {
         this.uuid = uuid;
         this.hash = hash;
         this.salt = salt;
@@ -30,7 +30,7 @@ public class UpdateAccount {
         return salt;
     }
 
-    public Set<String> getRoles() {
+    public String getRoles() {
         return roles;
     }
 }

@@ -29,17 +29,17 @@ public abstract class AccountDAO<C> extends DAO<C> {
 
     /**
      * Remove a user account.
-     * @param username the username of the account.
+     * @param uuid the UUID of the account.
      * @throws UserDoesNotExistException if the account does not exist.
      */
-    public abstract void removeAccount(String username) throws UserDoesNotExistException;
+    public abstract void removeAccount(String uuid) throws UserDoesNotExistException;
 
     /**
      * Get the account of a user.
-     * @param username the username of the account.
+     * @param uuid the UUID of the account.
      * @return the account.
      */
-    public abstract Optional<Account> getAccount(String username) ;
+    public abstract Optional<Account> getAccount(String uuid) ;
 
     /**
      * Update the account of a user.

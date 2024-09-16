@@ -25,7 +25,7 @@ class UserAuthenticatorTest {
         String salt64 = Base64.toBase64String(salt);
 
         AccountDAO<?> accountDAO = Mockito.mock(AccountDAO.class);
-        Mockito.when(accountDAO.getAccount("alice")).thenReturn(Optional.of(new Account("alice", null, null, hash64, salt64, Set.of(Roles.USER))));
+        Mockito.when(accountDAO.getAccount("alice")).thenReturn(Optional.of(new Account("alice", null, null, hash64, salt64, Roles.USER)));
         UserAuthenticator authenticator = new UserAuthenticator(accountDAO, hasher);
         try {
             Optional<User> user = authenticator.authenticate(new BasicCredentials("alice", "password"));

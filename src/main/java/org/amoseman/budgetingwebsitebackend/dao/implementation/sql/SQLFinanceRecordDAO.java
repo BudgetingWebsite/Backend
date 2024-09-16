@@ -8,18 +8,18 @@ import org.amoseman.budgetingwebsitebackend.pojo.event.Expense;
 import org.amoseman.budgetingwebsitebackend.pojo.event.Income;
 import org.jooq.*;
 import org.jooq.Record;
+import org.jooq.impl.SchemaImpl;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static org.jooq.impl.DSL.field;
-import static org.jooq.impl.DSL.table;
+import static org.jooq.impl.DSL.*;
 
 public class SQLFinanceRecordDAO extends FinanceRecordDAO<DSLContext> {
 
-    private static final Table<Record> INCOME_TABLE = table("income");
-    private static final Table<Record> EXPENSE_TABLE = table("expense");
+    private static final Table<?> INCOME_TABLE = table("income");
+    private static final Table<?> EXPENSE_TABLE = table("expense");
     private static final Field<String> UUID_FIELD = field("uuid", String.class);
     private static final Field<String> OWNER_FIELD = field("owner", String.class);
     private static final Field<LocalDateTime> OCCURRED_FIELD = field("occurred", LocalDateTime.class);

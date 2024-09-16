@@ -32,8 +32,8 @@ public class UserAuthenticator implements Authenticator<BasicCredentials, User> 
     }
 
     private boolean validate(Account account, String attempt) {
-        byte[] salt = Base64.getDecoder().decode(account.getSalt());
+        byte[] salt = Base64.getDecoder().decode(account.salt);
         String hash = hasher.hash(attempt, salt);
-        return hash.equals(account.getHash());
+        return hash.equals(account.hash);
     }
 }

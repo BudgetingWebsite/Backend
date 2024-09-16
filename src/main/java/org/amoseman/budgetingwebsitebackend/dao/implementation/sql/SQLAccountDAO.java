@@ -1,22 +1,29 @@
 package org.amoseman.budgetingwebsitebackend.dao.implementation.sql;
 
-import org.amoseman.budgetingwebsitebackend.application.auth.Roles;
 import org.amoseman.budgetingwebsitebackend.dao.AccountDAO;
 import org.amoseman.budgetingwebsitebackend.database.DatabaseConnection;
 import org.amoseman.budgetingwebsitebackend.exception.UserAlreadyExistsException;
 import org.amoseman.budgetingwebsitebackend.exception.UserDoesNotExistException;
 import org.amoseman.budgetingwebsitebackend.pojo.account.Account;
-import org.jooq.DSLContext;
+import org.jooq.*;
 import org.jooq.Record;
-import org.jooq.Result;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.table;
 
 public class SQLAccountDAO extends AccountDAO<DSLContext> {
+    private static final Table<Record> ACCOUNT_TABLE = table("account");
+    private static final Field<String> UUID_FIELD = field("uuid", String.class);
+    private static final Field<String> ROLES_FIELD = field("roles", String.class);
+    private static final Field<String> HASH_FIELD = field("hash", String.class);
+    private static final Field<String> SALT_FIELD = field("salt", String.class);
+    private static final Field<LocalDateTime> CREATED_FIELD = field("created", LocalDateTime.class);
+    private static final Field<LocalDateTime> UPDATED_FIELD = field("updated", LocalDateTime.class);
+
     public SQLAccountDAO(DatabaseConnection<DSLContext> connection) {
         super(connection);
     }
@@ -24,74 +31,45 @@ public class SQLAccountDAO extends AccountDAO<DSLContext> {
     @Override
     public void addAccount(Account account) throws UserAlreadyExistsException {
         try {
-            connection.get()
-                    .insertInto(
-                            table("accounts"),
-                            field("username"),
-                            field("roles"),
-                            field("hash"),
-                            field("salt"),
-                            field("created"),
-                            field("updated")
-                    )
-                    .values(
-                            account.getUuid(),
-                            Roles.asString(account.getRoles()),
-                            account.getHash(),
-                            account.getSalt(),
-                            account.getCreated(),
-                            account.getUpdated()
-                    )
-                    .execute();
+            Record record = connection.get().newRecord(ACCOUNT_TABLE, account);
+            connection.get().executeInsert((TableRecord<?>) record);
         }
         catch (Exception e) {
-            throw new UserAlreadyExistsException("add", account.getUuid());
+            e.printStackTrace();
+            throw new UserAlreadyExistsException("add", account.uuid);
         }
     }
 
     @Override
-    public void removeAccount(String username) throws UserDoesNotExistException {
+    public void removeAccount(String uuid) throws UserDoesNotExistException {
         int result = connection.get()
-                .deleteFrom(table("accounts"))
-                .where(field("username").eq(username))
+                .deleteFrom(ACCOUNT_TABLE)
+                .where(UUID_FIELD.eq(uuid))
                 .execute();
         if (0 == result) {
-            throw new UserDoesNotExistException("remove", username);
+            throw new UserDoesNotExistException("remove", uuid);
         }
     }
 
     @Override
-    public Optional<Account> getAccount(String username) {
-        Result<Record> result = connection.get()
-                .selectFrom(table("accounts"))
-                .where(field("username").eq(username))
-                .fetch();
-        if (result.isEmpty()) {
+    public Optional<Account> getAccount(String uuid) {
+        List<Account> list = connection.get()
+                .selectFrom(ACCOUNT_TABLE)
+                .where(UUID_FIELD.eq(uuid))
+                .fetch()
+                .into(Account.class);
+        if (list.isEmpty()) {
             return Optional.empty();
         }
-        Record record = result.get(0);
-        return Optional.of(new Account(
-                record.get(field("username"), String.class),
-                record.get(field("created"), Timestamp.class).toLocalDateTime(),
-                record.get(field("updated"), Timestamp.class).toLocalDateTime(),
-                record.get(field("hash"), String.class),
-                record.get(field("salt"), String.class),
-                Roles.fromString(record.get(field("roles"), String.class))
-                ));
+        return Optional.of(list.get(0));
     }
 
     @Override
     public void updateAccount(Account account) throws UserDoesNotExistException{
-        int result = connection.get()
-                .update(table("accounts"))
-                .set(field("roles"), Roles.asString(account.getRoles()))
-                .set(field("hash"), account.getHash())
-                .set(field("salt"), account.getSalt())
-                .set(field("updated"), account.getUpdated())
-                .where(field("username").eq(account.getUuid()))
-                .execute();
+        Record record = connection.get().newRecord(ACCOUNT_TABLE, account);
+        int result = connection.get().executeUpdate((UpdatableRecord<?>) record);
         if (0 == result) {
-            throw new UserDoesNotExistException("update", account.getUuid());
+            throw new UserDoesNotExistException("update", account.uuid);
         }
     }
 }

@@ -51,13 +51,8 @@ public class SQLPartitionDAO extends PartitionDAO<DSLContext> {
 
     @Override
     public void updatePartition(Partition partition) throws PartitionDoesNotExistException {
-        int result = connection.get()
-                .update(PARTITION_TABLE)
-                .set(SHARE_FIELD, partition.share)
-                .set(NAME_FIELD, partition.name)
-                .set(UPDATED_FIELD, partition.updated)
-                .where(UUID_FIELD.eq(partition.uuid))
-                .execute();
+        Record record = connection.get().newRecord(PARTITION_TABLE, partition);
+        int result = connection.get().executeUpdate((UpdatableRecord<?>) record);
         if (0 == result) {
             throw new PartitionDoesNotExistException("update", partition.uuid);
         }

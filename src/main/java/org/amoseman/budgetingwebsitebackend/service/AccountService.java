@@ -11,6 +11,7 @@ import org.amoseman.budgetingwebsitebackend.pojo.account.op.UpdateAccount;
 import org.amoseman.budgetingwebsitebackend.util.Now;
 import org.bouncycastle.util.encoders.Base64;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Set;
 
@@ -27,7 +28,7 @@ public class AccountService<C> {
         byte[] salt = hasher.salt();
         String salt64 = Base64.toBase64String(salt);
         String hash64 = hasher.hash(usernamePassword.getPassword(), salt);
-        Account account = new Account(usernamePassword.getUsername(), Now.get(), Now.get(), hash64, salt64, Set.of(Roles.USER));
+        Account account = new Account(usernamePassword.getUsername(), Now.get(), Now.get(), hash64, salt64, Roles.USER);
         accountDAO.addAccount(account);
     }
 
@@ -40,6 +41,7 @@ public class AccountService<C> {
     }
 
     public void changePassword(String username, String password) throws UserDoesNotExistException {
+        LocalDateTime now = Now.get();
         Optional<Account> maybe = accountDAO.getAccount(username);
         if (maybe.isEmpty()) {
             throw new UserDoesNotExistException("change password", username);
@@ -48,19 +50,20 @@ public class AccountService<C> {
         byte[] salt = hasher.salt();
         String salt64 = Base64.toBase64String(salt);
         String hash64 = hasher.hash(password, salt);
-        UpdateAccount update = new UpdateAccount(username, hash64, salt64, account.getRoles());
-        account = account.update(update);
+        UpdateAccount update = new UpdateAccount(username, hash64, salt64, account.roles);
+        account = new Account(account, update, now);
         accountDAO.updateAccount(account);
     }
 
-    public void changeRoles(String username, Set<String> roles) throws UserDoesNotExistException {
+    public void changeRoles(String username, String roles) throws UserDoesNotExistException {
+        LocalDateTime now = Now.get();
         Optional<Account> maybe = accountDAO.getAccount(username);
         if (maybe.isEmpty()) {
             throw new UserDoesNotExistException("change password", username);
         }
         Account account = maybe.get();
-        UpdateAccount update = new UpdateAccount(username, account.getHash(), account.getSalt(), roles);
-        account = account.update(update);
+        UpdateAccount update = new UpdateAccount(username, account.hash, account.salt, roles);
+        account = new Account(account, update, now);
         accountDAO.updateAccount(account);
     }
 }

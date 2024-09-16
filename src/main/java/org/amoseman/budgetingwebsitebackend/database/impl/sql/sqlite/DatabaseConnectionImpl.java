@@ -1,22 +1,23 @@
-package org.amoseman.budgetingwebsitebackend.database.implementation;
+package org.amoseman.budgetingwebsitebackend.database.impl.sql.sqlite;
 
 import org.amoseman.budgetingwebsitebackend.database.DatabaseConnection;
-import org.jooq.DSLContext;
-import org.jooq.SQLDialect;
+import org.jooq.*;
 import org.jooq.impl.DSL;
+import org.jooq.impl.DefaultConfiguration;
+import org.jooq.impl.DefaultRecordMapper;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class SQLDatabaseConnection extends DatabaseConnection<DSLContext> {
+public class DatabaseConnectionImpl extends DatabaseConnection<DSLContext> {
     private Connection connection;
 
     /**
      * Instantiate a connection to an SQL database.
      * @param url the URL of the database.
      */
-    public SQLDatabaseConnection(String url) {
+    public DatabaseConnectionImpl(String url) {
         super(url);
     }
 
@@ -29,7 +30,11 @@ public class SQLDatabaseConnection extends DatabaseConnection<DSLContext> {
             throw new RuntimeException(e);
         }
         SQLDialect dialect = getDialect(url);
-        return DSL.using(connection, dialect);
+        Configuration configuration = new DefaultConfiguration()
+                .set(connection)
+                .set(dialect)
+                .derive((RecordMapperProvider) DefaultRecordMapper::new);
+        return DSL.using(configuration);
     }
 
     @Override

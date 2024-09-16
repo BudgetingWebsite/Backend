@@ -15,8 +15,8 @@ public class User implements Principal {
     }
 
     public User(Account account) {
-        this.username = account.getUuid();
-        this.roles = account.getRoles();
+        this.username = account.uuid;
+        this.roles = Set.of(account.roles.split(","));
     }
 
     @Override

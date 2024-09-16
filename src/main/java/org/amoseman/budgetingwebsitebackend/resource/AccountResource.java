@@ -72,7 +72,7 @@ public class AccountResource<C> {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{username}/roles")
-    public Response changeRoles(@Auth User user, @PathParam("username") String username, Set<String> roles) {
+    public Response changeRoles(@Auth User user, @PathParam("username") String username, String roles) {
         try {
             accountService.changeRoles(username, roles);
             return Response.ok().build();

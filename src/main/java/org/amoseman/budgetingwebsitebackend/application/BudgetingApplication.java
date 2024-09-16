@@ -18,9 +18,7 @@ import org.amoseman.budgetingwebsitebackend.dao.implementation.sql.SQLFinanceRec
 import org.amoseman.budgetingwebsitebackend.dao.implementation.sql.SQLPartitionDAO;
 import org.amoseman.budgetingwebsitebackend.dao.implementation.sql.SQLStatisticsDAO;
 import org.amoseman.budgetingwebsitebackend.database.DatabaseConnection;
-import org.amoseman.budgetingwebsitebackend.database.DatabaseInitializer;
-import org.amoseman.budgetingwebsitebackend.database.implementation.SQLDatabaseConnection;
-import org.amoseman.budgetingwebsitebackend.database.implementation.SQLDatabaseInitializer;
+import org.amoseman.budgetingwebsitebackend.database.impl.sql.sqlite.DatabaseConnectionImpl;
 import org.amoseman.budgetingwebsitebackend.resource.AccountResource;
 import org.amoseman.budgetingwebsitebackend.resource.FinanceRecordResource;
 import org.amoseman.budgetingwebsitebackend.resource.PartitionResource;
@@ -40,9 +38,7 @@ public class BudgetingApplication extends Application<BudgetingConfiguration> {
         SecureRandom random = new SecureRandom();
         Hasher hasher = new Hasher(random, 16, 16, 2, 8192, 1);
 
-        DatabaseConnection<DSLContext> connection = new SQLDatabaseConnection(configuration.getDatabaseURL());
-        DatabaseInitializer<DSLContext> initializer = new SQLDatabaseInitializer(connection, configuration, hasher);
-        initializer.initialize();
+        DatabaseConnection<DSLContext> connection = new DatabaseConnectionImpl(configuration.getDatabaseURL());
 
         AccountDAO<DSLContext> accountDAO = new SQLAccountDAO(connection);
         FinanceRecordDAO<DSLContext> financeRecordDAO = new SQLFinanceRecordDAO(connection);
