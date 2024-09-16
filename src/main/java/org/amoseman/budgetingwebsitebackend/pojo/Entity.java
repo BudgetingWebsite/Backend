@@ -1,27 +1,17 @@
 package org.amoseman.budgetingwebsitebackend.pojo;
 
+import java.beans.ConstructorProperties;
 import java.time.LocalDateTime;
 
 public class Entity {
-    protected final String uuid;
-    protected final LocalDateTime created;
-    protected final LocalDateTime updated;
+    public final String uuid;
+    public final LocalDateTime created;
+    public final LocalDateTime updated;
 
+    @ConstructorProperties({"uuid", "created", "updated"})
     public Entity(String uuid, LocalDateTime created, LocalDateTime updated) {
         this.uuid = uuid;
         this.created = created;
         this.updated = updated;
-    }
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    public LocalDateTime getCreated() {
-        return created;
-    }
-
-    public LocalDateTime getUpdated() {
-        return updated;
     }
 }

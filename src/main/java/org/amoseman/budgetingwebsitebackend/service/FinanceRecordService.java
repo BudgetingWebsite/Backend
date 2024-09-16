@@ -5,7 +5,6 @@ import org.amoseman.budgetingwebsitebackend.dao.PartitionDAO;
 import org.amoseman.budgetingwebsitebackend.exception.*;
 import org.amoseman.budgetingwebsitebackend.pojo.*;
 import org.amoseman.budgetingwebsitebackend.pojo.event.Expense;
-import org.amoseman.budgetingwebsitebackend.pojo.event.FinanceRecord;
 import org.amoseman.budgetingwebsitebackend.pojo.event.Income;
 import org.amoseman.budgetingwebsitebackend.pojo.event.op.CreateExpense;
 import org.amoseman.budgetingwebsitebackend.pojo.event.op.CreateIncome;
@@ -14,7 +13,6 @@ import org.amoseman.budgetingwebsitebackend.util.Now;
 import org.amoseman.budgetingwebsitebackend.util.Split;
 import org.amoseman.budgetingwebsitebackend.util.Splitter;
 
-import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -29,42 +27,42 @@ public class FinanceRecordService<C> {
         this.partitionDAO = partitionDAO;
     }
 
-    public String addEvent(String user, CreateIncome create) throws NegativeValueException, InvalidFinanceEventTypeException, FinanceRecordAlreadyExistsException, DateTimeException {
+    public String addIncome(String user, CreateIncome create) throws FinanceRecordAlreadyExistsException, NegativeValueException, InvalidFinanceEventTypeException {
         String uuid = UUID.randomUUID().toString();
         LocalDateTime now = Now.get();
-        LocalDateTime when = LocalDateTime.of(create.getYear(), create.getMonth(), create.getDay(), 0, 0);
-        Income event = new Income(
+        LocalDateTime occurred = LocalDateTime.of(create.getYear(), create.getMonth(), create.getDay(), 0, 0);
+        Income income = new Income(
                 uuid,
                 now,
                 now,
                 user,
                 create.getAmount(),
-                when,
+                occurred,
                 create.getCategory(),
                 create.getDescription()
         );
-        financeRecordDAO.addEvent(event);
-        addToPartitions(user, event.getAmount());
+        financeRecordDAO.addIncome(income);
+        addToPartitions(user, income.amount);
         return uuid;
     }
 
-    public String addEvent(String user, CreateExpense create) throws NegativeValueException, InvalidFinanceEventTypeException, FinanceRecordAlreadyExistsException, DateTimeException {
+    public String addExpense(String user, CreateExpense create) throws FinanceRecordAlreadyExistsException, NegativeValueException, InvalidFinanceEventTypeException {
         String uuid = UUID.randomUUID().toString();
         LocalDateTime now = Now.get();
-        LocalDateTime when = LocalDateTime.of(create.getYear(), create.getMonth(), create.getDay(), 0, 0);
-        Expense event = new Expense(
+        LocalDateTime occurred = LocalDateTime.of(create.getYear(), create.getMonth(), create.getDay(), 0, 0);
+        Expense expense = new Expense(
                 uuid,
                 now,
                 now,
                 user,
                 create.getAmount(),
-                when,
+                occurred,
                 create.getCategory(),
                 create.getDescription(),
                 create.getPartition()
         );
-        financeRecordDAO.addEvent(event);
-        addToPartition(user, create.getPartition(), -create.getAmount());
+        financeRecordDAO.addExpense(expense);
+        addToPartition(user, expense.partition, -expense.amount);
         return uuid;
     }
 
@@ -101,36 +99,64 @@ public class FinanceRecordService<C> {
         }
     }
 
-    public void removeEvent(String user, String id, String type) throws FinanceRecordDoesNotExistException {
-        FinanceRecord event = financeRecordDAO.removeEvent(user, id, type);
-        if ("income".equals(type)) {
-            addToPartitions(user, -event.getAmount());
+    public boolean removeIncome(String user, String uuid) {
+        Optional<Income> maybe = financeRecordDAO.getIncome(user, uuid);
+        if (maybe.isEmpty()) {
+            return false;
         }
-        if ("expense".equals(type)) {
-            Expense expense = (Expense) event;
-            addToPartition(user, expense.getPartition(), expense.getAmount());
+        Income income = maybe.get();
+        if (financeRecordDAO.removeIncome(user, uuid)) {
+            addToPartitions(user, -income.amount);
+            return true;
         }
+        return false;
     }
 
-    public List<FinanceRecord> getEvents(
-            String user, String type,
-            String yearStartString, String monthStartString, String dayStartString,
-            String yearEndString, String monthEndString, String dayEndString) throws NumberFormatException {
+    public boolean removeExpense(String user, String uuid) {
+        Optional<Expense> maybe = financeRecordDAO.getExpense(user, uuid);
+        if (maybe.isEmpty()) {
+            return false;
+        }
+        Expense expense = maybe.get();
+        if (financeRecordDAO.removeExpense(user, uuid)) {
+            addToPartition(user, expense.partition, expense.amount);
+            return true;
+        }
+        return false;
+    }
 
-        int yearStart = Integer.parseInt(yearStartString);
-        int monthStart = Integer.parseInt(monthStartString);
-        int dayStart = Integer.parseInt(dayStartString);
-        int yearEnd = Integer.parseInt(yearEndString);
-        int monthEnd = Integer.parseInt(monthEndString);
-        int dayEnd = Integer.parseInt(dayEndString);
+    private LocalDateTime toLocalDateTime(String yearString, String monthString, String dayString) throws NumberFormatException {
+        int year = Integer.parseInt(yearString);
+        int month = Integer.parseInt(monthString);
+        int day = Integer.parseInt(dayString);
+        return LocalDateTime.of(year, month, day, 0, 0);
+    }
 
-        LocalDateTime start = LocalDateTime.of(yearStart, monthStart, dayStart, 0, 0);
-        LocalDateTime end = LocalDateTime.of(yearEnd, monthEnd, dayEnd, 0, 0);
+    public List<Income> getIncome(
+            String user,
+            String yearStartString,
+            String monthStartString,
+            String dayStartString,
+            String yearEndString,
+            String monthEndString,
+            String dayEndString) throws NumberFormatException {
+        LocalDateTime start = toLocalDateTime(yearStartString, monthStartString, dayStartString);
+        LocalDateTime end = toLocalDateTime(yearEndString, monthEndString, dayEndString);
         TimeRange range = new TimeRange(start, end);
-        return financeRecordDAO.getEvents(user, type, range);
+        return financeRecordDAO.getIncomeInRange(user, range);
     }
 
-    public List<FinanceRecord> getEvents(String user, String type) {
-        return financeRecordDAO.getEvents(user, type);
+    public List<Expense> getExpenses(
+            String user,
+            String yearStartString,
+            String monthStartString,
+            String dayStartString,
+            String yearEndString,
+            String monthEndString,
+            String dayEndString) {
+        LocalDateTime start = toLocalDateTime(yearStartString, monthStartString, dayStartString);
+        LocalDateTime end = toLocalDateTime(yearEndString, monthEndString, dayEndString);
+        TimeRange range = new TimeRange(start, end);
+        return financeRecordDAO.getExpensesInRange(user, range);
     }
 }

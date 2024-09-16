@@ -5,174 +5,188 @@ import org.amoseman.budgetingwebsitebackend.database.DatabaseConnection;
 import org.amoseman.budgetingwebsitebackend.exception.*;
 import org.amoseman.budgetingwebsitebackend.pojo.TimeRange;
 import org.amoseman.budgetingwebsitebackend.pojo.event.Expense;
-import org.amoseman.budgetingwebsitebackend.pojo.event.FinanceRecord;
 import org.amoseman.budgetingwebsitebackend.pojo.event.Income;
 import org.jooq.*;
 import org.jooq.Record;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.table;
 
 public class SQLFinanceRecordDAO extends FinanceRecordDAO<DSLContext> {
+
+    private static final Table<Record> INCOME_TABLE = table("income");
+    private static final Table<Record> EXPENSE_TABLE = table("expense");
+    private static final Field<String> UUID_FIELD = field("uuid", String.class);
+    private static final Field<String> OWNER_FIELD = field("owner", String.class);
+    private static final Field<LocalDateTime> OCCURRED_FIELD = field("occurred", LocalDateTime.class);
+
     public SQLFinanceRecordDAO(DatabaseConnection<DSLContext> connection) {
         super(connection);
     }
 
-    private Table<Record> getTable(String type) {
-        return table(String.format("%s_events", type));
+    @Override
+    public void addIncome(Income income) throws FinanceRecordAlreadyExistsException {
+        try {
+            Record record = connection.get().newRecord(INCOME_TABLE, income);
+            connection.get().executeInsert((TableRecord<?>) record);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            throw new FinanceRecordAlreadyExistsException("add", income.uuid);
+        }
     }
 
-    private FinanceRecord fromRecord(String type, Record record) {
+    @Override
+    public void addExpense(Expense expense) throws FinanceRecordAlreadyExistsException {
         try {
-            if ("income".equals(type)) {
-                return new Income(
-                        record.get(field("uuid"), String.class),
-                        record.get(field("created"), Timestamp.class).toLocalDateTime(),
-                        record.get(field("updated"), Timestamp.class).toLocalDateTime(),
-                        record.get(field("owner"), String.class),
-                        record.get(field("amount"), Long.class),
-                        record.get(field("occurred"), Timestamp.class).toLocalDateTime(),
-                        record.get(field("category"), String.class),
-                        record.get(field("description"), String.class)
-                );
-            }
-            else {
-                return new Expense(
-                        record.get(field("uuid"), String.class),
-                        record.get(field("created"), Timestamp.class).toLocalDateTime(),
-                        record.get(field("updated"), Timestamp.class).toLocalDateTime(),
-                        record.get(field("owner"), String.class),
-                        record.get(field("amount"), Long.class),
-                        record.get(field("occurred"), Timestamp.class).toLocalDateTime(),
-                        record.get(field("category"), String.class),
-                        record.get(field("description"), String.class),
-                        record.get(field("partition"), String.class)
-                        );
-            }
+            Record record = connection.get().newRecord(EXPENSE_TABLE, expense);
+            connection.get().executeInsert((TableRecord<?>) record);
         }
-        catch (NegativeValueException | InvalidFinanceEventTypeException e) {
+        catch (Exception e) {
+            e.printStackTrace();
+            throw new FinanceRecordAlreadyExistsException("add", expense.uuid);
+        }
+    }
+
+    @Override
+    public boolean removeIncome(String user, String uuid) {
+        try {
+            return 1 == connection.get()
+                    .deleteFrom(INCOME_TABLE)
+                    .where(
+                            UUID_FIELD.eq(uuid).and(OWNER_FIELD.eq(user))
+                    )
+                    .execute();
+        }
+        catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    private List<FinanceRecord> fromRecords(String type, Result<Record> results) {
-        List<FinanceRecord> events = new ArrayList<>();
-        results.forEach(record -> events.add(fromRecord(type, record)));
-        return events;
-    }
-
     @Override
-    public void addEvent(Income event) throws FinanceRecordAlreadyExistsException {
+    public boolean removeExpense(String user, String uuid) {
         try {
-            connection.get()
-                    .insertInto(
-                            getTable(event.getType()),
-                            field("uuid"),
-                            field("owner"),
-                            field("amount"),
-                            field("occurred"),
-                            field("category"),
-                            field("description"),
-                            field("created"),
-                            field("updated")
-                    )
-                    .values(
-                            event.getUuid(),
-                            event.getOwner(),
-                            event.getAmount(),
-                            event.getOccurred(),
-                            event.getCategory(),
-                            event.getDescription(),
-                            event.getCreated(),
-                            event.getUpdated()
+            return 1 == connection.get()
+                    .deleteFrom(EXPENSE_TABLE)
+                    .where(
+                            UUID_FIELD.eq(uuid).and(OWNER_FIELD.eq(user))
                     )
                     .execute();
         }
         catch (Exception e) {
-            throw new FinanceRecordAlreadyExistsException("add", event.getUuid());
+            throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void addEvent(Expense event) throws FinanceRecordAlreadyExistsException {
+    public List<Income> getAllIncome(String user) {
         try {
-            connection.get()
-                    .insertInto(
-                            getTable(event.getType()),
-                            field("uuid"),
-                            field("owner"),
-                            field("amount"),
-                            field("occurred"),
-                            field("category"),
-                            field("description"),
-                            field("partition"),
-                            field("created"),
-                            field("updated")
-                    )
-                    .values(
-                            event.getUuid(),
-                            event.getOwner(),
-                            event.getAmount(),
-                            event.getOccurred(),
-                            event.getCategory(),
-                            event.getDescription(),
-                            event.getPartition(),
-                            event.getCreated(),
-                            event.getUpdated()
-                    )
-                    .execute();
+            return connection.get()
+                    .selectFrom(INCOME_TABLE)
+                    .where(OWNER_FIELD.eq(user))
+                    .fetch()
+                    .into(Income.class);
         }
         catch (Exception e) {
-            throw new FinanceRecordAlreadyExistsException("add", event.getUuid());
+            throw new RuntimeException(e);
         }
     }
 
     @Override
-    public FinanceRecord removeEvent(String user, String id, String type) throws FinanceRecordDoesNotExistException {
-        FinanceRecord event = getEvent(user, id, type);
-        int result = connection.get()
-                .deleteFrom(getTable(type))
-                .where(field("uuid").eq(id).and(field("owner").eq(user)))
-                .execute();
-        if (0 == result) {
-            throw new FinanceRecordDoesNotExistException("remove", id);
+    public List<Expense> getAllExpenses(String user) {
+        try {
+            return connection.get()
+                    .selectFrom(EXPENSE_TABLE)
+                    .where(OWNER_FIELD.eq(user))
+                    .fetch()
+                    .into(Expense.class);
         }
-        return event;
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
-    public List<FinanceRecord> getEvents(String user, String type) {
-        Result<Record> result = connection.get()
-                .selectFrom(getTable(type))
-                .where(field("owner").eq(user))
-                .fetch();
-        return fromRecords(type, result);
+    public List<Income> getIncomeInRange(String user, TimeRange range) {
+        try {
+            return connection.get()
+                    .selectFrom(INCOME_TABLE)
+                    .where(
+                            OWNER_FIELD.eq(user)
+                                    .and(
+                                            OCCURRED_FIELD.greaterOrEqual(range.getStart())
+                                                    .and(OCCURRED_FIELD.lessOrEqual(range.getEnd()))
+                                    )
+                    )
+                    .fetch()
+                    .into(Income.class);
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
-    public List<FinanceRecord> getEvents(String user, String type, TimeRange range) {
-        Condition rangeCondition = field("occurred").greaterOrEqual(range.getStart()).and(field("occurred").lessOrEqual(range.getEnd()));
-        Result<Record> result = connection.get()
-                .selectFrom(getTable(type))
-                .where(field("owner").eq(user).and(rangeCondition))
-                .fetch();
-        return fromRecords(type, result);
+    public List<Expense> getExpensesInRange(String user, TimeRange range) {
+        try {
+            return connection.get()
+                    .selectFrom(EXPENSE_TABLE)
+                    .where(
+                            OWNER_FIELD.eq(user)
+                                    .and(
+                                            OCCURRED_FIELD.greaterOrEqual(range.getStart())
+                                                    .and(OCCURRED_FIELD.lessOrEqual(range.getEnd()))
+                                    )
+                    )
+                    .fetch()
+                    .into(Expense.class);
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    private FinanceRecord getEvent(String owner, String uuid, String type) throws FinanceRecordDoesNotExistException {
-        Result<Record> result = connection.get()
-                .selectFrom(getTable(type))
-                .where(field("owner").eq(owner).and(field("uuid").eq(uuid)))
-                .fetch();
-        if (result.isEmpty()) {
-            throw new FinanceRecordDoesNotExistException("get", uuid);
+    @Override
+    public Optional<Income> getIncome(String user, String uuid) {
+        try {
+            List<Income> list = connection.get()
+                    .selectFrom(INCOME_TABLE)
+                    .where(
+                            OWNER_FIELD.eq(user).and(UUID_FIELD.eq(uuid))
+                    )
+                    .fetch()
+                    .into(Income.class);
+            if (list.isEmpty()) {
+                return Optional.empty();
+            }
+            return Optional.of(list.get(0));
         }
-        Record record = result.get(0);
-        return fromRecord(type, record);
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
+    @Override
+    public Optional<Expense> getExpense(String user, String uuid) {
+        try {
+            List<Expense> list = connection.get()
+                    .selectFrom(EXPENSE_TABLE)
+                    .where(
+                            OWNER_FIELD.eq(user).and(UUID_FIELD.eq(uuid))
+                    )
+                    .fetch()
+                    .into(Expense.class);
+            if (list.isEmpty()) {
+                return Optional.empty();
+            }
+            return Optional.of(list.get(0));
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
