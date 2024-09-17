@@ -13,7 +13,6 @@ import org.amoseman.budgetingwebsitebackend.pojo.bucket.op.UpdateBucket;
 import org.amoseman.budgetingwebsitebackend.util.Now;
 import org.amoseman.budgetingwebsitebackend.util.Split;
 import org.amoseman.budgetingwebsitebackend.util.Splitter;
-import org.jooq.impl.QOM;
 
 import java.time.LocalDateTime;
 import java.util.*;
