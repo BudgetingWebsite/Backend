@@ -55,16 +55,20 @@ class BudgetingApplicationTest {
         return toNode(json).get(index).get(field).asText();
     }
 
-    @Test
-    void test() {
+    private void init(String adminUsername, String adminPassword) {
         String databaseURL = "jdbc:sqlite:test-database.db";
-        String address = "http://127.0.0.1:8080";
         String configurationLocation = "test-config.yaml";
-        String adminUsername = "admin_user";
-        String adminPassword = "admin_pass";
         InitTestDatabase.init(databaseURL, "schema.sql");
         InitTestConfiguration.init(configurationLocation, databaseURL, adminUsername, adminPassword);
         startApplication(configurationLocation);
+    }
+
+    @Test
+    void test() {
+        String address = "http://127.0.0.1:8080";
+        String adminUsername = "admin_user";
+        String adminPassword = "admin_pass";
+        init(adminUsername, adminPassword);
 
         WebTarget client = JerseyClientBuilder.newClient()
                 .target(address)

@@ -4,7 +4,6 @@ import org.apache.ibatis.jdbc.ScriptRunner;
 
 import java.io.File;
 import java.io.FileReader;
-import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
