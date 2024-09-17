@@ -7,23 +7,24 @@ import org.amoseman.budgetingwebsitebackend.dao.impl.sql.BucketDAOImpl;
 import org.amoseman.budgetingwebsitebackend.dao.impl.sql.FinanceRecordDAOImpl;
 import org.amoseman.budgetingwebsitebackend.database.DatabaseConnection;
 import org.amoseman.budgetingwebsitebackend.database.impl.sql.sqlite.DatabaseConnectionImpl;
-import org.amoseman.budgetingwebsitebackend.exception.BucketAlreadyExistsException;
-import org.amoseman.budgetingwebsitebackend.exception.BucketDoesNotExistException;
-import org.amoseman.budgetingwebsitebackend.exception.TotalBucketShareExceededException;
+import org.amoseman.budgetingwebsitebackend.exception.*;
 import org.amoseman.budgetingwebsitebackend.pojo.bucket.Bucket;
 import org.amoseman.budgetingwebsitebackend.pojo.bucket.op.CreateBucket;
 import org.amoseman.budgetingwebsitebackend.pojo.bucket.op.UpdateBucket;
+import org.amoseman.budgetingwebsitebackend.pojo.record.op.CreateExpense;
+import org.amoseman.budgetingwebsitebackend.pojo.record.op.CreateIncome;
 import org.jooq.DSLContext;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class BucketServiceTest {
     private static final String databaseURL = "jdbc:sqlite:test.db";
     private static BucketService<DSLContext> bucketService;
+    private static FinanceRecordService<DSLContext> financeRecordService;
 
     @BeforeEach
     void setup() {
@@ -32,9 +33,11 @@ class BucketServiceTest {
         BucketDAO<DSLContext> bucketDAO = new BucketDAOImpl(connection);
         FinanceRecordDAO<DSLContext> financeRecordDAO = new FinanceRecordDAOImpl(connection);
         bucketService = new BucketService<>(bucketDAO, financeRecordDAO);
+        financeRecordService = new FinanceRecordService<>(financeRecordDAO);
     }
 
     @Test
+    @Order(1)
     void testCRUD() {
         String uuid = null;
         try {
@@ -75,6 +78,64 @@ class BucketServiceTest {
         }
         buckets = bucketService.getBuckets("alice");
         assertEquals(0, buckets.size());
+
+        InitTestDatabase.close(databaseURL);
+    }
+
+    @Test
+    @Order(1)
+    void testRecords() {
+        try {
+            bucketService.addBucket("alice", new CreateBucket("savings", 0.2));
+            bucketService.addBucket("alice", new CreateBucket("expenses", 0.5));
+            bucketService.addBucket("alice", new CreateBucket("other", 0.3));
+        }
+        catch (BucketAlreadyExistsException | TotalBucketShareExceededException e) {
+            fail(e);
+        }
+        try {
+            financeRecordService.addIncome("alice", new CreateIncome(200, 2024, 1, 1, "", ""));
+        }
+        catch (FinanceRecordAlreadyExistsException | NegativeValueException e) {
+            fail(e);
+        }
+
+        List<Bucket> buckets = bucketService.getBuckets("alice");
+        Bucket savings = buckets.get(0);
+        Bucket expenses = buckets.get(1);
+        Bucket other = buckets.get(2);
+        assertEquals(40, savings.amount);
+        assertEquals(100, expenses.amount);
+        assertEquals(60, other.amount);
+
+        try {
+            bucketService.updateBucket("alice", savings.uuid, new UpdateBucket("savings", 0.5));
+            bucketService.updateBucket("alice", expenses.uuid, new UpdateBucket("expenses", 0.2));
+        }
+        catch (BucketDoesNotExistException e) {
+            fail(e);
+        }
+        buckets = bucketService.getBuckets("alice");
+        savings = buckets.get(0);
+        expenses = buckets.get(1);
+        other = buckets.get(2);
+        assertEquals(100, savings.amount);
+        assertEquals(40, expenses.amount);
+        assertEquals(60, other.amount);
+
+        try {
+            financeRecordService.addExpense("alice", new CreateExpense(100, 2024, 1, 1, "", "", savings.uuid));
+        }
+        catch (NegativeValueException | FinanceRecordAlreadyExistsException e) {
+            fail(e);
+        }
+        buckets = bucketService.getBuckets("alice");
+        savings = buckets.get(0);
+        expenses = buckets.get(1);
+        other = buckets.get(2);
+        assertEquals(0, savings.amount);
+        assertEquals(40, expenses.amount);
+        assertEquals(60, other.amount);
 
         InitTestDatabase.close(databaseURL);
     }
