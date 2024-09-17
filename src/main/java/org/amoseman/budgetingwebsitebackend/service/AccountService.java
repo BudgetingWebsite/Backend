@@ -86,7 +86,8 @@ public class AccountService<C> {
 
     /**
      * Change the roles of an account.
-     * The roles should be comma-delimited with no whitespaces.
+     * The roles should be comma-delimited with no whitespaces and are case-sensitive.
+     * Valid roles are ADMIN and USER.
      * @param username the username of the account.
      * @param roles the new roles of the account.
      * @throws UserDoesNotExistException if the account does not exist.
