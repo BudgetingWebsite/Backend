@@ -42,7 +42,6 @@ public final class Splitter {
             index++;
             out[indices.get(index)]++;
             r -= out[index];
-            total += out[index];
         }
         return new Split(out, r);
     }
