@@ -1,5 +1,8 @@
 package org.amoseman.budgetingwebsitebackend.pojo.record.op;
 
+/**
+ * Represents a financial record creation operation.
+ */
 public class CreateFinanceRecord {
     private long amount;
     private int year;
@@ -12,6 +15,15 @@ public class CreateFinanceRecord {
 
     }
 
+    /**
+     * Instantiate a financial record creation operation.
+     * @param amount the amount in dollars associated with the new record.
+     * @param year what year the record occurred.
+     * @param month what month the record occurred.
+     * @param day what day the record occurred.
+     * @param category the category of the new record.
+     * @param description the description of the new record.
+     */
     public CreateFinanceRecord(long amount, int year, int month, int day, String category, String description) {
         this.amount = amount;
         this.year = year;
