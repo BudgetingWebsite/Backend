@@ -33,18 +33,18 @@ public final class Splitter {
         }
         indices = sortIndices(indices, differences);
 
-        long r = Math.round(remainder);
         long[] out = new long[len];
-        long total = 0;
-        for (Integer index : indices) {
-            out[index] = (long) rounded[index];
-            if (r > 0) {
-                r--;
-                out[index]++;
-            }
+        long r = amount;
+        int index = 0;
+        long remainderRemaining = (long) Math.floor(remainder);
+        while (remainderRemaining > 0 && index < indices.size()) {
+            remainderRemaining--;
+            index++;
+            out[indices.get(index)]++;
+            r -= out[index];
             total += out[index];
         }
-        return new Split(out, amount - total);
+        return new Split(out, r);
     }
 
     public static List<Integer> sortIndices(List<Integer> indices, double[] differences) {
