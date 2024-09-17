@@ -9,9 +9,9 @@ import org.amoseman.budgetingwebsitebackend.application.auth.*;
 import org.amoseman.budgetingwebsitebackend.dao.AccountDAO;
 import org.amoseman.budgetingwebsitebackend.dao.FinanceRecordDAO;
 import org.amoseman.budgetingwebsitebackend.dao.BucketDAO;
-import org.amoseman.budgetingwebsitebackend.dao.impl.sql.SQLAccountDAO;
-import org.amoseman.budgetingwebsitebackend.dao.impl.sql.SQLFinanceRecordDAO;
-import org.amoseman.budgetingwebsitebackend.dao.impl.sql.SQLBucketDAO;
+import org.amoseman.budgetingwebsitebackend.dao.impl.sql.AccountDAOImpl;
+import org.amoseman.budgetingwebsitebackend.dao.impl.sql.FinanceRecordDAOImpl;
+import org.amoseman.budgetingwebsitebackend.dao.impl.sql.BucketDAOImpl;
 import org.amoseman.budgetingwebsitebackend.database.DatabaseConnection;
 import org.amoseman.budgetingwebsitebackend.database.impl.sql.sqlite.DatabaseConnectionImpl;
 import org.amoseman.budgetingwebsitebackend.pojo.account.Account;
@@ -37,9 +37,9 @@ public class BudgetingApplication extends Application<BudgetingConfiguration> {
 
         DatabaseConnection<DSLContext> connection = new DatabaseConnectionImpl(configuration.getDatabaseURL());
 
-        AccountDAO<DSLContext> accountDAO = new SQLAccountDAO(connection);
-        FinanceRecordDAO<DSLContext> financeRecordDAO = new SQLFinanceRecordDAO(connection);
-        BucketDAO<DSLContext> bucketDAO = new SQLBucketDAO(connection);
+        AccountDAO<DSLContext> accountDAO = new AccountDAOImpl(connection);
+        FinanceRecordDAO<DSLContext> financeRecordDAO = new FinanceRecordDAOImpl(connection);
+        BucketDAO<DSLContext> bucketDAO = new BucketDAOImpl(connection);
 
         AccountService<DSLContext> accountService = new AccountService<>(accountDAO, hasher);
         FinanceRecordService<DSLContext> financeRecordService = new FinanceRecordService<>(financeRecordDAO);

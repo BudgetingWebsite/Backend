@@ -17,14 +17,14 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class SQLAccountDAOTest {
+class AccountDAOImplTest {
 
     @Test
     void testCRUD() {
         String databaseURL = "jdbc:sqlite:test.db";
         InitTestDatabase.init(databaseURL, "schema.sql");
         DatabaseConnection<DSLContext> connection = new DatabaseConnectionImpl(databaseURL);
-        AccountDAO<DSLContext> accountDAO = new SQLAccountDAO(connection);
+        AccountDAO<DSLContext> accountDAO = new AccountDAOImpl(connection);
         LocalDateTime now = Now.get();
         Account account = new Account(
                 "12345",

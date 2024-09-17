@@ -12,8 +12,8 @@ import java.util.Optional;
 import static org.jooq.codegen.Tables.*;
 import org.jooq.codegen.tables.records.*;
 
-public class SQLAccountDAO extends AccountDAO<DSLContext> {
-    public SQLAccountDAO(DatabaseConnection<DSLContext> connection) {
+public class AccountDAOImpl extends AccountDAO<DSLContext> {
+    public AccountDAOImpl(DatabaseConnection<DSLContext> connection) {
         super(connection);
     }
 

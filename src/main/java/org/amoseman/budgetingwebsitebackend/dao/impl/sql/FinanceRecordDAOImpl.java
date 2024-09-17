@@ -14,9 +14,9 @@ import java.util.Optional;
 import static org.jooq.codegen.Tables.*;
 import org.jooq.codegen.tables.records.*;
 
-public class SQLFinanceRecordDAO extends FinanceRecordDAO<DSLContext> {
+public class FinanceRecordDAOImpl extends FinanceRecordDAO<DSLContext> {
 
-    public SQLFinanceRecordDAO(DatabaseConnection<DSLContext> connection) {
+    public FinanceRecordDAOImpl(DatabaseConnection<DSLContext> connection) {
         super(connection);
     }
 

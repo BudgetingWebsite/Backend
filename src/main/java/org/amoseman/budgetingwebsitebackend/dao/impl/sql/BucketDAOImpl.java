@@ -13,9 +13,9 @@ import java.util.Optional;
 import static org.jooq.codegen.Tables.*;
 import org.jooq.codegen.tables.records.*;
 
-public class SQLBucketDAO extends BucketDAO<DSLContext> {
+public class BucketDAOImpl extends BucketDAO<DSLContext> {
 
-    public SQLBucketDAO(DatabaseConnection<DSLContext> connection) {
+    public BucketDAOImpl(DatabaseConnection<DSLContext> connection) {
         super(connection);
     }
 
