@@ -20,14 +20,14 @@ public final class Splitter {
      */
     public static Split get(List<Bucket> buckets, long amount) {
         int len = buckets.size();
-        double[] floored = new double[len];
+        double[] rounded = new double[len];
         double[] differences = new double[len];
         double remainder = 0;
         List<Integer> indices = new ArrayList<>();
         for (int i = 0; i < len; i++) {
             double raw = buckets.get(i).share * amount;
-            floored[i] = Math.floor(raw);
-            differences[i] = raw - floored[i];
+            rounded[i] = Math.floor(raw);
+            differences[i] = raw - rounded[i];
             remainder += differences[i];
             indices.add(i);
         }
@@ -37,7 +37,7 @@ public final class Splitter {
         long[] out = new long[len];
         long total = 0;
         for (Integer index : indices) {
-            out[index] = (long) floored[index];
+            out[index] = (long) rounded[index];
             if (r > 0) {
                 r--;
                 out[index]++;
