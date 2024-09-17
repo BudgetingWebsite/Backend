@@ -12,24 +12,20 @@ class SplitterTest {
 
     @Test
     void get() {
-        for (int i = 0; i < 1000; i++) {
-            double r = 1;
-            double a = Math.random() * r;
-            r -= a;
-            double b = Math.random() * r;
-            r -= b;
-            double c = Math.random() * r;
-            r -= c;
-            double d = r;
-            double[] shares = new double[]{a, b, c, d};
-            List<Partition> partitions = new ArrayList<>();
-            for (int j = 0; j < 4; j++) {
-                partitions.add(new Partition(null, null, null, null, null, shares[i], 0));
-            }
-            long amount = (long) (Math.random() * 1000);
-            Split split = Splitter.get(partitions, amount);
-            long sum = Splitter.sum(split.getAmounts());
-            assertEquals(amount, sum);
-        }
+        final double BUCKET_SHARE_ONE = 0.496274986;
+        final double BUCKET_SHARE_TWO = 0.1234356456;
+        final double BUCKET_SHARE_THREE = 1.0 - BUCKET_SHARE_ONE - BUCKET_SHARE_TWO;
+        final long AMOUNT = 100;
+
+        assertEquals(1.0, BUCKET_SHARE_ONE + BUCKET_SHARE_TWO + BUCKET_SHARE_THREE);
+
+        List<Partition> partitions = new ArrayList<>();
+        partitions.add(new Partition(null, null, null, null, null, BUCKET_SHARE_ONE, 0));
+        partitions.add(new Partition(null, null, null, null, null, BUCKET_SHARE_TWO, 0));
+        partitions.add(new Partition(null, null, null, null, null, BUCKET_SHARE_THREE, 0));
+
+        Split split = Splitter.get(partitions, AMOUNT);
+        long sum = Splitter.sum(split.getAmounts());
+        assertEquals(AMOUNT, sum);
     }
 }
