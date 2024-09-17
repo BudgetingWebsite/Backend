@@ -3,7 +3,9 @@ package org.amoseman.budgetingbackend.util;
 import org.amoseman.budgetingbackend.pojo.bucket.Bucket;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.IntStream;
 
 /**
  * Provides dollar amount splitting functionality.
@@ -29,7 +31,7 @@ public final class Splitter {
             remainder += differences[i];
             indices.add(i);
         }
-        sortIndices(indices, differences);
+        indices = sortIndices(indices, differences);
 
         long r = Math.round(remainder);
         long[] out = new long[len];
@@ -45,20 +47,13 @@ public final class Splitter {
         return new Split(out, amount - total);
     }
 
-    public static void sortIndices(List<Integer> indices, double[] differences) {
-        List<Integer> sortedIndices = new ArrayList<>();
-        while (!indices.isEmpty()) {
-            int largest = 0;
-            for (int i = 1; i < indices.size(); i++) {
-                Integer largestIndex = indices.get(largest);
-                Integer otherIndex = indices.get(i);
-                if (differences[largestIndex] < differences[otherIndex]) {
-                    largest = i;
-                }
-            }
-            sortedIndices.add(indices.remove(largest));
-        }
-        indices.addAll(sortedIndices);
+    public static List<Integer> sortIndices(List<Integer> indices, double[] differences) {
+        return IntStream.range(0, indices.size())
+                .boxed()
+                .sorted(Comparator.comparingDouble(i -> differences[i]))
+                .sorted(Comparator.reverseOrder())
+                .map(indices::get)
+                .toList();
     }
 
     public static long sum(long[] x) {
