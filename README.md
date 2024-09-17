@@ -36,12 +36,10 @@ Creates a new account with the provided username and password.
 	password: String
 }
 ```
----
 
 ### `AUTH:Basic`&emsp;`DELETE`&emsp;/account/{username}
 Delete an existing account based on the provided username. Will return 401 if the provided credentials does not correspond to an account with the admin role or is not the same account that is being deleted.
 
----
 ### `AUTH:Basic`&emsp;`PUT`&emsp;/account/password
 Update the password of authenticated account. 
 
@@ -51,14 +49,61 @@ Update the password of authenticated account.
 	password: String
 }
 ```
----
 
-### `AUTH:Basic`&emsp;`PUT`&emsp;/account/{username}/roles
-Update the roles of the account of the provided username. The roles should be comma-delimited.
+### `AUTH:Basic`&emsp;`Permited:ADMIN`&emsp;`PUT`&emsp;/account/{username}/roles
+Update the roles of the account of the provided username. The roles should be comma-delimited. They are case-sensitive. The allowed roles are USER and ADMIN.
 
 #### Consumes JSON
 ```
 {
 	roles: String
+}
+```
+
+## Account
+
+### `AUTH:Basic`&emsp;`POST`&emsp;/bucket
+Create a new bucket.
+
+#### Consumes JSON
+```
+{
+	name: String,
+	share: Double
+}
+```
+
+### `AUTH:Basic`&emsp;`DELETE`&emsp;/bucket/{uuid}
+Delete the bucket associated with the provided UUID.
+
+### `AUTH:Basic`&emsp;`PUT`&emsp;/bucket/{uuid}
+Update the bucket associated with the provided UUID.
+
+#### Consumes JSON
+```
+{
+	name: String,
+	share: Double
+}
+```
+
+### `AUTH:Basic`&emsp;`GET`&emsp;/bucket
+Get the authenicated user's buckets.
+
+#### Produces JSON
+```
+{
+	[
+		{
+			uuid: String,
+			created: LocalDateTime,
+			updated: LocalDateTime,
+			owner: String,
+			name: String,
+			share: Double,
+			amount: Long
+		},
+		...
+	]
 }
 ```
