@@ -31,6 +31,9 @@ import org.jooq.DSLContext;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 
+/**
+ * The budgeting website backend application.
+ */
 public class BudgetingApplication extends Application<BudgetingConfiguration> {
     @Override
     public void run(BudgetingConfiguration configuration, Environment environment) throws Exception {
@@ -63,7 +66,10 @@ public class BudgetingApplication extends Application<BudgetingConfiguration> {
         ));
         environment.jersey().register(RolesAllowedDynamicFeature.class);
         environment.jersey().register(new AuthValueFactoryProvider.Binder<>(User.class));
+        initializeAdminAccount(configuration, hasher, accountDAO);
+    }
 
+    private void initializeAdminAccount(BudgetingConfiguration configuration, Hasher hasher, AccountDAO<?> accountDAO) {
         LocalDateTime now = Now.get();
         byte[] saltBytes = hasher.salt();
         String hash = hasher.hash(configuration.getAdminPassword(), saltBytes);
