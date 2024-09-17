@@ -9,7 +9,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.amoseman.InitTestConfiguration;
 import org.amoseman.InitTestDatabase;
-import org.amoseman.budgetingwebsitebackend.pojo.event.op.CreateIncome;
+import org.amoseman.budgetingwebsitebackend.pojo.record.op.CreateIncome;
 import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.junit.jupiter.api.Test;

@@ -13,8 +13,6 @@ import org.amoseman.budgetingwebsitebackend.exception.UserDoesNotExistException;
 import org.amoseman.budgetingwebsitebackend.pojo.account.op.CreateAccount;
 import org.amoseman.budgetingwebsitebackend.service.AccountService;
 
-import java.util.Set;
-
 @Path("/account")
 @Produces(MediaType.APPLICATION_JSON)
 public class AccountResource<C> {

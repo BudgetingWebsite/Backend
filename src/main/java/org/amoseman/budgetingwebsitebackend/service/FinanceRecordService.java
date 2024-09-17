@@ -3,10 +3,10 @@ package org.amoseman.budgetingwebsitebackend.service;
 import org.amoseman.budgetingwebsitebackend.dao.FinanceRecordDAO;
 import org.amoseman.budgetingwebsitebackend.exception.*;
 import org.amoseman.budgetingwebsitebackend.pojo.*;
-import org.amoseman.budgetingwebsitebackend.pojo.event.Expense;
-import org.amoseman.budgetingwebsitebackend.pojo.event.Income;
-import org.amoseman.budgetingwebsitebackend.pojo.event.op.CreateExpense;
-import org.amoseman.budgetingwebsitebackend.pojo.event.op.CreateIncome;
+import org.amoseman.budgetingwebsitebackend.pojo.record.Expense;
+import org.amoseman.budgetingwebsitebackend.pojo.record.Income;
+import org.amoseman.budgetingwebsitebackend.pojo.record.op.CreateExpense;
+import org.amoseman.budgetingwebsitebackend.pojo.record.op.CreateIncome;
 import org.amoseman.budgetingwebsitebackend.util.Now;
 
 import java.time.LocalDateTime;
@@ -51,7 +51,7 @@ public class FinanceRecordService<C> {
                 occurred,
                 create.getCategory(),
                 create.getDescription(),
-                create.getPartition()
+                create.getBucket()
         );
         financeRecordDAO.addExpense(expense);
         return uuid;

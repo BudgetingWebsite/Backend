@@ -1,4 +1,4 @@
-package org.amoseman.budgetingwebsitebackend.pojo.event.op;
+package org.amoseman.budgetingwebsitebackend.pojo.record.op;
 
 public class CreateFinanceRecord {
     private long amount;

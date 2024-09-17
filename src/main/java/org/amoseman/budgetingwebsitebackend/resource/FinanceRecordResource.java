@@ -8,10 +8,10 @@ import jakarta.ws.rs.core.Response;
 import org.amoseman.budgetingwebsitebackend.application.auth.User;
 import org.amoseman.budgetingwebsitebackend.exception.FinanceRecordAlreadyExistsException;
 import org.amoseman.budgetingwebsitebackend.exception.NegativeValueException;
-import org.amoseman.budgetingwebsitebackend.pojo.event.Expense;
-import org.amoseman.budgetingwebsitebackend.pojo.event.Income;
-import org.amoseman.budgetingwebsitebackend.pojo.event.op.CreateExpense;
-import org.amoseman.budgetingwebsitebackend.pojo.event.op.CreateIncome;
+import org.amoseman.budgetingwebsitebackend.pojo.record.Expense;
+import org.amoseman.budgetingwebsitebackend.pojo.record.Income;
+import org.amoseman.budgetingwebsitebackend.pojo.record.op.CreateExpense;
+import org.amoseman.budgetingwebsitebackend.pojo.record.op.CreateIncome;
 import org.amoseman.budgetingwebsitebackend.service.FinanceRecordService;
 
 import java.time.DateTimeException;

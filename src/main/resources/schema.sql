@@ -8,7 +8,7 @@ CREATE TABLE if NOT EXISTS account (
     PRIMARY KEY (uuid)
 );
 
-CREATE TABLE if NOT EXISTS partition (
+CREATE TABLE if NOT EXISTS bucket (
     uuid VARCHAR(1000),
     owner VARCHAR(1000),
     name VARCHAR(1000),
@@ -39,11 +39,11 @@ CREATE TABLE if NOT EXISTS expense (
     occurred TIMESTAMP NOT NULL,
     category VARCHAR(1000),
     description VARCHAR(1000),
-    partition VARCHAR(1000),
+    bucket VARCHAR(1000),
     created TIMESTAMP NOT NULL,
     updated TIMESTAMP NOT NULL,
     PRIMARY KEY (uuid),
     FOREIGN KEY (owner) REFERENCES account (uuid)
-    FOREIGN KEY (partition) REFERENCES partition (uuid)
+    FOREIGN KEY (bucket) REFERENCES bucket (uuid)
 );
 

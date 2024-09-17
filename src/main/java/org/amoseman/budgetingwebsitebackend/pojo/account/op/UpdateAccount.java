@@ -1,7 +1,5 @@
 package org.amoseman.budgetingwebsitebackend.pojo.account.op;
 
-import java.util.Set;
-
 public class UpdateAccount {
     private String uuid;
     private String hash;

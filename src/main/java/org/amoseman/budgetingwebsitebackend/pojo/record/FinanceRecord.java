@@ -1,7 +1,6 @@
-package org.amoseman.budgetingwebsitebackend.pojo.event;
+package org.amoseman.budgetingwebsitebackend.pojo.record;
 
 
-import org.amoseman.budgetingwebsitebackend.exception.InvalidFinanceEventTypeException;
 import org.amoseman.budgetingwebsitebackend.exception.NegativeValueException;
 import org.amoseman.budgetingwebsitebackend.pojo.OwnedEntity;
 

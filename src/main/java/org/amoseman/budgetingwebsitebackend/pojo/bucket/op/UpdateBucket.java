@@ -1,13 +1,13 @@
-package org.amoseman.budgetingwebsitebackend.pojo.partition.op;
+package org.amoseman.budgetingwebsitebackend.pojo.bucket.op;
 
-public class CreatePartition {
+public class UpdateBucket {
     private String name;
     private double share;
 
-    public CreatePartition() {
+    public UpdateBucket() {
     }
 
-    public CreatePartition(String name, double share) {
+    public UpdateBucket(String name, double share) {
         this.name = name;
         this.share = share;
     }

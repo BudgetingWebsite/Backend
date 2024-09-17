@@ -13,7 +13,6 @@ import org.bouncycastle.util.encoders.Base64;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.Set;
 
 public class AccountService<C> {
     private final AccountDAO<C> accountDAO;

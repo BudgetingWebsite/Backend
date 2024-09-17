@@ -2,10 +2,9 @@ package org.amoseman.budgetingwebsitebackend.dao;
 
 import org.amoseman.budgetingwebsitebackend.database.DatabaseConnection;
 import org.amoseman.budgetingwebsitebackend.exception.FinanceRecordAlreadyExistsException;
-import org.amoseman.budgetingwebsitebackend.exception.FinanceRecordDoesNotExistException;
 import org.amoseman.budgetingwebsitebackend.pojo.TimeRange;
-import org.amoseman.budgetingwebsitebackend.pojo.event.Expense;
-import org.amoseman.budgetingwebsitebackend.pojo.event.Income;
+import org.amoseman.budgetingwebsitebackend.pojo.record.Expense;
+import org.amoseman.budgetingwebsitebackend.pojo.record.Income;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,4 +1,4 @@
-package org.amoseman.budgetingwebsitebackend.pojo.event;
+package org.amoseman.budgetingwebsitebackend.pojo.record;
 
 import org.amoseman.budgetingwebsitebackend.exception.NegativeValueException;
 

@@ -8,19 +8,19 @@ import io.dropwizard.core.setup.Environment;
 import org.amoseman.budgetingwebsitebackend.application.auth.*;
 import org.amoseman.budgetingwebsitebackend.dao.AccountDAO;
 import org.amoseman.budgetingwebsitebackend.dao.FinanceRecordDAO;
-import org.amoseman.budgetingwebsitebackend.dao.PartitionDAO;
+import org.amoseman.budgetingwebsitebackend.dao.BucketDAO;
 import org.amoseman.budgetingwebsitebackend.dao.impl.sql.SQLAccountDAO;
 import org.amoseman.budgetingwebsitebackend.dao.impl.sql.SQLFinanceRecordDAO;
-import org.amoseman.budgetingwebsitebackend.dao.impl.sql.SQLPartitionDAO;
+import org.amoseman.budgetingwebsitebackend.dao.impl.sql.SQLBucketDAO;
 import org.amoseman.budgetingwebsitebackend.database.DatabaseConnection;
 import org.amoseman.budgetingwebsitebackend.database.impl.sql.sqlite.DatabaseConnectionImpl;
 import org.amoseman.budgetingwebsitebackend.pojo.account.Account;
 import org.amoseman.budgetingwebsitebackend.resource.AccountResource;
 import org.amoseman.budgetingwebsitebackend.resource.FinanceRecordResource;
-import org.amoseman.budgetingwebsitebackend.resource.PartitionResource;
+import org.amoseman.budgetingwebsitebackend.resource.BucketResource;
 import org.amoseman.budgetingwebsitebackend.service.AccountService;
 import org.amoseman.budgetingwebsitebackend.service.FinanceRecordService;
-import org.amoseman.budgetingwebsitebackend.service.PartitionService;
+import org.amoseman.budgetingwebsitebackend.service.BucketService;
 import org.amoseman.budgetingwebsitebackend.util.Now;
 import org.bouncycastle.util.encoders.Base64;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
@@ -39,19 +39,19 @@ public class BudgetingApplication extends Application<BudgetingConfiguration> {
 
         AccountDAO<DSLContext> accountDAO = new SQLAccountDAO(connection);
         FinanceRecordDAO<DSLContext> financeRecordDAO = new SQLFinanceRecordDAO(connection);
-        PartitionDAO<DSLContext> partitionDAO = new SQLPartitionDAO(connection);
+        BucketDAO<DSLContext> bucketDAO = new SQLBucketDAO(connection);
 
         AccountService<DSLContext> accountService = new AccountService<>(accountDAO, hasher);
         FinanceRecordService<DSLContext> financeRecordService = new FinanceRecordService<>(financeRecordDAO);
-        PartitionService<DSLContext> partitionService =  new PartitionService<>(partitionDAO, financeRecordDAO);
+        BucketService<DSLContext> bucketService =  new BucketService<>(bucketDAO, financeRecordDAO);
 
         AccountResource<DSLContext> accountResource = new AccountResource<>(accountService);
         FinanceRecordResource<DSLContext> financeRecordResource = new FinanceRecordResource<>(financeRecordService);
-        PartitionResource<DSLContext> partitionResource = new PartitionResource<>(partitionService);
+        BucketResource<DSLContext> bucketResource = new BucketResource<>(bucketService);
 
         environment.jersey().register(accountResource);
         environment.jersey().register(financeRecordResource);
-        environment.jersey().register(partitionResource);
+        environment.jersey().register(bucketResource);
 
         environment.jersey().register(new AuthDynamicFeature(new BasicCredentialAuthFilter.Builder<User>()
                 .setAuthenticator(new UserAuthenticator(accountDAO, hasher))
