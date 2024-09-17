@@ -3,6 +3,7 @@ package org.amoseman.budgetingwebsitebackend.application.auth;
 import io.dropwizard.auth.AuthenticationException;
 import io.dropwizard.auth.Authenticator;
 import io.dropwizard.auth.basic.BasicCredentials;
+import org.amoseman.budgetingwebsitebackend.application.auth.hashing.Hasher;
 import org.amoseman.budgetingwebsitebackend.dao.AccountDAO;
 import org.amoseman.budgetingwebsitebackend.pojo.account.Account;
 

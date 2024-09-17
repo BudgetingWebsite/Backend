@@ -2,6 +2,8 @@ package org.amoseman.budgetingwebsitebackend.application.auth;
 
 import io.dropwizard.auth.AuthenticationException;
 import io.dropwizard.auth.basic.BasicCredentials;
+import org.amoseman.budgetingwebsitebackend.application.auth.hashing.ArgonHasher;
+import org.amoseman.budgetingwebsitebackend.application.auth.hashing.Hasher;
 import org.amoseman.budgetingwebsitebackend.dao.AccountDAO;
 import org.amoseman.budgetingwebsitebackend.pojo.account.Account;
 import org.bouncycastle.util.encoders.Base64;
@@ -10,7 +12,6 @@ import org.mockito.Mockito;
 
 import java.security.SecureRandom;
 import java.util.Optional;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,7 +19,7 @@ class UserAuthenticatorTest {
 
     @Test
     void authenticate() {
-        Hasher hasher = new Hasher(new SecureRandom(), 16, 16, 2, 8192, 1);
+        Hasher hasher = new ArgonHasher(new SecureRandom(), 16, 16, 2, 8192, 1);
         String password = "password";
         byte[] salt = hasher.salt();
         String hash64 = hasher.hash(password, salt);

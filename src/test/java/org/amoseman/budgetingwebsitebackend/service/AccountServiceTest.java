@@ -1,7 +1,8 @@
 package org.amoseman.budgetingwebsitebackend.service;
 
 import org.amoseman.InitTestDatabase;
-import org.amoseman.budgetingwebsitebackend.application.auth.Hasher;
+import org.amoseman.budgetingwebsitebackend.application.auth.hashing.ArgonHasher;
+import org.amoseman.budgetingwebsitebackend.application.auth.hashing.Hasher;
 import org.amoseman.budgetingwebsitebackend.dao.AccountDAO;
 import org.amoseman.budgetingwebsitebackend.dao.impl.sql.AccountDAOImpl;
 import org.amoseman.budgetingwebsitebackend.database.DatabaseConnection;
@@ -25,7 +26,7 @@ class AccountServiceTest {
     @BeforeEach
     void setup() {
         SecureRandom random = new SecureRandom();
-        Hasher hasher = new Hasher(random, 16, 16, 2, 8000, 1);
+        Hasher hasher = new ArgonHasher(random, 16, 16, 2, 8000, 1);
         String databaseURL = "jdbc:sqlite:test.db";
         InitTestDatabase.init(databaseURL, "schema.sql");
         DatabaseConnection<DSLContext> connection = new DatabaseConnectionImpl(databaseURL);

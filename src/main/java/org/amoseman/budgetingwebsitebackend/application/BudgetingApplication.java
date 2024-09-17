@@ -6,6 +6,8 @@ import io.dropwizard.auth.basic.BasicCredentialAuthFilter;
 import io.dropwizard.core.Application;
 import io.dropwizard.core.setup.Environment;
 import org.amoseman.budgetingwebsitebackend.application.auth.*;
+import org.amoseman.budgetingwebsitebackend.application.auth.hashing.ArgonHasher;
+import org.amoseman.budgetingwebsitebackend.application.auth.hashing.Hasher;
 import org.amoseman.budgetingwebsitebackend.dao.AccountDAO;
 import org.amoseman.budgetingwebsitebackend.dao.FinanceRecordDAO;
 import org.amoseman.budgetingwebsitebackend.dao.BucketDAO;
@@ -33,7 +35,7 @@ public class BudgetingApplication extends Application<BudgetingConfiguration> {
     @Override
     public void run(BudgetingConfiguration configuration, Environment environment) throws Exception {
         SecureRandom random = new SecureRandom();
-        Hasher hasher = new Hasher(random, 16, 16, 2, 8192, 1);
+        Hasher hasher = new ArgonHasher(random, 16, 16, 2, 8192, 1);
 
         DatabaseConnection<DSLContext> connection = new DatabaseConnectionImpl(configuration.getDatabaseURL());
 

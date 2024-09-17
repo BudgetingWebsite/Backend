@@ -1,6 +1,6 @@
 package org.amoseman.budgetingwebsitebackend.service;
 
-import org.amoseman.budgetingwebsitebackend.application.auth.Hasher;
+import org.amoseman.budgetingwebsitebackend.application.auth.hashing.Hasher;
 import org.amoseman.budgetingwebsitebackend.application.auth.Roles;
 import org.amoseman.budgetingwebsitebackend.dao.AccountDAO;
 import org.amoseman.budgetingwebsitebackend.exception.UserAlreadyExistsException;
