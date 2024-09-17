@@ -5,7 +5,17 @@ import org.amoseman.budgetingbackend.pojo.bucket.Bucket;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Splitter {
+/**
+ * Provides dollar amount splitting functionality.
+ */
+public final class Splitter {
+
+    /**
+     * Split the provided amount based on the provided buckets.
+     * @param buckets the buckets.
+     * @param amount the dollar amount to split.
+     * @return the split amount.
+     */
     public static Split get(List<Bucket> buckets, long amount) {
         int len = buckets.size();
         double[] floored = new double[len];
