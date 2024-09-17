@@ -24,4 +24,7 @@ public class InitTestDatabase {
         }
     }
 
+    public static void close(String databaseURL) {
+        new File(databaseURL.split(":")[2]).delete();
+    }
 }

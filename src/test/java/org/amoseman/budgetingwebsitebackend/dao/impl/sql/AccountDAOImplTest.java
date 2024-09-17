@@ -73,5 +73,6 @@ class AccountDAOImplTest {
         if (maybe.isPresent()) {
             fail("Retrieved account when it should have been deleted");
         }
+        InitTestDatabase.close(databaseURL);
     }
 }

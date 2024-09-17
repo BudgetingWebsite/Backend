@@ -12,6 +12,7 @@ import org.amoseman.budgetingwebsitebackend.pojo.record.Income;
 import org.amoseman.budgetingwebsitebackend.util.Now;
 import org.jooq.DSLContext;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -24,8 +25,8 @@ class FinanceRecordDAOImplTest {
 
     private static FinanceRecordDAO<DSLContext> financeRecordDAO;
 
-    @BeforeAll
-    static void setup() {
+    @BeforeEach
+    void setup() {
         String databaseURL = "jdbc:sqlite:test.db";
         InitTestDatabase.init(databaseURL, "schema.sql");
         DatabaseConnection<DSLContext> connection = new DatabaseConnectionImpl(databaseURL);
@@ -84,6 +85,7 @@ class FinanceRecordDAOImplTest {
         assertEquals(0, records.size());
         records = financeRecordDAO.getIncomeInRange("person", new TimeRange(LocalDateTime.of(2023, 1, 1, 0, 0), LocalDateTime.of(2024, 1, 2, 0, 0)));
         assertEquals(0, records.size());
+        InitTestDatabase.close("jdbc:sqlite:test.db");
     }
 
     @Test
@@ -140,5 +142,6 @@ class FinanceRecordDAOImplTest {
         assertEquals(0, records.size());
         records = financeRecordDAO.getExpensesInRange("person", new TimeRange(LocalDateTime.of(2023, 1, 1, 0, 0), LocalDateTime.of(2024, 1, 2, 0, 0)));
         assertEquals(0, records.size());
+        InitTestDatabase.close("jdbc:sqlite:test.db");
     }
 }

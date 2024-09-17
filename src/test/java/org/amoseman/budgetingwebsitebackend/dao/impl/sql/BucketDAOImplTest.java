@@ -91,5 +91,6 @@ class BucketDAOImplTest {
         }
         buckets = bucketDAO.getBuckets("person");
         assertEquals(0, buckets.size());
+        InitTestDatabase.close(databaseURL);
     }
 }
