@@ -3,9 +3,7 @@ package org.amoseman.budgetingwebsitebackend.service;
 import org.amoseman.InitTestDatabase;
 import org.amoseman.budgetingwebsitebackend.application.auth.Hasher;
 import org.amoseman.budgetingwebsitebackend.dao.AccountDAO;
-import org.amoseman.budgetingwebsitebackend.dao.FinanceRecordDAO;
 import org.amoseman.budgetingwebsitebackend.dao.impl.sql.AccountDAOImpl;
-import org.amoseman.budgetingwebsitebackend.dao.impl.sql.FinanceRecordDAOImpl;
 import org.amoseman.budgetingwebsitebackend.database.DatabaseConnection;
 import org.amoseman.budgetingwebsitebackend.database.impl.sql.sqlite.DatabaseConnectionImpl;
 import org.amoseman.budgetingwebsitebackend.exception.UserAlreadyExistsException;
@@ -13,7 +11,7 @@ import org.amoseman.budgetingwebsitebackend.exception.UserDoesNotExistException;
 import org.amoseman.budgetingwebsitebackend.pojo.account.Account;
 import org.amoseman.budgetingwebsitebackend.pojo.account.op.CreateAccount;
 import org.jooq.DSLContext;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.security.SecureRandom;
@@ -24,8 +22,8 @@ import static org.junit.jupiter.api.Assertions.*;
 class AccountServiceTest {
     private static AccountService<DSLContext> accountService;
 
-    @BeforeAll
-    static void setup() {
+    @BeforeEach
+    void setup() {
         SecureRandom random = new SecureRandom();
         Hasher hasher = new Hasher(random, 16, 16, 2, 8000, 1);
         String databaseURL = "jdbc:sqlite:test.db";
