@@ -102,4 +102,22 @@ public class FinanceRecordResource<C> {
         );
         return Response.ok(expenses).build();
     }
+
+    @PUT
+    @PermitAll
+    @Path("/income/{uuid}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateIncome(@Auth User user, @PathParam("uuid") String uuid, IncomeInfo update) throws NegativeValueException, FinanceRecordDoesNotExistException {
+        financeRecordService.updateIncome(user.getName(), uuid, update);
+        return Response.ok().build();
+    }
+
+    @PUT
+    @PermitAll
+    @Path("/expense/{uuid}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateExpense(@Auth User user, @PathParam("uuid") String uuid, ExpenseInfo update) throws NegativeValueException, FinanceRecordDoesNotExistException {
+        financeRecordService.updateExpense(user.getName(), uuid, update);
+        return Response.ok().build();
+    }
 }
