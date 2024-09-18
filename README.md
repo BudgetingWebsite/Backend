@@ -156,10 +156,10 @@ Delete an income record.
 ### `AUTH:Basic`&emsp;`DELETE`&emsp;/record/expense/{uuid}
 Delete an expense record.
 
-## `AUTH:Basic`&emsp;`GET`&emsp;/record/income
+### `AUTH:Basic`&emsp;`GET`&emsp;/record/income
 Get income records in the time range. Month and day values start at 1. So, January 1st, 2024, would be `...startYear=2024&startMonth=1&startDay=1...`
 
-### Consumes PARAMS
+#### Consumes PARAMS
 ```
 startYear: String
 startMonth: String
