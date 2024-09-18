@@ -1,6 +1,7 @@
 package org.amoseman.budgetingbackend.util;
 
 import org.amoseman.budgetingbackend.pojo.bucket.Bucket;
+import org.jooq.meta.derby.sys.Sys;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -12,6 +13,17 @@ import java.util.stream.IntStream;
  */
 public final class Splitter {
 
+    static class Rounded {
+        long value;
+        double loss;
+
+        public Rounded(long value, double loss) {
+            this.value = value;
+            this.loss = loss;
+        }
+    }
+
+
     /**
      * Split the provided amount based on the provided buckets.
      * @param buckets the buckets.
@@ -20,36 +32,35 @@ public final class Splitter {
      */
     public static Split get(List<Bucket> buckets, long amount) {
         int len = buckets.size();
-        double[] rounded = new double[len];
-        double[] differences = new double[len];
-        double remainder = 0;
+        long[] rounded = new long[len];
+        double[] loss = new double[len];
+        double totalLoss = 0;
         List<Integer> indices = new ArrayList<>();
         for (int i = 0; i < len; i++) {
             double raw = buckets.get(i).share * amount;
-            rounded[i] = Math.floor(raw);
-            differences[i] = raw - rounded[i];
-            remainder += differences[i];
+            rounded[i] = Math.round(raw);
+            loss[i] = raw - rounded[i];
+            totalLoss += loss[i];
             indices.add(i);
         }
-        indices = sortIndices(indices, differences);
+        indices = sortIndices(indices, loss);
 
-        long[] out = new long[len];
-        long r = amount;
+        long remainder = amount;
         int index = 0;
-        long remainderRemaining = (long) Math.floor(remainder);
-        while (remainderRemaining > 0 && index < indices.size()) {
-            remainderRemaining--;
+        long remainingLoss = (long) Math.floor(totalLoss);
+        while (remainingLoss > 0 && index < indices.size()) {
+            remainingLoss--;
             index++;
-            out[indices.get(index)]++;
-            r -= out[index];
+            rounded[indices.get(index)]++;
+            remainder -= rounded[index];
         }
-        return new Split(out, r);
+        return new Split(rounded, remainder);
     }
 
-    public static List<Integer> sortIndices(List<Integer> indices, double[] differences) {
+    public static List<Integer> sortIndices(List<Integer> indices, double[] loss) {
         return IntStream.range(0, indices.size())
                 .boxed()
-                .sorted(Comparator.comparingDouble(i -> differences[i]))
+                .sorted(Comparator.comparingDouble(i -> loss[i]))
                 .sorted(Comparator.reverseOrder())
                 .map(indices::get)
                 .toList();
