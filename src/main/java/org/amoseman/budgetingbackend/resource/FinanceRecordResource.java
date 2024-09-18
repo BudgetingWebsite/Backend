@@ -7,6 +7,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.amoseman.budgetingbackend.application.auth.User;
 import org.amoseman.budgetingbackend.exception.FinanceRecordAlreadyExistsException;
+import org.amoseman.budgetingbackend.exception.FinanceRecordDoesNotExistException;
 import org.amoseman.budgetingbackend.exception.NegativeValueException;
 import org.amoseman.budgetingbackend.pojo.record.Expense;
 import org.amoseman.budgetingbackend.pojo.record.Income;
@@ -30,70 +31,38 @@ public class FinanceRecordResource<C> {
     @Consumes(MediaType.APPLICATION_JSON)
     @PermitAll
     @Path("/income")
-    public Response addIncome(@Auth User user, IncomeInfo create) {
-        try {
-            String uuid = financeRecordService.addIncome(user.getName(), create);
-            return Response.ok(uuid).build();
-        }
-        catch (NegativeValueException e) {
-            String reason = String.format("Negative amount: %s", create.getAmount());
-            return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), reason).build();
-        }
-        catch (FinanceRecordAlreadyExistsException e) {
-            // todo: this should never occur, so make it re-attempt once in the service if the UUID already exists
-            String reason = "Congratulations, you won the UUID v4 lottery as the UUID generated is already in use!";
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), reason).build();
-        }
-        catch (DateTimeException e) {
-            String reason = "Not a valid date";
-            return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), reason).build();
-        }
+    public Response addIncome(@Auth User user, IncomeInfo create) throws NegativeValueException, FinanceRecordAlreadyExistsException, DateTimeException {
+        String uuid = financeRecordService.addIncome(user.getName(), create);
+        return Response.ok(uuid).build();
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @PermitAll
     @Path("/expense")
-    public Response addExpense(@Auth User user, ExpenseInfo create) {
-        try {
-            String uuid = financeRecordService.addExpense(user.getName(), create);
-            return Response.ok(uuid).build();
-        }
-        catch (NegativeValueException e) {
-            String reason = String.format("Negative amount: %s", create.getAmount());
-            return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), reason).build();
-        }
-        catch (FinanceRecordAlreadyExistsException e) {
-            // todo: this should never occur, so make it re-attempt once in the service if the UUID already exists
-            String reason = "Congratulations, you won the UUID v4 lottery as the UUID is already in use! ";
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), reason).build();
-        }
-        catch (DateTimeException e) {
-            String reason = "Not a valid date";
-            return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), reason).build();
-        }
+    public Response addExpense(@Auth User user, ExpenseInfo create) throws NegativeValueException, FinanceRecordAlreadyExistsException, DateTimeException {
+        String uuid = financeRecordService.addExpense(user.getName(), create);
+        return Response.ok(uuid).build();
     }
 
     @DELETE
     @PermitAll
     @Path("/income/{uuid}")
-    public Response removeIncome(@Auth User user, @PathParam("uuid") String uuid) {
-        if (financeRecordService.removeIncome(user.getName(), uuid)) {
-            return Response.ok().build();
+    public Response removeIncome(@Auth User user, @PathParam("uuid") String uuid) throws FinanceRecordDoesNotExistException {
+        if (!financeRecordService.removeIncome(user.getName(), uuid)) {
+            throw new FinanceRecordDoesNotExistException("remove", uuid);
         }
-        String reason = String.format("Income record %s does not exist", uuid);
-        return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), reason).build();
+        return Response.ok().build();
     }
 
     @DELETE
     @PermitAll
     @Path("/expense/{uuid}")
-    public Response removeExpense(@Auth User user, @PathParam("uuid") String uuid) {
-        if (financeRecordService.removeExpense(user.getName(), uuid)) {
-            return Response.ok().build();
+    public Response removeExpense(@Auth User user, @PathParam("uuid") String uuid) throws FinanceRecordDoesNotExistException {
+        if (!financeRecordService.removeExpense(user.getName(), uuid)) {
+            throw new FinanceRecordDoesNotExistException("remove", uuid);
         }
-        String reason = String.format("Expense record %s does not exist", uuid);
-        return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), reason).build();
+        return Response.ok().build();
     }
 
     @GET
@@ -106,18 +75,13 @@ public class FinanceRecordResource<C> {
             @DefaultValue("1") @QueryParam("start-day") String startDay,
             @DefaultValue("9999") @QueryParam("end-year") String endYear,
             @DefaultValue("1") @QueryParam("end-month") String endMonth,
-            @DefaultValue("1") @QueryParam("end-day") String endDay) {
-        try {
-            List<Income> income = financeRecordService.getIncome(
-                    user.getName(),
-                    startYear, startMonth, startDay,
-                    endYear, endMonth, endDay
-            );
-            return Response.ok(income).build();
-        }
-        catch (NumberFormatException e) {
-            return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), "Invalid value in time range").build();
-        }
+            @DefaultValue("1") @QueryParam("end-day") String endDay) throws NumberFormatException {
+        List<Income> income = financeRecordService.getIncome(
+                user.getName(),
+                startYear, startMonth, startDay,
+                endYear, endMonth, endDay
+        );
+        return Response.ok(income).build();
     }
 
     @GET
@@ -130,17 +94,12 @@ public class FinanceRecordResource<C> {
             @DefaultValue("1") @QueryParam("start-day") String startDay,
             @DefaultValue("9999") @QueryParam("end-year") String endYear,
             @DefaultValue("1") @QueryParam("end-month") String endMonth,
-            @DefaultValue("1") @QueryParam("end-day") String endDay) {
-        try {
-            List<Expense> expenses = financeRecordService.getExpenses(
-                    user.getName(),
-                    startYear, startMonth, startDay,
-                    endYear, endMonth, endDay
-            );
-            return Response.ok(expenses).build();
-        }
-        catch (NumberFormatException e) {
-            return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), "Invalid value in time range").build();
-        }
+            @DefaultValue("1") @QueryParam("end-day") String endDay) throws NumberFormatException {
+        List<Expense> expenses = financeRecordService.getExpenses(
+                user.getName(),
+                startYear, startMonth, startDay,
+                endYear, endMonth, endDay
+        );
+        return Response.ok(expenses).build();
     }
 }

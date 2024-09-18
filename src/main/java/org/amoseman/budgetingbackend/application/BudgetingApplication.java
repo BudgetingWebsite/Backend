@@ -16,10 +16,7 @@ import org.amoseman.budgetingbackend.dao.impl.sql.FinanceRecordDAOImpl;
 import org.amoseman.budgetingbackend.dao.impl.sql.BucketDAOImpl;
 import org.amoseman.budgetingbackend.database.DatabaseConnection;
 import org.amoseman.budgetingbackend.database.impl.sql.sqlite.DatabaseConnectionImpl;
-import org.amoseman.budgetingbackend.exception.mapping.IdentifierAlreadyExistsExceptionMapper;
-import org.amoseman.budgetingbackend.exception.mapping.IdentifierDoesNotExistExceptionMapper;
-import org.amoseman.budgetingbackend.exception.mapping.NegativeValueExceptionMapper;
-import org.amoseman.budgetingbackend.exception.mapping.TotalBucketShareExceededExceptionMapper;
+import org.amoseman.budgetingbackend.exception.mapping.*;
 import org.amoseman.budgetingbackend.pojo.account.Account;
 import org.amoseman.budgetingbackend.resource.AccountResource;
 import org.amoseman.budgetingbackend.resource.FinanceRecordResource;
@@ -75,6 +72,8 @@ public class BudgetingApplication extends Application<BudgetingConfiguration> {
         environment.jersey().register(new IdentifierDoesNotExistExceptionMapper());
         environment.jersey().register(new NegativeValueExceptionMapper());
         environment.jersey().register(new TotalBucketShareExceededExceptionMapper());
+        environment.jersey().register(new DateTimeExceptionMapper());
+        environment.jersey().register(new NumberFormatExceptionMapper());
 
         initializeAdminAccount(configuration, hasher, accountDAO);
     }

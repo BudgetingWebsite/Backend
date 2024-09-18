@@ -24,60 +24,37 @@ public class AccountResource<C> {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createAccount(CreateAccount account) {
-        try {
-            accountService.addAccount(account);
-            return Response.ok().build();
-        }
-        catch (UserAlreadyExistsException e) {
-            String reason = String.format("Username %s is already in use", account.getUsername());
-            return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), reason).build();
-        }
+    public Response createAccount(CreateAccount account) throws UserAlreadyExistsException {
+        accountService.addAccount(account);
+        return Response.ok().build();
     }
 
     @PermitAll
     @DELETE
     @Path("/{username}")
-    public Response removeAccount(@Auth User user, @PathParam("username") String username) {
+    public Response removeAccount(@Auth User user, @PathParam("username") String username) throws UserDoesNotExistException {
         if (!user.getRoles().contains(Roles.ADMIN) && !user.getName().equals(username)) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
-        try {
-            accountService.removeAccount(username);
-            return Response.ok().build();
-        }
-        catch (UserDoesNotExistException e) {
-            String reason = String.format("User %s does not exist", username);
-            return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), reason).build();
-        }
+        accountService.removeAccount(username);
+        return Response.ok().build();
     }
 
     @PermitAll
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/password")
-    public Response changePassword(@Auth User user, String password) {
-        try {
-            accountService.changePassword(user.getName(), password);
-            return Response.ok().build();
-        }
-        catch (UserDoesNotExistException e) {
-            return Response.status(Response.Status.UNAUTHORIZED).build();
-        }
+    public Response changePassword(@Auth User user, String password) throws UserDoesNotExistException {
+        accountService.changePassword(user.getName(), password);
+        return Response.ok().build();
     }
 
     @RolesAllowed(Roles.ADMIN)
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{username}/roles")
-    public Response changeRoles(@Auth User user, @PathParam("username") String username, String roles) {
-        try {
-            accountService.changeRoles(username, roles);
-            return Response.ok().build();
-        }
-        catch (UserDoesNotExistException e) {
-            String reason = String.format("User %s does not exist", username);
-            return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), reason).build();
-        }
+    public Response changeRoles(@Auth User user, @PathParam("username") String username, String roles) throws UserDoesNotExistException {
+        accountService.changeRoles(username, roles);
+        return Response.ok().build();
     }
 }
