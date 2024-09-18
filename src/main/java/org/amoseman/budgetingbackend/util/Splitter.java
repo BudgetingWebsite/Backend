@@ -12,18 +12,6 @@ import java.util.stream.IntStream;
  * Provides dollar amount splitting functionality.
  */
 public final class Splitter {
-
-    static class Rounded {
-        long value;
-        double loss;
-
-        public Rounded(long value, double loss) {
-            this.value = value;
-            this.loss = loss;
-        }
-    }
-
-
     /**
      * Split the provided amount based on the provided buckets.
      * @param buckets the buckets.
