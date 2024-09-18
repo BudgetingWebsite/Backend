@@ -2,9 +2,12 @@ package org.amoseman.budgetingbackend.dao;
 
 import org.amoseman.budgetingbackend.database.DatabaseConnection;
 import org.amoseman.budgetingbackend.exception.FinanceRecordAlreadyExistsException;
+import org.amoseman.budgetingbackend.exception.FinanceRecordDoesNotExistException;
 import org.amoseman.budgetingbackend.pojo.TimeRange;
 import org.amoseman.budgetingbackend.pojo.record.Expense;
 import org.amoseman.budgetingbackend.pojo.record.Income;
+import org.amoseman.budgetingbackend.pojo.record.op.create.CreateExpense;
+import org.amoseman.budgetingbackend.pojo.record.op.create.CreateIncome;
 
 import java.util.List;
 import java.util.Optional;
@@ -97,4 +100,22 @@ public abstract class FinanceRecordDAO<C> extends DAO<C> {
      * @return the record.
      */
     public abstract Optional<Expense> getExpense(String user, String uuid);
+
+    /**
+     * Update an income record.
+     * @param user the UUID of the owning user.
+     * @param uuid the UUID of the income.
+     * @param update the updated information of the income.
+     * @throws FinanceRecordDoesNotExistException if the income does not exist.
+     */
+    public abstract void updateIncome(String user, String uuid, CreateIncome update) throws FinanceRecordDoesNotExistException;
+
+    /**
+     * Update an expense record.
+     * @param user the UUID of the owning user.
+     * @param uuid the UUID of the expense.
+     * @param update the updated information of the expense.
+     * @throws FinanceRecordDoesNotExistException if the expense does not exist.
+     */
+    public abstract void updateExpense(String user, String uuid, CreateExpense update) throws FinanceRecordDoesNotExistException;
 }

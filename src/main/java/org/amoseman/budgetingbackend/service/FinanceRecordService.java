@@ -5,8 +5,8 @@ import org.amoseman.budgetingbackend.exception.*;
 import org.amoseman.budgetingbackend.pojo.*;
 import org.amoseman.budgetingbackend.pojo.record.Expense;
 import org.amoseman.budgetingbackend.pojo.record.Income;
-import org.amoseman.budgetingbackend.pojo.record.op.CreateExpense;
-import org.amoseman.budgetingbackend.pojo.record.op.CreateIncome;
+import org.amoseman.budgetingbackend.pojo.record.op.create.CreateExpense;
+import org.amoseman.budgetingbackend.pojo.record.op.create.CreateIncome;
 import org.amoseman.budgetingbackend.util.Now;
 
 import java.time.LocalDateTime;

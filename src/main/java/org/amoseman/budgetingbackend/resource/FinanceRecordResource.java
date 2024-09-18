@@ -10,8 +10,8 @@ import org.amoseman.budgetingbackend.exception.FinanceRecordAlreadyExistsExcepti
 import org.amoseman.budgetingbackend.exception.NegativeValueException;
 import org.amoseman.budgetingbackend.pojo.record.Expense;
 import org.amoseman.budgetingbackend.pojo.record.Income;
-import org.amoseman.budgetingbackend.pojo.record.op.CreateExpense;
-import org.amoseman.budgetingbackend.pojo.record.op.CreateIncome;
+import org.amoseman.budgetingbackend.pojo.record.op.create.CreateExpense;
+import org.amoseman.budgetingbackend.pojo.record.op.create.CreateIncome;
 import org.amoseman.budgetingbackend.service.FinanceRecordService;
 
 import java.time.DateTimeException;

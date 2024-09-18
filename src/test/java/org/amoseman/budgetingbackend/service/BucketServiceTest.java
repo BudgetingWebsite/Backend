@@ -11,8 +11,8 @@ import org.amoseman.budgetingbackend.exception.*;
 import org.amoseman.budgetingbackend.pojo.bucket.Bucket;
 import org.amoseman.budgetingbackend.pojo.bucket.op.CreateBucket;
 import org.amoseman.budgetingbackend.pojo.bucket.op.UpdateBucket;
-import org.amoseman.budgetingbackend.pojo.record.op.CreateExpense;
-import org.amoseman.budgetingbackend.pojo.record.op.CreateIncome;
+import org.amoseman.budgetingbackend.pojo.record.op.create.CreateExpense;
+import org.amoseman.budgetingbackend.pojo.record.op.create.CreateIncome;
 import org.jooq.DSLContext;
 import org.junit.jupiter.api.*;
 

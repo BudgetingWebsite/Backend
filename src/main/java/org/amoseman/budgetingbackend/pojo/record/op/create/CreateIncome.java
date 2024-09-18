@@ -1,4 +1,4 @@
-package org.amoseman.budgetingbackend.pojo.record.op;
+package org.amoseman.budgetingbackend.pojo.record.op.create;
 
 /**
  * Represents an income record creation operation.
