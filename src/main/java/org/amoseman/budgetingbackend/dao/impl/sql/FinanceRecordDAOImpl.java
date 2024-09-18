@@ -6,8 +6,12 @@ import org.amoseman.budgetingbackend.exception.*;
 import org.amoseman.budgetingbackend.pojo.TimeRange;
 import org.amoseman.budgetingbackend.pojo.record.Expense;
 import org.amoseman.budgetingbackend.pojo.record.Income;
+import org.amoseman.budgetingbackend.pojo.record.info.ExpenseInfo;
+import org.amoseman.budgetingbackend.pojo.record.info.IncomeInfo;
+import org.amoseman.budgetingbackend.util.Now;
 import org.jooq.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -180,5 +184,31 @@ public class FinanceRecordDAOImpl extends FinanceRecordDAO<DSLContext> {
         catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void updateIncome(String user, String uuid, IncomeInfo update) throws FinanceRecordDoesNotExistException, NegativeValueException {
+        LocalDateTime now = Now.get();
+        Optional<Income> maybe = getIncome(user, uuid);
+        if (maybe.isEmpty()) {
+            throw new FinanceRecordDoesNotExistException("update", uuid);
+        }
+        Income income = maybe.get();
+        income = new Income(income, update, now);
+        IncomeRecord record = connection.get().newRecord(INCOME, income);
+        connection.get().executeUpdate(record);
+    }
+
+    @Override
+    public void updateExpense(String user, String uuid, ExpenseInfo update) throws FinanceRecordDoesNotExistException, NegativeValueException {
+        LocalDateTime now = Now.get();
+        Optional<Expense> maybe = getExpense(user, uuid);
+        if (maybe.isEmpty()) {
+            throw new FinanceRecordDoesNotExistException("update", uuid);
+        }
+        Expense expense = maybe.get();
+        expense = new Expense(expense, update, now);
+        ExpenseRecord record = connection.get().newRecord(EXPENSE, expense);
+        connection.get().executeUpdate(record);
     }
 }

@@ -99,4 +99,12 @@ public class FinanceRecordService<C> {
         TimeRange range = new TimeRange(start, end);
         return financeRecordDAO.getExpensesInRange(user, range);
     }
+
+    public void updateIncome(String user, String uuid, IncomeInfo update) throws NegativeValueException, FinanceRecordDoesNotExistException {
+        financeRecordDAO.updateIncome(user, uuid, update);
+    }
+
+    public void updateExpense(String user, String uuid, ExpenseInfo update) throws NegativeValueException, FinanceRecordDoesNotExistException {
+        financeRecordDAO.updateExpense(user, uuid, update);
+    }
 }

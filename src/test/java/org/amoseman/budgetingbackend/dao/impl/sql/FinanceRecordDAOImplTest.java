@@ -5,10 +5,13 @@ import org.amoseman.budgetingbackend.dao.FinanceRecordDAO;
 import org.amoseman.budgetingbackend.database.DatabaseConnection;
 import org.amoseman.budgetingbackend.database.impl.sql.sqlite.DatabaseConnectionImpl;
 import org.amoseman.budgetingbackend.exception.FinanceRecordAlreadyExistsException;
+import org.amoseman.budgetingbackend.exception.FinanceRecordDoesNotExistException;
 import org.amoseman.budgetingbackend.exception.NegativeValueException;
 import org.amoseman.budgetingbackend.pojo.TimeRange;
 import org.amoseman.budgetingbackend.pojo.record.Expense;
 import org.amoseman.budgetingbackend.pojo.record.Income;
+import org.amoseman.budgetingbackend.pojo.record.info.ExpenseInfo;
+import org.amoseman.budgetingbackend.pojo.record.info.IncomeInfo;
 import org.amoseman.budgetingbackend.util.Now;
 import org.jooq.DSLContext;
 import org.junit.jupiter.api.BeforeEach;
@@ -75,6 +78,20 @@ class FinanceRecordDAOImplTest {
         records = financeRecordDAO.getIncomeInRange("person", new TimeRange(LocalDateTime.of(2023, 1, 1, 0, 0), LocalDateTime.of(2024, 1, 2, 0, 0)));
         assertEquals(1, records.size());
 
+        try {
+            financeRecordDAO.updateIncome("person", "12345", new IncomeInfo(0, 2024, 1, 1, "", ""));
+        }
+        catch (FinanceRecordDoesNotExistException | NegativeValueException e) {
+            fail(e);
+        }
+        maybe = financeRecordDAO.getIncome("person", "12345");
+        if (maybe.isEmpty()) {
+            fail("Unable to retrieve income after it was updated");
+        }
+        Income updated = maybe.get();
+        assertEquals(0, updated.amount);
+
+
         financeRecordDAO.removeIncome("person", "12345");
         maybe = financeRecordDAO.getIncome("person", "12345");
         if (maybe.isPresent()) {
@@ -131,6 +148,19 @@ class FinanceRecordDAOImplTest {
 
         records = financeRecordDAO.getExpensesInRange("person", new TimeRange(LocalDateTime.of(2023, 1, 1, 0, 0), LocalDateTime.of(2024, 1, 2, 0, 0)));
         assertEquals(1, records.size());
+
+        try {
+            financeRecordDAO.updateExpense("person", "12345", new ExpenseInfo(0, 2024, 1, 1, "", "", ""));
+        }
+        catch (FinanceRecordDoesNotExistException | NegativeValueException e) {
+            fail(e);
+        }
+        maybe = financeRecordDAO.getExpense("person", "12345");
+        if (maybe.isEmpty()) {
+            fail("Unable to retrieve expense after it was updated");
+        }
+        Expense updated = maybe.get();
+        assertEquals(0, updated.amount);
 
         financeRecordDAO.removeExpense("person", "12345");
         maybe = financeRecordDAO.getExpense("person", "12345");
