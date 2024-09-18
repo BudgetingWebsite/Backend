@@ -107,3 +107,108 @@ Get the authenicated user's buckets.
 	]
 }
 ```
+
+## Financial Record
+
+### `AUTH:Basic`&emsp;`POST`&emsp;/record/income
+Add an income record.
+
+#### Consumes JSON
+```
+{
+	amount: Integer,
+	year: Integer,
+	month: Integer,
+	day: Integer,
+	category: String,
+	description: String
+}
+```
+#### Produces TEXT
+```
+uuid: String
+```
+
+### `AUTH:Basic`&emsp;`POST`&emsp;/record/expense
+Add an expense record.
+
+#### Consumes JSON
+```
+{
+	amount: Integer,
+	year: Integer,
+	month: Integer,
+	day: Integer,
+	category: String,
+	description: String,
+	bucket: String
+}
+```
+
+#### Produces TEXT
+```
+uuid: String
+```
+
+### `AUTH:Basic`&emsp;`DELETE`&emsp;/record/income/{uuid}
+Delete an income record.
+
+### `AUTH:Basic`&emsp;`DELETE`&emsp;/record/expense/{uuid}
+Delete an expense record.
+
+## `AUTH:Basic`&emsp;`GET`&emsp;/record/income
+Get income records in the time range. Month and day values start at 1. So, January 1st, 2024, would be `...startYear=2024&startMonth=1&startDay=1...`
+
+### Consumes PARAMS
+```
+startYear: String
+startMonth: String
+startDay: String
+endYear: String
+endMonth: String
+endDay: String
+```
+
+### `AUTH:Basic`&emsp;`GET`&emsp;/record/expense
+Get expense records in the time range. Month and day values start at 1. So, January 1st, 2024, would be `...startYear=2024&startMonth=1&startDay=1...`
+
+#### Consumes PARAMS
+```
+startYear: String
+startMonth: String
+startDay: String
+endYear: String
+endMonth: String
+endDay: String
+```
+
+### `AUTH:Basic`&emsp;`PUT`&emsp;/record/income/{uuid}
+Update an income record.
+
+#### Consumes JSON
+```
+{
+	amount: Integer,
+	year: Integer,
+	month: Integer,
+	day: Integer,
+	category: String,
+	description: String
+}
+```
+
+### `AUTH:Basic`&emsp;`PUT`&emsp;/record/expense/{uuid}
+Update an expense record.
+
+#### Consumes JSON
+```
+{
+	amount: Integer,
+	year: Integer,
+	month: Integer,
+	day: Integer,
+	category: String,
+	description: String,
+	bucket: String
+}
+```
