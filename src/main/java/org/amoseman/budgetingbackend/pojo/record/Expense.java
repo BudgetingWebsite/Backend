@@ -1,6 +1,7 @@
 package org.amoseman.budgetingbackend.pojo.record;
 
 import org.amoseman.budgetingbackend.exception.NegativeValueException;
+import org.amoseman.budgetingbackend.pojo.record.op.create.CreateExpense;
 
 import java.beans.ConstructorProperties;
 import java.time.LocalDateTime;
@@ -28,5 +29,26 @@ public class Expense extends FinanceRecord {
     public Expense(String uuid, LocalDateTime created, LocalDateTime updated, String owner, long amount, LocalDateTime occurred, String category, String description, String bucket) throws NegativeValueException {
         super(uuid, created, updated, owner, amount, occurred, category, description);
         this.bucket = bucket;
+    }
+
+    /**
+     * Update an expense.
+     * @param expense the expense.
+     * @param update the updated information.
+     * @param updated when this update occurred.
+     * @throws NegativeValueException if the provided amount is negative.
+     */
+    public Expense(Expense expense, CreateExpense update, LocalDateTime updated) throws NegativeValueException {
+        super(
+                expense.uuid,
+                expense.created,
+                updated,
+                expense.owner,
+                update.getAmount(),
+                LocalDateTime.of(update.getYear(), update.getMonth(), update.getDay(), 0, 0),
+                update.getCategory(),
+                update.getDescription()
+        );
+        this.bucket = update.getBucket();
     }
 }
