@@ -5,8 +5,8 @@ import org.amoseman.budgetingbackend.exception.*;
 import org.amoseman.budgetingbackend.pojo.*;
 import org.amoseman.budgetingbackend.pojo.record.Expense;
 import org.amoseman.budgetingbackend.pojo.record.Income;
-import org.amoseman.budgetingbackend.pojo.record.op.create.CreateExpense;
-import org.amoseman.budgetingbackend.pojo.record.op.create.CreateIncome;
+import org.amoseman.budgetingbackend.pojo.record.info.ExpenseInfo;
+import org.amoseman.budgetingbackend.pojo.record.info.IncomeInfo;
 import org.amoseman.budgetingbackend.util.Now;
 
 import java.time.LocalDateTime;
@@ -20,7 +20,7 @@ public class FinanceRecordService<C> {
         this.financeRecordDAO = financeRecordDAO;
     }
 
-    public String addIncome(String user, CreateIncome create) throws FinanceRecordAlreadyExistsException, NegativeValueException {
+    public String addIncome(String user, IncomeInfo create) throws FinanceRecordAlreadyExistsException, NegativeValueException {
         String uuid = UUID.randomUUID().toString();
         LocalDateTime now = Now.get();
         LocalDateTime occurred = LocalDateTime.of(create.getYear(), create.getMonth(), create.getDay(), 0, 0);
@@ -38,7 +38,7 @@ public class FinanceRecordService<C> {
         return uuid;
     }
 
-    public String addExpense(String user, CreateExpense create) throws FinanceRecordAlreadyExistsException, NegativeValueException {
+    public String addExpense(String user, ExpenseInfo create) throws FinanceRecordAlreadyExistsException, NegativeValueException {
         String uuid = UUID.randomUUID().toString();
         LocalDateTime now = Now.get();
         LocalDateTime occurred = LocalDateTime.of(create.getYear(), create.getMonth(), create.getDay(), 0, 0);

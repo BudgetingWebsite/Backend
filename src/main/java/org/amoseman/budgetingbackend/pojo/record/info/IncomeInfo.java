@@ -1,11 +1,11 @@
-package org.amoseman.budgetingbackend.pojo.record.op.create;
+package org.amoseman.budgetingbackend.pojo.record.info;
 
 /**
  * Represents an income record creation operation.
  */
-public class CreateIncome extends CreateFinanceRecord {
+public class IncomeInfo extends FinanceRecordInfo {
 
-    public CreateIncome() {
+    public IncomeInfo() {
     }
 
     /**
@@ -17,7 +17,7 @@ public class CreateIncome extends CreateFinanceRecord {
      * @param category the category of the new income.
      * @param description the description of the new income.
      */
-    public CreateIncome(long amount, int year, int month, int day, String category, String description) {
+    public IncomeInfo(long amount, int year, int month, int day, String category, String description) {
         super(amount, year, month, day, category, description);
     }
 }

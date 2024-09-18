@@ -9,8 +9,8 @@ import org.amoseman.budgetingbackend.exception.FinanceRecordAlreadyExistsExcepti
 import org.amoseman.budgetingbackend.exception.NegativeValueException;
 import org.amoseman.budgetingbackend.pojo.record.Expense;
 import org.amoseman.budgetingbackend.pojo.record.Income;
-import org.amoseman.budgetingbackend.pojo.record.op.create.CreateExpense;
-import org.amoseman.budgetingbackend.pojo.record.op.create.CreateIncome;
+import org.amoseman.budgetingbackend.pojo.record.info.ExpenseInfo;
+import org.amoseman.budgetingbackend.pojo.record.info.IncomeInfo;
 import org.jooq.DSLContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,7 +35,7 @@ class FinanceRecordServiceTest {
     @Test
     void testIncomeCRUD() {
         try {
-            financeRecordService.addIncome("alice", new CreateIncome(
+            financeRecordService.addIncome("alice", new IncomeInfo(
                     100,
                     2024,
                     1,
@@ -86,7 +86,7 @@ class FinanceRecordServiceTest {
     @Test
     void testExpenseCRUD() {
         try {
-            financeRecordService.addExpense("alice", new CreateExpense(
+            financeRecordService.addExpense("alice", new ExpenseInfo(
                     100,
                     2024,
                     1,

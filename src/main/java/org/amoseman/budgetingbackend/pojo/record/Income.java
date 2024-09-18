@@ -1,7 +1,7 @@
 package org.amoseman.budgetingbackend.pojo.record;
 
 import org.amoseman.budgetingbackend.exception.NegativeValueException;
-import org.amoseman.budgetingbackend.pojo.record.op.create.CreateIncome;
+import org.amoseman.budgetingbackend.pojo.record.info.IncomeInfo;
 
 import java.beans.ConstructorProperties;
 import java.time.LocalDateTime;
@@ -35,7 +35,7 @@ public class Income extends FinanceRecord {
      * @param updated when this update occurred.
      * @throws NegativeValueException if the provided amount is negative.
      */
-    public Income(Income income, CreateIncome update, LocalDateTime updated) throws NegativeValueException {
+    public Income(Income income, IncomeInfo update, LocalDateTime updated) throws NegativeValueException {
         super(
                 income.uuid,
                 income.created,

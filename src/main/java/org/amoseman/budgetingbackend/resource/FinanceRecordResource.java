@@ -10,8 +10,8 @@ import org.amoseman.budgetingbackend.exception.FinanceRecordAlreadyExistsExcepti
 import org.amoseman.budgetingbackend.exception.NegativeValueException;
 import org.amoseman.budgetingbackend.pojo.record.Expense;
 import org.amoseman.budgetingbackend.pojo.record.Income;
-import org.amoseman.budgetingbackend.pojo.record.op.create.CreateExpense;
-import org.amoseman.budgetingbackend.pojo.record.op.create.CreateIncome;
+import org.amoseman.budgetingbackend.pojo.record.info.ExpenseInfo;
+import org.amoseman.budgetingbackend.pojo.record.info.IncomeInfo;
 import org.amoseman.budgetingbackend.service.FinanceRecordService;
 
 import java.time.DateTimeException;
@@ -30,7 +30,7 @@ public class FinanceRecordResource<C> {
     @Consumes(MediaType.APPLICATION_JSON)
     @PermitAll
     @Path("/income")
-    public Response addIncome(@Auth User user, CreateIncome create) {
+    public Response addIncome(@Auth User user, IncomeInfo create) {
         try {
             String uuid = financeRecordService.addIncome(user.getName(), create);
             return Response.ok(uuid).build();
@@ -54,7 +54,7 @@ public class FinanceRecordResource<C> {
     @Consumes(MediaType.APPLICATION_JSON)
     @PermitAll
     @Path("/expense")
-    public Response addExpense(@Auth User user, CreateExpense create) {
+    public Response addExpense(@Auth User user, ExpenseInfo create) {
         try {
             String uuid = financeRecordService.addExpense(user.getName(), create);
             return Response.ok(uuid).build();

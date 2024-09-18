@@ -9,7 +9,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.amoseman.InitTestConfiguration;
 import org.amoseman.InitTestDatabase;
-import org.amoseman.budgetingbackend.pojo.record.op.create.CreateIncome;
+import org.amoseman.budgetingbackend.pojo.record.info.IncomeInfo;
 import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.junit.jupiter.api.Test;
@@ -74,7 +74,7 @@ class BudgetingApplicationTest {
                 .target(address)
                 .register(HttpAuthenticationFeature.basic(adminUsername, adminPassword));
 
-        CreateIncome createIncome = new CreateIncome(100, 2024, 1, 1, "example", "example");
+        IncomeInfo createIncome = new IncomeInfo(100, 2024, 1, 1, "example", "example");
         String createIncomeJson = toJSON(createIncome);
         Entity<String> createIncomeEntity = Entity.entity(createIncomeJson, MediaType.APPLICATION_JSON_TYPE);
         Response response =  client.path("/record/income").request().post(createIncomeEntity);

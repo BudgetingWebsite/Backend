@@ -11,8 +11,8 @@ import org.amoseman.budgetingbackend.exception.*;
 import org.amoseman.budgetingbackend.pojo.bucket.Bucket;
 import org.amoseman.budgetingbackend.pojo.bucket.op.CreateBucket;
 import org.amoseman.budgetingbackend.pojo.bucket.op.UpdateBucket;
-import org.amoseman.budgetingbackend.pojo.record.op.create.CreateExpense;
-import org.amoseman.budgetingbackend.pojo.record.op.create.CreateIncome;
+import org.amoseman.budgetingbackend.pojo.record.info.ExpenseInfo;
+import org.amoseman.budgetingbackend.pojo.record.info.IncomeInfo;
 import org.jooq.DSLContext;
 import org.junit.jupiter.api.*;
 
@@ -94,7 +94,7 @@ class BucketServiceTest {
             fail(e);
         }
         try {
-            financeRecordService.addIncome("alice", new CreateIncome(200, 2024, 1, 1, "", ""));
+            financeRecordService.addIncome("alice", new IncomeInfo(200, 2024, 1, 1, "", ""));
         }
         catch (FinanceRecordAlreadyExistsException | NegativeValueException e) {
             fail(e);
@@ -124,7 +124,7 @@ class BucketServiceTest {
         assertEquals(60, other.amount);
 
         try {
-            financeRecordService.addExpense("alice", new CreateExpense(100, 2024, 1, 1, "", "", savings.uuid));
+            financeRecordService.addExpense("alice", new ExpenseInfo(100, 2024, 1, 1, "", "", savings.uuid));
         }
         catch (NegativeValueException | FinanceRecordAlreadyExistsException e) {
             fail(e);

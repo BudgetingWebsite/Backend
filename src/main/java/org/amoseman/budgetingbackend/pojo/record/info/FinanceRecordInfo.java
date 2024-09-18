@@ -1,9 +1,9 @@
-package org.amoseman.budgetingbackend.pojo.record.op.create;
+package org.amoseman.budgetingbackend.pojo.record.info;
 
 /**
  * Represents a financial record creation operation.
  */
-public class CreateFinanceRecord {
+public class FinanceRecordInfo {
     private long amount;
     private int year;
     private int month;
@@ -11,7 +11,7 @@ public class CreateFinanceRecord {
     private String category;
     private String description;
 
-    public CreateFinanceRecord() {
+    public FinanceRecordInfo() {
 
     }
 
@@ -24,7 +24,7 @@ public class CreateFinanceRecord {
      * @param category the category of the new record.
      * @param description the description of the new record.
      */
-    public CreateFinanceRecord(long amount, int year, int month, int day, String category, String description) {
+    public FinanceRecordInfo(long amount, int year, int month, int day, String category, String description) {
         this.amount = amount;
         this.year = year;
         this.month = month;
