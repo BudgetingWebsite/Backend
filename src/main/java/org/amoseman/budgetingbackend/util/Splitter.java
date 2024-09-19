@@ -1,7 +1,6 @@
 package org.amoseman.budgetingbackend.util;
 
 import org.amoseman.budgetingbackend.pojo.bucket.Bucket;
-import org.jooq.meta.derby.sys.Sys;
 
 import java.util.ArrayList;
 import java.util.Comparator;

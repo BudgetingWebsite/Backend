@@ -7,8 +7,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * Represents an account creation operation.
  */
 public class CreateAccount {
-    private String username;
-    private String password;
+    private final String username;
+    private final String password;
 
     /**
      * Instantiate an account creation operation.
