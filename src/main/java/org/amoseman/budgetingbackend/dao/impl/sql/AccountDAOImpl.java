@@ -11,6 +11,8 @@ import java.util.Optional;
 
 import static org.jooq.codegen.Tables.*;
 import org.jooq.codegen.tables.records.*;
+import org.jooq.exception.DataAccessException;
+import org.jooq.exception.SQLStateClass;
 
 public class AccountDAOImpl extends AccountDAO<DSLContext> {
     public AccountDAOImpl(DatabaseConnection<DSLContext> connection) {
@@ -18,15 +20,12 @@ public class AccountDAOImpl extends AccountDAO<DSLContext> {
     }
 
     @Override
-    public void addAccount(Account account) throws UserAlreadyExistsException {
-        try {
-            AccountRecord record = connection.get().newRecord(ACCOUNT, account);
-            connection.get().executeInsert(record);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
+    public void addAccount(Account account) throws UserAlreadyExistsException, DataAccessException {
+        if (getAccount(account.uuid).isPresent()) {
             throw new UserAlreadyExistsException("add", account.uuid);
         }
+        AccountRecord record = connection.get().newRecord(ACCOUNT, account);
+        connection.get().executeInsert(record);
     }
 
     @Override

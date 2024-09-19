@@ -12,6 +12,7 @@ import java.util.Optional;
 
 import static org.jooq.codegen.Tables.*;
 import org.jooq.codegen.tables.records.*;
+import org.jooq.exception.DataAccessException;
 
 public class BucketDAOImpl extends BucketDAO<DSLContext> {
 
@@ -20,15 +21,12 @@ public class BucketDAOImpl extends BucketDAO<DSLContext> {
     }
 
     @Override
-    public void addBucket(Bucket bucket) throws BucketAlreadyExistsException {
-        try {
-            BucketRecord record = connection.get().newRecord(BUCKET, bucket);
-            connection.get().executeInsert(record);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
+    public void addBucket(Bucket bucket) throws BucketAlreadyExistsException, DataAccessException {
+        if (getBucket(bucket.owner, bucket.uuid).isPresent()) {
             throw new BucketAlreadyExistsException("add", bucket.uuid);
         }
+        BucketRecord record = connection.get().newRecord(BUCKET, bucket);
+        connection.get().executeInsert(record);
     }
 
     @Override

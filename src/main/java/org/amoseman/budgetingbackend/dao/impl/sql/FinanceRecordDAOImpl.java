@@ -17,6 +17,7 @@ import java.util.Optional;
 
 import static org.jooq.codegen.Tables.*;
 import org.jooq.codegen.tables.records.*;
+import org.jooq.exception.DataAccessException;
 
 public class FinanceRecordDAOImpl extends FinanceRecordDAO<DSLContext> {
 
@@ -25,27 +26,21 @@ public class FinanceRecordDAOImpl extends FinanceRecordDAO<DSLContext> {
     }
 
     @Override
-    public void addIncome(Income income) throws FinanceRecordAlreadyExistsException {
-        try {
-            IncomeRecord record = connection.get().newRecord(INCOME, income);
-            connection.get().executeInsert(record);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
+    public void addIncome(Income income) throws FinanceRecordAlreadyExistsException, DataAccessException {
+        if (getIncome(income.owner, income.uuid).isPresent()) {
             throw new FinanceRecordAlreadyExistsException("add", income.uuid);
         }
+        IncomeRecord record = connection.get().newRecord(INCOME, income);
+        connection.get().executeInsert(record);
     }
 
     @Override
-    public void addExpense(Expense expense) throws FinanceRecordAlreadyExistsException {
-        try {
-            ExpenseRecord record = connection.get().newRecord(EXPENSE, expense);
-            connection.get().executeInsert(record);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
+    public void addExpense(Expense expense) throws FinanceRecordAlreadyExistsException, DataAccessException {
+        if (getExpense(expense.owner, expense.uuid).isPresent()) {
             throw new FinanceRecordAlreadyExistsException("add", expense.uuid);
         }
+        ExpenseRecord record = connection.get().newRecord(EXPENSE, expense);
+        connection.get().executeInsert(record);
     }
 
     @Override
