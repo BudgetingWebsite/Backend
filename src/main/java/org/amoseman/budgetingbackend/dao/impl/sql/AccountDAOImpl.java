@@ -8,7 +8,6 @@ import org.amoseman.budgetingbackend.pojo.account.Account;
 import org.jooq.*;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.jooq.codegen.Tables.*;
 import org.jooq.codegen.tables.records.*;

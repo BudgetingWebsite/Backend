@@ -29,7 +29,7 @@ public abstract class DatabaseConnection<C> {
 
     /**
      * Get the client for the database.
-     * @return
+     * @return C the client.
      */
     public C get() {
         return client;

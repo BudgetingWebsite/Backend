@@ -11,19 +11,13 @@ import org.amoseman.StatusTester;
 import org.amoseman.budgetingbackend.pojo.account.op.CreateAccount;
 import org.amoseman.budgetingbackend.pojo.bucket.op.CreateBucket;
 import org.amoseman.budgetingbackend.pojo.bucket.op.UpdateBucket;
-import org.amoseman.budgetingbackend.pojo.record.Income;
 import org.amoseman.budgetingbackend.pojo.record.info.ExpenseInfo;
 import org.amoseman.budgetingbackend.pojo.record.info.IncomeInfo;
 import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
-import java.net.URI;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class BudgetingApplicationTest {
 

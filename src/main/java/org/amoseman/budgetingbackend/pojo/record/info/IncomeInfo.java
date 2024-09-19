@@ -9,7 +9,7 @@ public class IncomeInfo extends FinanceRecordInfo {
     }
 
     /**
-     * Instantiate a income record creation operation.
+     * Instantiate an income record creation operation.
      * @param amount the amount in dollars associated with the new income.
      * @param year what year the income occurred.
      * @param month what month the income occurred.

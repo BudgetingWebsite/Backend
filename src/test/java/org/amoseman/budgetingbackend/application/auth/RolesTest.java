@@ -1,6 +1,5 @@
 package org.amoseman.budgetingbackend.application.auth;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Set;
