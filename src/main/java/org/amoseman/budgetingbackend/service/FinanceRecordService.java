@@ -74,28 +74,28 @@ public class FinanceRecordService<C> {
 
     public List<Income> getIncome(
             String user,
-            String yearStartString,
-            String monthStartString,
-            String dayStartString,
-            String yearEndString,
-            String monthEndString,
-            String dayEndString) throws NumberFormatException {
-        LocalDateTime start = toLocalDateTime(yearStartString, monthStartString, dayStartString);
-        LocalDateTime end = toLocalDateTime(yearEndString, monthEndString, dayEndString);
+            int yearStart,
+            int monthStart,
+            int dayStart,
+            int yearEnd,
+            int monthEnd,
+            int dayEnd) throws NumberFormatException {
+        LocalDateTime start = LocalDateTime.of(yearStart, monthStart, dayStart, 0, 0);
+        LocalDateTime end = LocalDateTime.of(yearEnd, monthEnd, dayEnd, 0, 0);
         TimeRange range = new TimeRange(start, end);
         return financeRecordDAO.getIncomeInRange(user, range);
     }
 
     public List<Expense> getExpenses(
             String user,
-            String yearStartString,
-            String monthStartString,
-            String dayStartString,
-            String yearEndString,
-            String monthEndString,
-            String dayEndString) {
-        LocalDateTime start = toLocalDateTime(yearStartString, monthStartString, dayStartString);
-        LocalDateTime end = toLocalDateTime(yearEndString, monthEndString, dayEndString);
+            int yearStart,
+            int monthStart,
+            int dayStart,
+            int yearEnd,
+            int monthEnd,
+            int dayEnd) {
+        LocalDateTime start = LocalDateTime.of(yearStart, monthStart, dayStart, 0, 0);
+        LocalDateTime end = LocalDateTime.of(yearEnd, monthEnd, dayEnd, 0, 0);
         TimeRange range = new TimeRange(start, end);
         return financeRecordDAO.getExpensesInRange(user, range);
     }

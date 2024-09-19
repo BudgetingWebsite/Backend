@@ -41,7 +41,7 @@ public class AccountResource<C> {
     }
 
     @PermitAll
-    @POST
+    @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/password")
     public Response changePassword(@Auth User user, String password) throws UserDoesNotExistException {
@@ -49,8 +49,8 @@ public class AccountResource<C> {
         return Response.ok().build();
     }
 
-    @RolesAllowed(Roles.ADMIN)
-    @POST
+    @RolesAllowed({Roles.ADMIN})
+    @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{username}/roles")
     public Response changeRoles(@Auth User user, @PathParam("username") String username, String roles) throws UserDoesNotExistException {

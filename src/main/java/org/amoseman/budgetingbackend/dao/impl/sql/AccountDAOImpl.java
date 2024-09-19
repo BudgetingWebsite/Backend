@@ -8,6 +8,7 @@ import org.amoseman.budgetingbackend.pojo.account.Account;
 import org.jooq.*;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.jooq.codegen.Tables.*;
 import org.jooq.codegen.tables.records.*;
@@ -56,7 +57,7 @@ public class AccountDAOImpl extends AccountDAO<DSLContext> {
     @Override
     public void updateAccount(Account account) throws UserDoesNotExistException{
         AccountRecord record = connection.get().newRecord(ACCOUNT, account);
-        int result = connection.get().executeUpdate(record);
+        int result = connection.get().executeUpdate(record, ACCOUNT.UUID.eq(account.uuid));
         if (0 == result) {
             throw new UserDoesNotExistException("update", account.uuid);
         }

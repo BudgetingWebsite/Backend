@@ -73,7 +73,6 @@ public class BudgetingApplication extends Application<BudgetingConfiguration> {
         environment.jersey().register(new NegativeValueExceptionMapper());
         environment.jersey().register(new TotalBucketShareExceededExceptionMapper());
         environment.jersey().register(new DateTimeExceptionMapper());
-        environment.jersey().register(new NumberFormatExceptionMapper());
 
         initializeAdminAccount(configuration, hasher, accountDAO);
     }
@@ -88,7 +87,7 @@ public class BudgetingApplication extends Application<BudgetingConfiguration> {
             accountDAO.addAccount(admin);
         }
         catch (Exception e) {
-
+            throw new RuntimeException(e);
         }
     }
 }

@@ -51,12 +51,12 @@ class FinanceRecordServiceTest {
 
         List<Income> records = financeRecordService.getIncome(
                 "alice",
-                "2023",
-                "1",
-                "1",
-                "2024",
-                "1",
-                "2"
+                2023,
+                1,
+                1,
+                2024,
+                1,
+                2
         );
         assertEquals(1, records.size());
         Income income = records.get(0);
@@ -74,12 +74,12 @@ class FinanceRecordServiceTest {
         }
         records = financeRecordService.getIncome(
                 "alice",
-                "2023",
-                "1",
-                "1",
-                "2024",
-                "1",
-                "2"
+                2023,
+                1,
+                1,
+                2024,
+                1,
+                2
         );
         if (records.isEmpty()) {
             fail("Unable to retrieve income after update");
@@ -93,12 +93,12 @@ class FinanceRecordServiceTest {
         }
         records = financeRecordService.getIncome(
                 "alice",
-                "2023",
-                "1",
-                "1",
-                "2024",
-                "1",
-                "2"
+                2023,
+                1,
+                1,
+                2024,
+                1,
+                2
         );
         assertEquals(0, records.size());
 
@@ -124,12 +124,12 @@ class FinanceRecordServiceTest {
 
         List<Expense> records = financeRecordService.getExpenses(
                 "alice",
-                "2023",
-                "1",
-                "1",
-                "2024",
-                "1",
-                "2"
+                2023,
+                1,
+                1,
+                2024,
+                1,
+                2
         );
         assertEquals(1, records.size());
         Expense expense = records.get(0);
@@ -148,12 +148,12 @@ class FinanceRecordServiceTest {
         }
         records = financeRecordService.getExpenses(
                 "alice",
-                "2023",
-                "1",
-                "1",
-                "2024",
-                "1",
-                "2"
+                2023,
+                1,
+                1,
+                2024,
+                1,
+                2
         );
         if (records.isEmpty()) {
             fail("Unable to retrieve expense after update");
@@ -167,12 +167,12 @@ class FinanceRecordServiceTest {
         }
         records = financeRecordService.getExpenses(
                 "alice",
-                "2023",
-                "1",
-                "1",
-                "2024",
-                "1",
-                "2"
+                2023,
+                1,
+                1,
+                2024,
+                1,
+                2
         );
         assertEquals(0, records.size());
 

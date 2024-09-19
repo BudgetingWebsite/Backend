@@ -21,20 +21,26 @@ public class UserAuthenticator implements Authenticator<BasicCredentials, User> 
 
     @Override
     public Optional<User> authenticate(BasicCredentials credentials) throws AuthenticationException {
+        System.out.println(credentials.getUsername());
         Optional<Account> maybe = accountDAO.getAccount(credentials.getUsername());
         if (maybe.isEmpty()) {
+            System.out.println("NO ACCOUNT");
             return Optional.empty();
         }
         Account account = maybe.get();
         if (!validate(account, credentials.getPassword())) {
+            System.out.println("BAD PASSWORD: " + credentials.getPassword());
             return Optional.empty();
         }
         return Optional.of(new User(account));
     }
 
-    private boolean validate(Account account, String attempt) {
+    private boolean validate(Account account, String attemptedPassword) {
         byte[] salt = Base64.getDecoder().decode(account.salt);
-        String hash = hasher.hash(attempt, salt);
+        String hash = hasher.hash(attemptedPassword, salt);
+
+        System.out.printf("%s : %s\n", account.hash, hash);
+
         return hash.equals(account.hash);
     }
 }

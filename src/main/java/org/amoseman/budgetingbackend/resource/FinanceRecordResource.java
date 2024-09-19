@@ -70,12 +70,12 @@ public class FinanceRecordResource<C> {
     @Path("/income")
     public Response getIncome(
             @Auth User user,
-            @DefaultValue("1") @QueryParam("start-year") String startYear,
-            @DefaultValue("1") @QueryParam("start-month") String startMonth,
-            @DefaultValue("1") @QueryParam("start-day") String startDay,
-            @DefaultValue("9999") @QueryParam("end-year") String endYear,
-            @DefaultValue("1") @QueryParam("end-month") String endMonth,
-            @DefaultValue("1") @QueryParam("end-day") String endDay) throws NumberFormatException {
+            @DefaultValue("1") @QueryParam("startYear") int startYear,
+            @DefaultValue("1") @QueryParam("startMonth") int startMonth,
+            @DefaultValue("1") @QueryParam("startDay") int startDay,
+            @DefaultValue("9999") @QueryParam("endYear") int endYear,
+            @DefaultValue("1") @QueryParam("endMonth") int endMonth,
+            @DefaultValue("1") @QueryParam("endDay") int endDay) {
         List<Income> income = financeRecordService.getIncome(
                 user.getName(),
                 startYear, startMonth, startDay,
@@ -89,12 +89,12 @@ public class FinanceRecordResource<C> {
     @Path("/expense")
     public Response getExpenses(
             @Auth User user,
-            @DefaultValue("1") @QueryParam("start-year") String startYear,
-            @DefaultValue("1") @QueryParam("start-month") String startMonth,
-            @DefaultValue("1") @QueryParam("start-day") String startDay,
-            @DefaultValue("9999") @QueryParam("end-year") String endYear,
-            @DefaultValue("1") @QueryParam("end-month") String endMonth,
-            @DefaultValue("1") @QueryParam("end-day") String endDay) throws NumberFormatException {
+            @DefaultValue("1") @QueryParam("startYear") int startYear,
+            @DefaultValue("1") @QueryParam("startMonth") int startMonth,
+            @DefaultValue("1") @QueryParam("startDay") int startDay,
+            @DefaultValue("9999") @QueryParam("endYear") int endYear,
+            @DefaultValue("1") @QueryParam("endMonth") int endMonth,
+            @DefaultValue("1") @QueryParam("endDay") int endDay) {
         List<Expense> expenses = financeRecordService.getExpenses(
                 user.getName(),
                 startYear, startMonth, startDay,
