@@ -2,6 +2,8 @@ package org.amoseman.budgetingbackend.database.impl.sql.sqlite;
 
 import org.amoseman.budgetingbackend.database.DatabaseConnection;
 import org.jooq.*;
+import org.jooq.conf.ExecuteWithoutWhere;
+import org.jooq.conf.Settings;
 import org.jooq.impl.DSL;
 import org.jooq.impl.DefaultConfiguration;
 import org.jooq.impl.DefaultRecordMapper;
@@ -33,6 +35,8 @@ public class DatabaseConnectionImpl extends DatabaseConnection<DSLContext> {
         Configuration configuration = new DefaultConfiguration()
                 .set(connection)
                 .set(dialect)
+                .set(new Settings().withExecuteUpdateWithoutWhere(ExecuteWithoutWhere.THROW))
+                .set(new Settings().withExecuteDeleteWithoutWhere(ExecuteWithoutWhere.THROW))
                 .derive((RecordMapperProvider) DefaultRecordMapper::new);
         return DSL.using(configuration);
     }
