@@ -64,13 +64,13 @@ class BudgetingApplicationTest {
         return toNode(json).get(index).get(field).asText();
     }
 
-    static String address = "http://127.0.0.1:8080";
-    static String adminUsername = "admin_user";
-    static String adminPassword = "admin_pass";
-    static String databaseURL = "jdbc:sqlite:test-database.db";
-    static String configurationLocation = "test-config.yaml";
+    static final String address = "http://127.0.0.1:8080";
+    static final String adminUsername = "admin_user";
+    static final String adminPassword = "admin_pass";
+    static final String databaseURL = "jdbc:sqlite:test-database.db";
+    static final String configurationLocation = "test-config.yaml";
 
-    static StatusTest successTest = (code) -> code > 199 && code < 300;
+    static final StatusTest successTest = (code) -> code > 199 && code < 300;
     static StatusTest failureTest = (code) -> code > 299;
 
     static WebTarget client;

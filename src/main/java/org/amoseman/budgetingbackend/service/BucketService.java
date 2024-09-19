@@ -44,6 +44,13 @@ public class BucketService<C> {
      * @throws TotalBucketShareExceededException if this would result in the user's total bucket share to exceed 1.
      */
     public String addBucket(String user, CreateBucket create) throws BucketAlreadyExistsException, TotalBucketShareExceededException {
+        List<Bucket> buckets = getBuckets(user);
+        double totalShare = 0;
+        for (Bucket bucket : buckets) {
+            totalShare += bucket.share;
+        }        if (totalShare + create.getShare() > 1) {
+            throw new TotalBucketShareExceededException(totalShare, create.getShare());
+        }
         String uuid = UUID.randomUUID().toString();
         LocalDateTime now = Now.get();
         Bucket bucket = new Bucket(
@@ -77,7 +84,18 @@ public class BucketService<C> {
      * @param update the update information.
      * @throws BucketDoesNotExistException if the bucket does not exist.
      */
-    public void updateBucket(String user, String uuid, UpdateBucket update) throws BucketDoesNotExistException {
+    public void updateBucket(String user, String uuid, UpdateBucket update) throws BucketDoesNotExistException, TotalBucketShareExceededException {
+        List<Bucket> buckets = getBuckets(user);
+        double totalShare = 0;
+        for (Bucket bucket : buckets) {
+            if (bucket.uuid.equals(uuid)) {
+                continue;
+            }
+            totalShare += bucket.share;
+        }
+        if (totalShare + update.getShare() > 1.0) {
+            throw new TotalBucketShareExceededException(totalShare, update.getShare());
+        }
         LocalDateTime now = Now.get();
         Optional<Bucket> maybe = bucketDAO.getBucket(user, uuid);
         if (maybe.isEmpty()) {

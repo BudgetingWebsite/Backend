@@ -51,7 +51,7 @@ public class BucketResource<C> {
     @PUT
     @PermitAll
     @Path("/{uuid}")
-    public Response updateBucket(@Auth User user, @PathParam("uuid") String uuid, UpdateBucket update) throws BucketDoesNotExistException {
+    public Response updateBucket(@Auth User user, @PathParam("uuid") String uuid, UpdateBucket update) throws BucketDoesNotExistException, TotalBucketShareExceededException {
         bucketService.updateBucket(user.getName(), uuid, update);
         return Response.ok().build();
     }

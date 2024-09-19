@@ -58,7 +58,7 @@ class BucketServiceTest {
         try {
             bucketService.updateBucket("alice", uuid, new UpdateBucket("expenses", 0.5));
         }
-        catch (BucketDoesNotExistException e) {
+        catch (BucketDoesNotExistException | TotalBucketShareExceededException e) {
             fail(e);
         }
         buckets = bucketService.getBuckets("alice");
@@ -109,10 +109,10 @@ class BucketServiceTest {
         assertEquals(60, other.amount);
 
         try {
-            bucketService.updateBucket("alice", savings.uuid, new UpdateBucket("savings", 0.5));
             bucketService.updateBucket("alice", expenses.uuid, new UpdateBucket("expenses", 0.2));
+            bucketService.updateBucket("alice", savings.uuid, new UpdateBucket("savings", 0.5));
         }
-        catch (BucketDoesNotExistException e) {
+        catch (BucketDoesNotExistException | TotalBucketShareExceededException e) {
             fail(e);
         }
         buckets = bucketService.getBuckets("alice");
