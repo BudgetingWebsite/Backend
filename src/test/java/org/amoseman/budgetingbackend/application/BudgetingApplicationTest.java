@@ -9,8 +9,7 @@ import org.amoseman.InitTestDatabase;
 import org.amoseman.StatusTest;
 import org.amoseman.StatusTester;
 import org.amoseman.budgetingbackend.pojo.account.op.CreateAccount;
-import org.amoseman.budgetingbackend.pojo.bucket.op.CreateBucket;
-import org.amoseman.budgetingbackend.pojo.bucket.op.UpdateBucket;
+import org.amoseman.budgetingbackend.pojo.bucket.op.BucketInfo;
 import org.amoseman.budgetingbackend.pojo.record.info.ExpenseInfo;
 import org.amoseman.budgetingbackend.pojo.record.info.IncomeInfo;
 import org.glassfish.jersey.client.JerseyClientBuilder;
@@ -103,9 +102,9 @@ class BudgetingApplicationTest {
 
     @Test
     void bucketCRUD() {
-        CreateBucket create = new CreateBucket("bucket", 0.5);
+        BucketInfo create = new BucketInfo("bucket", 0.5);
         String uuid = tester.post("/bucket", toJSON(create), successTest);
-        UpdateBucket update = new UpdateBucket("different", 0.3);
+        BucketInfo update = new BucketInfo("different", 0.3);
         tester.put("/bucket/" + uuid, toJSON(update), successTest);
         tester.get("/bucket", successTest);
         tester.delete("/bucket/" + uuid, successTest);
@@ -123,7 +122,7 @@ class BudgetingApplicationTest {
 
     @Test
     void expenseCRUD() {
-        String bucket = tester.post("/bucket", toJSON(new CreateBucket("example", 0.5)), successTest); // some SQL dialects require foreign key references to exist, such as H2, but not SQLite
+        String bucket = tester.post("/bucket", toJSON(new BucketInfo("example", 0.5)), successTest); // some SQL dialects require foreign key references to exist, such as H2, but not SQLite
         ExpenseInfo create = new ExpenseInfo(0, 1, 1, 1, "", "", bucket);
         String uuid = tester.post("/record/expense", toJSON(create), successTest);
         ExpenseInfo update = new ExpenseInfo(1, 1, 1, 1, "", "", bucket);

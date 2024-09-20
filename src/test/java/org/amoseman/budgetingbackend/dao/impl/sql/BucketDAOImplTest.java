@@ -10,7 +10,7 @@ import org.amoseman.budgetingbackend.exception.BucketDoesNotExistException;
 import org.amoseman.budgetingbackend.exception.UserAlreadyExistsException;
 import org.amoseman.budgetingbackend.pojo.account.op.CreateAccount;
 import org.amoseman.budgetingbackend.pojo.bucket.Bucket;
-import org.amoseman.budgetingbackend.pojo.bucket.op.UpdateBucket;
+import org.amoseman.budgetingbackend.pojo.bucket.op.BucketInfo;
 import org.amoseman.budgetingbackend.service.AccountService;
 import org.amoseman.budgetingbackend.util.Now;
 import org.jooq.DSLContext;
@@ -74,7 +74,7 @@ class BucketDAOImplTest {
         assertEquals(retrieved.share, inList.share);
         assertEquals(retrieved.amount, inList.amount);
 
-        Bucket update = new Bucket(bucket, new UpdateBucket("new_name", 0.3), Now.get());
+        Bucket update = new Bucket(bucket, new BucketInfo("new_name", 0.3), Now.get());
         try {
             bucketDAO.updateBucket(update);
         }

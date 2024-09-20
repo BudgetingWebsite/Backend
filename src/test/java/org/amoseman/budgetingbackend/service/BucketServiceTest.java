@@ -12,8 +12,7 @@ import org.amoseman.budgetingbackend.database.impl.sql.sqlite.DatabaseConnection
 import org.amoseman.budgetingbackend.exception.*;
 import org.amoseman.budgetingbackend.pojo.account.op.CreateAccount;
 import org.amoseman.budgetingbackend.pojo.bucket.Bucket;
-import org.amoseman.budgetingbackend.pojo.bucket.op.CreateBucket;
-import org.amoseman.budgetingbackend.pojo.bucket.op.UpdateBucket;
+import org.amoseman.budgetingbackend.pojo.bucket.op.BucketInfo;
 import org.amoseman.budgetingbackend.pojo.record.info.ExpenseInfo;
 import org.amoseman.budgetingbackend.pojo.record.info.IncomeInfo;
 import org.jooq.DSLContext;
@@ -51,7 +50,7 @@ class BucketServiceTest {
         }
         String uuid = null;
         try {
-            uuid = bucketService.addBucket("alice", new CreateBucket("savings", 0.2));
+            uuid = bucketService.addBucket("alice", new BucketInfo("savings", 0.2));
         }
         catch (BucketAlreadyExistsException | TotalBucketShareExceededException e) {
             fail(e);
@@ -66,7 +65,7 @@ class BucketServiceTest {
         assertEquals(0, bucket.amount);
 
         try {
-            bucketService.updateBucket("alice", uuid, new UpdateBucket("expenses", 0.5));
+            bucketService.updateBucket("alice", uuid, new BucketInfo("expenses", 0.5));
         }
         catch (BucketDoesNotExistException | TotalBucketShareExceededException e) {
             fail(e);
@@ -101,9 +100,9 @@ class BucketServiceTest {
             fail(e);
         }
         try {
-            bucketService.addBucket("alice", new CreateBucket("savings", 0.2));
-            bucketService.addBucket("alice", new CreateBucket("expenses", 0.5));
-            bucketService.addBucket("alice", new CreateBucket("other", 0.3));
+            bucketService.addBucket("alice", new BucketInfo("savings", 0.2));
+            bucketService.addBucket("alice", new BucketInfo("expenses", 0.5));
+            bucketService.addBucket("alice", new BucketInfo("other", 0.3));
         }
         catch (BucketAlreadyExistsException | TotalBucketShareExceededException e) {
             fail(e);
@@ -124,8 +123,8 @@ class BucketServiceTest {
         assertEquals(60, other.amount);
 
         try {
-            bucketService.updateBucket("alice", expenses.uuid, new UpdateBucket("expenses", 0.2));
-            bucketService.updateBucket("alice", savings.uuid, new UpdateBucket("savings", 0.5));
+            bucketService.updateBucket("alice", expenses.uuid, new BucketInfo("expenses", 0.2));
+            bucketService.updateBucket("alice", savings.uuid, new BucketInfo("savings", 0.5));
         }
         catch (BucketDoesNotExistException | TotalBucketShareExceededException e) {
             fail(e);

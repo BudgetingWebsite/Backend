@@ -8,7 +8,7 @@ import org.amoseman.budgetingbackend.database.impl.sql.sqlite.DatabaseConnection
 import org.amoseman.budgetingbackend.exception.*;
 import org.amoseman.budgetingbackend.pojo.TimeRange;
 import org.amoseman.budgetingbackend.pojo.account.op.CreateAccount;
-import org.amoseman.budgetingbackend.pojo.bucket.op.CreateBucket;
+import org.amoseman.budgetingbackend.pojo.bucket.op.BucketInfo;
 import org.amoseman.budgetingbackend.pojo.record.Expense;
 import org.amoseman.budgetingbackend.pojo.record.Income;
 import org.amoseman.budgetingbackend.pojo.record.info.ExpenseInfo;
@@ -45,7 +45,7 @@ class FinanceRecordDAOImplTest {
             fail(e);
         }
         try {
-            bucket = new BucketService<>(new BucketDAOImpl(connection), financeRecordDAO).addBucket("person", new CreateBucket("bucket", 0.5));
+            bucket = new BucketService<>(new BucketDAOImpl(connection), financeRecordDAO).addBucket("person", new BucketInfo("bucket", 0.5));
         }
         catch (TotalBucketShareExceededException | BucketAlreadyExistsException e) {
             fail(e);

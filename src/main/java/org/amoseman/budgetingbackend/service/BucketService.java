@@ -8,8 +8,7 @@ import org.amoseman.budgetingbackend.exception.TotalBucketShareExceededException
 import org.amoseman.budgetingbackend.pojo.record.Expense;
 import org.amoseman.budgetingbackend.pojo.record.Income;
 import org.amoseman.budgetingbackend.pojo.bucket.Bucket;
-import org.amoseman.budgetingbackend.pojo.bucket.op.CreateBucket;
-import org.amoseman.budgetingbackend.pojo.bucket.op.UpdateBucket;
+import org.amoseman.budgetingbackend.pojo.bucket.op.BucketInfo;
 import org.amoseman.budgetingbackend.util.Now;
 import org.amoseman.budgetingbackend.util.Split;
 import org.amoseman.budgetingbackend.util.Splitter;
@@ -43,7 +42,7 @@ public class BucketService<C> {
      * @throws BucketAlreadyExistsException if the bucket already exists.
      * @throws TotalBucketShareExceededException if this would result in the user's total bucket share to exceed 1.
      */
-    public String addBucket(String user, CreateBucket create) throws BucketAlreadyExistsException, TotalBucketShareExceededException {
+    public String addBucket(String user, BucketInfo create) throws BucketAlreadyExistsException, TotalBucketShareExceededException {
         List<Bucket> buckets = getBuckets(user);
         double totalShare = 0;
         for (Bucket bucket : buckets) {
@@ -84,7 +83,7 @@ public class BucketService<C> {
      * @param update the update information.
      * @throws BucketDoesNotExistException if the bucket does not exist.
      */
-    public void updateBucket(String user, String uuid, UpdateBucket update) throws BucketDoesNotExistException, TotalBucketShareExceededException {
+    public void updateBucket(String user, String uuid, BucketInfo update) throws BucketDoesNotExistException, TotalBucketShareExceededException {
         List<Bucket> buckets = getBuckets(user);
         double totalShare = 0;
         for (Bucket bucket : buckets) {
