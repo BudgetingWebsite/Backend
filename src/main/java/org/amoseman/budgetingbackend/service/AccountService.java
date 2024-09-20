@@ -3,8 +3,8 @@ package org.amoseman.budgetingbackend.service;
 import org.amoseman.budgetingbackend.application.auth.hashing.Hasher;
 import org.amoseman.budgetingbackend.application.auth.Roles;
 import org.amoseman.budgetingbackend.dao.AccountDAO;
-import org.amoseman.budgetingbackend.exception.UserAlreadyExistsException;
-import org.amoseman.budgetingbackend.exception.UserDoesNotExistException;
+import org.amoseman.budgetingbackend.exception.AccountAlreadyExistsException;
+import org.amoseman.budgetingbackend.exception.AccountDoesNotExistException;
 import org.amoseman.budgetingbackend.pojo.account.Account;
 import org.amoseman.budgetingbackend.pojo.account.op.CreateAccount;
 import org.amoseman.budgetingbackend.pojo.account.op.UpdateAccount;
@@ -35,9 +35,9 @@ public class AccountService<C> {
     /**
      * Add a new account.
      * @param usernamePassword the username and password of the new account.
-     * @throws UserAlreadyExistsException if the username is already in use.
+     * @throws AccountAlreadyExistsException if the username is already in use.
      */
-    public void addAccount(CreateAccount usernamePassword) throws UserAlreadyExistsException {
+    public void addAccount(CreateAccount usernamePassword) throws AccountAlreadyExistsException {
         byte[] salt = hasher.salt();
         String salt64 = Base64.toBase64String(salt);
         String hash64 = hasher.hash(usernamePassword.getPassword(), salt);
@@ -48,9 +48,9 @@ public class AccountService<C> {
     /**
      * Remove an account.
      * @param username the username of the account.
-     * @throws UserDoesNotExistException if the account does not exist.
+     * @throws AccountDoesNotExistException if the account does not exist.
      */
-    public void removeAccount(String username) throws UserDoesNotExistException {
+    public void removeAccount(String username) throws AccountDoesNotExistException {
         accountDAO.removeAccount(username);
     }
 
@@ -67,13 +67,13 @@ public class AccountService<C> {
      * Change the password of an account.
      * @param username the username of the account.
      * @param password the new password of the account.
-     * @throws UserDoesNotExistException if the account does not exist.
+     * @throws AccountDoesNotExistException if the account does not exist.
      */
-    public void changePassword(String username, String password) throws UserDoesNotExistException {
+    public void changePassword(String username, String password) throws AccountDoesNotExistException {
         LocalDateTime now = Now.get();
         Optional<Account> maybe = accountDAO.getAccount(username);
         if (maybe.isEmpty()) {
-            throw new UserDoesNotExistException("change password", username);
+            throw new AccountDoesNotExistException("change password", username);
         }
         Account account = maybe.get();
         byte[] salt = hasher.salt();
@@ -90,13 +90,13 @@ public class AccountService<C> {
      * Valid roles are ADMIN and USER.
      * @param username the username of the account.
      * @param roles the new roles of the account.
-     * @throws UserDoesNotExistException if the account does not exist.
+     * @throws AccountDoesNotExistException if the account does not exist.
      */
-    public void changeRoles(String username, String roles) throws UserDoesNotExistException {
+    public void changeRoles(String username, String roles) throws AccountDoesNotExistException {
         LocalDateTime now = Now.get();
         Optional<Account> maybe = accountDAO.getAccount(username);
         if (maybe.isEmpty()) {
-            throw new UserDoesNotExistException("change password", username);
+            throw new AccountDoesNotExistException("change password", username);
         }
         Account account = maybe.get();
         UpdateAccount update = new UpdateAccount(username, account.hash, account.salt, roles);

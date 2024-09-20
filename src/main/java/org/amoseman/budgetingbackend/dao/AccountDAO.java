@@ -1,8 +1,8 @@
 package org.amoseman.budgetingbackend.dao;
 
 import org.amoseman.budgetingbackend.database.DatabaseConnection;
-import org.amoseman.budgetingbackend.exception.UserAlreadyExistsException;
-import org.amoseman.budgetingbackend.exception.UserDoesNotExistException;
+import org.amoseman.budgetingbackend.exception.AccountAlreadyExistsException;
+import org.amoseman.budgetingbackend.exception.AccountDoesNotExistException;
 import org.amoseman.budgetingbackend.pojo.account.Account;
 
 import java.util.Optional;
@@ -23,16 +23,16 @@ public abstract class AccountDAO<C> extends DAO<C> {
     /**
      * Add a new user account.
      * @param account the user account.
-     * @throws UserAlreadyExistsException if the username is already in use.
+     * @throws AccountAlreadyExistsException if the username is already in use.
      */
-    public abstract void addAccount(Account account) throws UserAlreadyExistsException;
+    public abstract void addAccount(Account account) throws AccountAlreadyExistsException;
 
     /**
      * Remove a user account.
      * @param uuid the UUID of the account.
-     * @throws UserDoesNotExistException if the account does not exist.
+     * @throws AccountDoesNotExistException if the account does not exist.
      */
-    public abstract void removeAccount(String uuid) throws UserDoesNotExistException;
+    public abstract void removeAccount(String uuid) throws AccountDoesNotExistException;
 
     /**
      * Get the account of a user.
@@ -45,5 +45,5 @@ public abstract class AccountDAO<C> extends DAO<C> {
      * Update the account of a user.
      * @param account the account.
      */
-    public abstract void updateAccount(Account account) throws UserDoesNotExistException;
+    public abstract void updateAccount(Account account) throws AccountDoesNotExistException;
 }

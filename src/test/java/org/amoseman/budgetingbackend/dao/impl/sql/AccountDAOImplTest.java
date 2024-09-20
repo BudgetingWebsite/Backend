@@ -4,8 +4,8 @@ import org.amoseman.InitTestDatabase;
 import org.amoseman.budgetingbackend.dao.AccountDAO;
 import org.amoseman.budgetingbackend.database.DatabaseConnection;
 import org.amoseman.budgetingbackend.database.impl.sql.sqlite.DatabaseConnectionImpl;
-import org.amoseman.budgetingbackend.exception.UserAlreadyExistsException;
-import org.amoseman.budgetingbackend.exception.UserDoesNotExistException;
+import org.amoseman.budgetingbackend.exception.AccountAlreadyExistsException;
+import org.amoseman.budgetingbackend.exception.AccountDoesNotExistException;
 import org.amoseman.budgetingbackend.pojo.account.Account;
 import org.amoseman.budgetingbackend.pojo.account.op.UpdateAccount;
 import org.amoseman.budgetingbackend.util.Now;
@@ -37,7 +37,7 @@ class AccountDAOImplTest {
         try {
             accountDAO.addAccount(account);
         }
-        catch (UserAlreadyExistsException e) {
+        catch (AccountAlreadyExistsException e) {
             fail(e);
         }
         Optional<Account> maybe = accountDAO.getAccount("12345");
@@ -52,7 +52,7 @@ class AccountDAOImplTest {
         try {
             accountDAO.updateAccount(update);
         }
-        catch (UserDoesNotExistException e) {
+        catch (AccountDoesNotExistException e) {
             fail(e);
         }
         maybe = accountDAO.getAccount("12345");
@@ -66,7 +66,7 @@ class AccountDAOImplTest {
         try {
             accountDAO.removeAccount("12345");
         }
-        catch (UserDoesNotExistException e) {
+        catch (AccountDoesNotExistException e) {
             fail(e);
         }
         maybe = accountDAO.getAccount("12345");

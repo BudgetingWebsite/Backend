@@ -41,7 +41,7 @@ class FinanceRecordDAOImplTest {
         financeRecordDAO = new FinanceRecordDAOImpl(connection);
         try {
             new AccountService<>(new AccountDAOImpl(connection), new ArgonHasher(new SecureRandom(), 16, 16, 2, 8000, 1)).addAccount(new CreateAccount("person", "password"));
-        } catch (UserAlreadyExistsException e) {
+        } catch (AccountAlreadyExistsException e) {
             fail(e);
         }
         try {

@@ -7,7 +7,7 @@ import org.amoseman.budgetingbackend.database.DatabaseConnection;
 import org.amoseman.budgetingbackend.database.impl.sql.sqlite.DatabaseConnectionImpl;
 import org.amoseman.budgetingbackend.exception.BucketAlreadyExistsException;
 import org.amoseman.budgetingbackend.exception.BucketDoesNotExistException;
-import org.amoseman.budgetingbackend.exception.UserAlreadyExistsException;
+import org.amoseman.budgetingbackend.exception.AccountAlreadyExistsException;
 import org.amoseman.budgetingbackend.pojo.account.op.CreateAccount;
 import org.amoseman.budgetingbackend.pojo.bucket.Bucket;
 import org.amoseman.budgetingbackend.pojo.bucket.BucketInfo;
@@ -34,7 +34,7 @@ class BucketDAOImplTest {
 
         try {
             new AccountService<>(new AccountDAOImpl(connection), new ArgonHasher(new SecureRandom(), 16, 16, 2, 8000, 1)).addAccount(new CreateAccount("alice", "password"));
-        } catch (UserAlreadyExistsException e) {
+        } catch (AccountAlreadyExistsException e) {
             fail(e);
         }
 

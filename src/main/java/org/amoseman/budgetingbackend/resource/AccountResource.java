@@ -8,8 +8,8 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.amoseman.budgetingbackend.application.auth.Roles;
 import org.amoseman.budgetingbackend.application.auth.User;
-import org.amoseman.budgetingbackend.exception.UserAlreadyExistsException;
-import org.amoseman.budgetingbackend.exception.UserDoesNotExistException;
+import org.amoseman.budgetingbackend.exception.AccountAlreadyExistsException;
+import org.amoseman.budgetingbackend.exception.AccountDoesNotExistException;
 import org.amoseman.budgetingbackend.pojo.account.op.CreateAccount;
 import org.amoseman.budgetingbackend.service.AccountService;
 
@@ -24,7 +24,7 @@ public class AccountResource<C> {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createAccount(CreateAccount account) throws UserAlreadyExistsException {
+    public Response createAccount(CreateAccount account) throws AccountAlreadyExistsException {
         accountService.addAccount(account);
         return Response.ok().build();
     }
@@ -32,7 +32,7 @@ public class AccountResource<C> {
     @PermitAll
     @DELETE
     @Path("/{username}")
-    public Response removeAccount(@Auth User user, @PathParam("username") String username) throws UserDoesNotExistException {
+    public Response removeAccount(@Auth User user, @PathParam("username") String username) throws AccountDoesNotExistException {
         if (!user.getRoles().contains(Roles.ADMIN) && !user.getName().equals(username)) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
@@ -44,7 +44,7 @@ public class AccountResource<C> {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/password")
-    public Response changePassword(@Auth User user, String password) throws UserDoesNotExistException {
+    public Response changePassword(@Auth User user, String password) throws AccountDoesNotExistException {
         accountService.changePassword(user.getName(), password);
         return Response.ok().build();
     }
@@ -53,7 +53,7 @@ public class AccountResource<C> {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{username}/roles")
-    public Response changeRoles(@Auth User user, @PathParam("username") String username, String roles) throws UserDoesNotExistException {
+    public Response changeRoles(@Auth User user, @PathParam("username") String username, String roles) throws AccountDoesNotExistException {
         accountService.changeRoles(username, roles);
         return Response.ok().build();
     }

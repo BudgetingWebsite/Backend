@@ -45,7 +45,7 @@ class BucketServiceTest {
     void testCRUD() {
         try {
             new AccountService<>(new AccountDAOImpl(connection), new ArgonHasher(new SecureRandom(), 16, 16, 2, 8000, 1)).addAccount(new CreateAccount("alice", "password"));
-        } catch (UserAlreadyExistsException e) {
+        } catch (AccountAlreadyExistsException e) {
             fail(e);
         }
         String uuid = null;
@@ -96,7 +96,7 @@ class BucketServiceTest {
     void testRecords() {
         try {
             new AccountService<>(new AccountDAOImpl(connection), new ArgonHasher(new SecureRandom(), 16, 16, 2, 8000, 1)).addAccount(new CreateAccount("alice", "password"));
-        } catch (UserAlreadyExistsException e) {
+        } catch (AccountAlreadyExistsException e) {
             fail(e);
         }
         try {

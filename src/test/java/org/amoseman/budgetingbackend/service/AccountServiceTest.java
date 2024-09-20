@@ -7,8 +7,8 @@ import org.amoseman.budgetingbackend.dao.AccountDAO;
 import org.amoseman.budgetingbackend.dao.impl.sql.AccountDAOImpl;
 import org.amoseman.budgetingbackend.database.DatabaseConnection;
 import org.amoseman.budgetingbackend.database.impl.sql.sqlite.DatabaseConnectionImpl;
-import org.amoseman.budgetingbackend.exception.UserAlreadyExistsException;
-import org.amoseman.budgetingbackend.exception.UserDoesNotExistException;
+import org.amoseman.budgetingbackend.exception.AccountAlreadyExistsException;
+import org.amoseman.budgetingbackend.exception.AccountDoesNotExistException;
 import org.amoseman.budgetingbackend.pojo.account.Account;
 import org.amoseman.budgetingbackend.pojo.account.op.CreateAccount;
 import org.jooq.DSLContext;
@@ -41,7 +41,7 @@ class AccountServiceTest {
         try {
             accountService.addAccount(new CreateAccount("alice", "12345"));
         }
-        catch (UserAlreadyExistsException e) {
+        catch (AccountAlreadyExistsException e) {
             fail(e);
         }
         Optional<Account> maybe =  accountService.getAccount("alice");
@@ -55,7 +55,7 @@ class AccountServiceTest {
         try {
             accountService.changePassword("alice", "54321");
         }
-        catch (UserDoesNotExistException e) {
+        catch (AccountDoesNotExistException e) {
             fail(e);
         }
         maybe = accountService.getAccount("alice");
@@ -69,7 +69,7 @@ class AccountServiceTest {
         try {
             accountService.changeRoles("alice", "USER,ADMIN");
         }
-        catch (UserDoesNotExistException e) {
+        catch (AccountDoesNotExistException e) {
             fail(e);
         }
         maybe = accountService.getAccount("alice");
@@ -82,7 +82,7 @@ class AccountServiceTest {
         try {
             accountService.removeAccount("alice");
         }
-        catch (UserDoesNotExistException e) {
+        catch (AccountDoesNotExistException e) {
             fail(e);
         }
         maybe = accountService.getAccount("alice");
