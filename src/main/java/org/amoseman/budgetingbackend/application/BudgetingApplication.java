@@ -54,6 +54,16 @@ public class BudgetingApplication extends Application<BudgetingConfiguration> {
         FinanceRecordService<DSLContext> financeRecordService = new FinanceRecordServiceImpl<>(financeRecordDAO);
         BucketService<DSLContext> bucketService =  new BucketServiceImpl<>(bucketDAO, financeRecordDAO);
 
+        registerResources(environment, accountService, financeRecordService, bucketService);
+        registerAuth(environment, accountDAO, hash);
+        registerExceptionMappers(environment);
+        initializeAdminAccount(configuration, hash, accountDAO);
+    }
+
+    private void registerResources(Environment environment,
+                                   AccountService<DSLContext> accountService,
+                                   FinanceRecordService<DSLContext> financeRecordService,
+                                   BucketService<DSLContext> bucketService) {
         AccountResource<DSLContext> accountResource = new AccountResource<>(accountService);
         FinanceRecordResource<DSLContext> financeRecordResource = new FinanceRecordResource<>(financeRecordService);
         BucketResource<DSLContext> bucketResource = new BucketResource<>(bucketService);
@@ -61,7 +71,9 @@ public class BudgetingApplication extends Application<BudgetingConfiguration> {
         environment.jersey().register(accountResource);
         environment.jersey().register(financeRecordResource);
         environment.jersey().register(bucketResource);
+    }
 
+    private void registerAuth(Environment environment, AccountDAO<?> accountDAO, Hash hash) {
         environment.jersey().register(new AuthDynamicFeature(new BasicCredentialAuthFilter.Builder<User>()
                 .setAuthenticator(new UserAuthenticator(accountDAO, hash))
                 .setAuthorizer(new UserAuthorizer())
@@ -70,22 +82,22 @@ public class BudgetingApplication extends Application<BudgetingConfiguration> {
         ));
         environment.jersey().register(RolesAllowedDynamicFeature.class);
         environment.jersey().register(new AuthValueFactoryProvider.Binder<>(User.class));
+    }
 
+    private void registerExceptionMappers(Environment environment) {
         environment.jersey().register(new IdentifierAlreadyExistsExceptionMapper());
         environment.jersey().register(new IdentifierDoesNotExistExceptionMapper());
         environment.jersey().register(new NegativeValueExceptionMapper());
         environment.jersey().register(new TotalBucketShareExceededExceptionMapper());
         environment.jersey().register(new DateTimeExceptionMapper());
-
-        initializeAdminAccount(configuration, hash, accountDAO);
     }
 
-    private void initializeAdminAccount(BudgetingConfiguration configuration, Hash hasher, AccountDAO<?> accountDAO) {
+    private void initializeAdminAccount(BudgetingConfiguration configuration, Hash hash, AccountDAO<?> accountDAO) {
         LocalDateTime now = Now.get();
-        byte[] saltBytes = hasher.salt();
-        String hash = hasher.hash(configuration.getAdminPassword(), saltBytes);
+        byte[] saltBytes = hash.salt();
+        String hashString = hash.hash(configuration.getAdminPassword(), saltBytes);
         String salt = Base64.toBase64String(saltBytes);
-        Account admin = new Account(configuration.getAdminUsername(), now, now, hash, salt, Roles.ADMIN);
+        Account admin = new Account(configuration.getAdminUsername(), now, now, hashString, salt, Roles.ADMIN);
         try {
             accountDAO.addAccount(admin);
         }
