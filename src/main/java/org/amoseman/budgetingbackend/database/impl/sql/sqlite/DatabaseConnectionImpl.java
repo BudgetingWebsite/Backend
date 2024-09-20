@@ -51,12 +51,29 @@ public class DatabaseConnectionImpl extends DatabaseConnection<DSLContext> {
         }
     }
 
+    /**
+     * Determine the proper SQL dialect based on a given JDBC connection URL.
+     * @param url the JDBC URL.
+     * @return the SQL dialect.
+     */
     private SQLDialect getDialect(String url) {
         String[] parts = url.split(":");
         String type = parts[1];
         switch (type) {
+            case "h2" -> {
+                return SQLDialect.H2;
+            }
             case "sqlite" -> {
                 return SQLDialect.SQLITE;
+            }
+            case "postgresql" -> {
+                return SQLDialect.POSTGRES;
+            }
+            case "mariadb" -> {
+                return SQLDialect.MARIADB;
+            }
+            case "mysql" -> {
+                return SQLDialect.MYSQL;
             }
             default -> throw new RuntimeException(String.format("Dialect not supported for %s", type));
         }
