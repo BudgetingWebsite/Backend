@@ -27,5 +27,6 @@ class SplitterTest {
         Split split = Splitter.get(buckets, AMOUNT);
         long sum = Splitter.sum(split.getAmounts());
         assertEquals(AMOUNT, sum);
+        assertEquals(0, split.getRemainder());
     }
 }
