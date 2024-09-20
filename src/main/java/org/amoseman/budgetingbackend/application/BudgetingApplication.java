@@ -8,6 +8,8 @@ import io.dropwizard.core.setup.Environment;
 import org.amoseman.budgetingbackend.application.auth.*;
 import org.amoseman.budgetingbackend.application.auth.hashing.ArgonHash;
 import org.amoseman.budgetingbackend.application.auth.hashing.Hash;
+import org.amoseman.budgetingbackend.application.pojo.DAOs;
+import org.amoseman.budgetingbackend.application.pojo.Services;
 import org.amoseman.budgetingbackend.dao.AccountDAO;
 import org.amoseman.budgetingbackend.dao.FinanceRecordDAO;
 import org.amoseman.budgetingbackend.dao.BucketDAO;
@@ -43,30 +45,35 @@ public class BudgetingApplication extends Application<BudgetingConfiguration> {
     public void run(BudgetingConfiguration configuration, Environment environment) throws Exception {
         SecureRandom random = new SecureRandom();
         Hash hash = new ArgonHash(random, 16, 16, 2, 8192, 1);
-
         DatabaseConnection<DSLContext> connection = new DatabaseConnectionImpl(configuration.getDatabaseURL());
 
+        DAOs<DSLContext> daos = initDAOs(connection);
+        Services<DSLContext> services = initServices(configuration, hash, daos);
+        registerResources(environment, services);
+
+        registerAuth(environment, daos.accountDAO, hash);
+        registerExceptionMappers(environment);
+        initializeAdminAccount(configuration, hash, daos.accountDAO);
+    }
+
+    private DAOs<DSLContext> initDAOs(DatabaseConnection<DSLContext> connection) {
         AccountDAO<DSLContext> accountDAO = new AccountDAOImpl(connection);
         FinanceRecordDAO<DSLContext> financeRecordDAO = new FinanceRecordDAOImpl(connection);
         BucketDAO<DSLContext> bucketDAO = new BucketDAOImpl(connection);
-
-        AccountService<DSLContext> accountService = new AccountServiceImpl<>(configuration, accountDAO, hash);
-        FinanceRecordService<DSLContext> financeRecordService = new FinanceRecordServiceImpl<>(financeRecordDAO);
-        BucketService<DSLContext> bucketService =  new BucketServiceImpl<>(bucketDAO, financeRecordDAO);
-
-        registerResources(environment, accountService, financeRecordService, bucketService);
-        registerAuth(environment, accountDAO, hash);
-        registerExceptionMappers(environment);
-        initializeAdminAccount(configuration, hash, accountDAO);
+        return new DAOs<>(accountDAO, financeRecordDAO, bucketDAO);
     }
 
-    private void registerResources(Environment environment,
-                                   AccountService<DSLContext> accountService,
-                                   FinanceRecordService<DSLContext> financeRecordService,
-                                   BucketService<DSLContext> bucketService) {
-        AccountResource<DSLContext> accountResource = new AccountResource<>(accountService);
-        FinanceRecordResource<DSLContext> financeRecordResource = new FinanceRecordResource<>(financeRecordService);
-        BucketResource<DSLContext> bucketResource = new BucketResource<>(bucketService);
+    private Services<DSLContext> initServices(BudgetingConfiguration configuration, Hash hash, DAOs<DSLContext> daos) {
+        AccountService<DSLContext> accountService = new AccountServiceImpl<>(configuration, daos.accountDAO, hash);
+        FinanceRecordService<DSLContext> financeRecordService = new FinanceRecordServiceImpl<>(daos.financeRecordDAO);
+        BucketService<DSLContext> bucketService =  new BucketServiceImpl<>(daos.bucketDAO, daos.financeRecordDAO);
+        return new Services<>(accountService, financeRecordService, bucketService);
+    }
+
+    private void registerResources(Environment environment, Services<DSLContext> services) {
+        AccountResource<DSLContext> accountResource = new AccountResource<>(services.accountService);
+        FinanceRecordResource<DSLContext> financeRecordResource = new FinanceRecordResource<>(services.financeRecordService);
+        BucketResource<DSLContext> bucketResource = new BucketResource<>(services.bucketService);
 
         environment.jersey().register(accountResource);
         environment.jersey().register(financeRecordResource);
