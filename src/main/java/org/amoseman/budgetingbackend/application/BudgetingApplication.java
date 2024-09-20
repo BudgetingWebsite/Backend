@@ -6,8 +6,8 @@ import io.dropwizard.auth.basic.BasicCredentialAuthFilter;
 import io.dropwizard.core.Application;
 import io.dropwizard.core.setup.Environment;
 import org.amoseman.budgetingbackend.application.auth.*;
-import org.amoseman.budgetingbackend.application.auth.hashing.ArgonHasher;
-import org.amoseman.budgetingbackend.application.auth.hashing.Hasher;
+import org.amoseman.budgetingbackend.application.auth.hashing.ArgonHash;
+import org.amoseman.budgetingbackend.application.auth.hashing.Hash;
 import org.amoseman.budgetingbackend.dao.AccountDAO;
 import org.amoseman.budgetingbackend.dao.FinanceRecordDAO;
 import org.amoseman.budgetingbackend.dao.BucketDAO;
@@ -39,7 +39,7 @@ public class BudgetingApplication extends Application<BudgetingConfiguration> {
     @Override
     public void run(BudgetingConfiguration configuration, Environment environment) throws Exception {
         SecureRandom random = new SecureRandom();
-        Hasher hasher = new ArgonHasher(random, 16, 16, 2, 8192, 1);
+        Hash hash = new ArgonHash(random, 16, 16, 2, 8192, 1);
 
         DatabaseConnection<DSLContext> connection = new DatabaseConnectionImpl(configuration.getDatabaseURL());
 
@@ -47,7 +47,7 @@ public class BudgetingApplication extends Application<BudgetingConfiguration> {
         FinanceRecordDAO<DSLContext> financeRecordDAO = new FinanceRecordDAOImpl(connection);
         BucketDAO<DSLContext> bucketDAO = new BucketDAOImpl(connection);
 
-        AccountService<DSLContext> accountService = new AccountService<>(accountDAO, hasher);
+        AccountService<DSLContext> accountService = new AccountService<>(accountDAO, hash);
         FinanceRecordService<DSLContext> financeRecordService = new FinanceRecordService<>(financeRecordDAO);
         BucketService<DSLContext> bucketService =  new BucketService<>(bucketDAO, financeRecordDAO);
 
@@ -60,7 +60,7 @@ public class BudgetingApplication extends Application<BudgetingConfiguration> {
         environment.jersey().register(bucketResource);
 
         environment.jersey().register(new AuthDynamicFeature(new BasicCredentialAuthFilter.Builder<User>()
-                .setAuthenticator(new UserAuthenticator(accountDAO, hasher))
+                .setAuthenticator(new UserAuthenticator(accountDAO, hash))
                 .setAuthorizer(new UserAuthorizer())
                 .setRealm("BASIC-AUTH-REALM")
                 .buildAuthFilter()
@@ -74,10 +74,10 @@ public class BudgetingApplication extends Application<BudgetingConfiguration> {
         environment.jersey().register(new TotalBucketShareExceededExceptionMapper());
         environment.jersey().register(new DateTimeExceptionMapper());
 
-        initializeAdminAccount(configuration, hasher, accountDAO);
+        initializeAdminAccount(configuration, hash, accountDAO);
     }
 
-    private void initializeAdminAccount(BudgetingConfiguration configuration, Hasher hasher, AccountDAO<?> accountDAO) {
+    private void initializeAdminAccount(BudgetingConfiguration configuration, Hash hasher, AccountDAO<?> accountDAO) {
         LocalDateTime now = Now.get();
         byte[] saltBytes = hasher.salt();
         String hash = hasher.hash(configuration.getAdminPassword(), saltBytes);

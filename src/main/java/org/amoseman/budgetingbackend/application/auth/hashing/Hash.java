@@ -2,11 +2,11 @@ package org.amoseman.budgetingbackend.application.auth.hashing;
 
 import java.security.SecureRandom;
 
-public abstract class Hasher {
+public abstract class Hash {
     protected final SecureRandom random;
     private final int saltLength;
 
-    public Hasher(SecureRandom random, int saltLength) {
+    public Hash(SecureRandom random, int saltLength) {
         this.random = random;
         this.saltLength = saltLength;
     }

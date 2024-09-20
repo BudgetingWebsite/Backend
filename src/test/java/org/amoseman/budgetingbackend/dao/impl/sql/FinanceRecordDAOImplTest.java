@@ -1,7 +1,7 @@
 package org.amoseman.budgetingbackend.dao.impl.sql;
 
 import org.amoseman.InitTestDatabase;
-import org.amoseman.budgetingbackend.application.auth.hashing.ArgonHasher;
+import org.amoseman.budgetingbackend.application.auth.hashing.ArgonHash;
 import org.amoseman.budgetingbackend.dao.FinanceRecordDAO;
 import org.amoseman.budgetingbackend.database.DatabaseConnection;
 import org.amoseman.budgetingbackend.database.impl.sql.sqlite.DatabaseConnectionImpl;
@@ -40,7 +40,7 @@ class FinanceRecordDAOImplTest {
         DatabaseConnection<DSLContext> connection = new DatabaseConnectionImpl(databaseURL);
         financeRecordDAO = new FinanceRecordDAOImpl(connection);
         try {
-            new AccountService<>(new AccountDAOImpl(connection), new ArgonHasher(new SecureRandom(), 16, 16, 2, 8000, 1)).addAccount(new CreateAccount("person", "password"));
+            new AccountService<>(new AccountDAOImpl(connection), new ArgonHash(new SecureRandom(), 16, 16, 2, 8000, 1)).addAccount(new CreateAccount("person", "password"));
         } catch (AccountAlreadyExistsException e) {
             fail(e);
         }

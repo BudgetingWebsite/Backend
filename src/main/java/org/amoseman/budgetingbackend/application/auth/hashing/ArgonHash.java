@@ -7,11 +7,11 @@ import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.Base64;
 
-public class ArgonHasher extends Hasher {
+public class ArgonHash extends Hash {
     private final int hashLength;
     private final Argon2Parameters.Builder builder;
 
-    public ArgonHasher(SecureRandom random, int saltLength, int hashLength, int iterations, int memory, int parallelism) {
+    public ArgonHash(SecureRandom random, int saltLength, int hashLength, int iterations, int memory, int parallelism) {
         super(random, saltLength);
         this.hashLength = hashLength;
         builder = new Argon2Parameters.Builder(Argon2Parameters.ARGON2_id)

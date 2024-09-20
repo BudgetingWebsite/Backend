@@ -1,8 +1,8 @@
 package org.amoseman.budgetingbackend.service;
 
 import org.amoseman.InitTestDatabase;
-import org.amoseman.budgetingbackend.application.auth.hashing.ArgonHasher;
-import org.amoseman.budgetingbackend.application.auth.hashing.Hasher;
+import org.amoseman.budgetingbackend.application.auth.hashing.ArgonHash;
+import org.amoseman.budgetingbackend.application.auth.hashing.Hash;
 import org.amoseman.budgetingbackend.dao.AccountDAO;
 import org.amoseman.budgetingbackend.dao.impl.sql.AccountDAOImpl;
 import org.amoseman.budgetingbackend.database.DatabaseConnection;
@@ -29,11 +29,11 @@ class AccountServiceTest {
     @BeforeEach
     void setup() {
         SecureRandom random = new SecureRandom();
-        Hasher hasher = new ArgonHasher(random, 16, 16, 2, 8000, 1);
+        Hash hash = new ArgonHash(random, 16, 16, 2, 8000, 1);
         InitTestDatabase.init(databaseURL, "schema.sql");
         connection = new DatabaseConnectionImpl(databaseURL);
         AccountDAO<DSLContext> accountDAO = new AccountDAOImpl(connection);
-        accountService = new AccountService<>(accountDAO, hasher);
+        accountService = new AccountService<>(accountDAO, hash);
     }
 
     @Test

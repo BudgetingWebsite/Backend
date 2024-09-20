@@ -3,7 +3,7 @@ package org.amoseman.budgetingbackend.application.auth;
 import io.dropwizard.auth.AuthenticationException;
 import io.dropwizard.auth.Authenticator;
 import io.dropwizard.auth.basic.BasicCredentials;
-import org.amoseman.budgetingbackend.application.auth.hashing.Hasher;
+import org.amoseman.budgetingbackend.application.auth.hashing.Hash;
 import org.amoseman.budgetingbackend.dao.AccountDAO;
 import org.amoseman.budgetingbackend.pojo.account.Account;
 
@@ -12,11 +12,11 @@ import java.util.Optional;
 
 public class UserAuthenticator implements Authenticator<BasicCredentials, User> {
     private final AccountDAO<?> accountDAO;
-    private final Hasher hasher;
+    private final Hash hash;
 
-    public UserAuthenticator(AccountDAO<?> accountDAO, Hasher hasher) {
+    public UserAuthenticator(AccountDAO<?> accountDAO, Hash hash) {
         this.accountDAO = accountDAO;
-        this.hasher = hasher;
+        this.hash = hash;
     }
 
     @Override
@@ -34,7 +34,7 @@ public class UserAuthenticator implements Authenticator<BasicCredentials, User> 
 
     private boolean validate(Account account, String attemptedPassword) {
         byte[] salt = Base64.getDecoder().decode(account.salt);
-        String hash = hasher.hash(attemptedPassword, salt);
+        String hash = this.hash.hash(attemptedPassword, salt);
         return hash.equals(account.hash);
     }
 }

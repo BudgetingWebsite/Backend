@@ -1,7 +1,7 @@
 package org.amoseman.budgetingbackend.service;
 
 import org.amoseman.InitTestDatabase;
-import org.amoseman.budgetingbackend.application.auth.hashing.ArgonHasher;
+import org.amoseman.budgetingbackend.application.auth.hashing.ArgonHash;
 import org.amoseman.budgetingbackend.dao.BucketDAO;
 import org.amoseman.budgetingbackend.dao.FinanceRecordDAO;
 import org.amoseman.budgetingbackend.dao.impl.sql.AccountDAOImpl;
@@ -44,7 +44,7 @@ class BucketServiceTest {
     @Order(1)
     void testCRUD() {
         try {
-            new AccountService<>(new AccountDAOImpl(connection), new ArgonHasher(new SecureRandom(), 16, 16, 2, 8000, 1)).addAccount(new CreateAccount("alice", "password"));
+            new AccountService<>(new AccountDAOImpl(connection), new ArgonHash(new SecureRandom(), 16, 16, 2, 8000, 1)).addAccount(new CreateAccount("alice", "password"));
         } catch (AccountAlreadyExistsException e) {
             fail(e);
         }
@@ -95,7 +95,7 @@ class BucketServiceTest {
     @Order(1)
     void testRecords() {
         try {
-            new AccountService<>(new AccountDAOImpl(connection), new ArgonHasher(new SecureRandom(), 16, 16, 2, 8000, 1)).addAccount(new CreateAccount("alice", "password"));
+            new AccountService<>(new AccountDAOImpl(connection), new ArgonHash(new SecureRandom(), 16, 16, 2, 8000, 1)).addAccount(new CreateAccount("alice", "password"));
         } catch (AccountAlreadyExistsException e) {
             fail(e);
         }

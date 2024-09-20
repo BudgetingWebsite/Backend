@@ -1,6 +1,6 @@
 package org.amoseman.budgetingbackend.service;
 
-import org.amoseman.budgetingbackend.application.auth.hashing.Hasher;
+import org.amoseman.budgetingbackend.application.auth.hashing.Hash;
 import org.amoseman.budgetingbackend.application.auth.Roles;
 import org.amoseman.budgetingbackend.dao.AccountDAO;
 import org.amoseman.budgetingbackend.exception.AccountAlreadyExistsException;
@@ -20,16 +20,16 @@ import java.util.Optional;
  */
 public class AccountService<C> {
     private final AccountDAO<C> accountDAO;
-    private final Hasher hasher;
+    private final Hash hash;
 
     /**
      * Instantiate a new account service.
      * @param accountDAO the account data access object to use.
-     * @param hasher what to use for password hashing.
+     * @param hash what to use for password hashing.
      */
-    public AccountService(AccountDAO<C> accountDAO, Hasher hasher) {
+    public AccountService(AccountDAO<C> accountDAO, Hash hash) {
         this.accountDAO = accountDAO;
-        this.hasher = hasher;
+        this.hash = hash;
     }
 
     /**
@@ -38,9 +38,9 @@ public class AccountService<C> {
      * @throws AccountAlreadyExistsException if the username is already in use.
      */
     public void addAccount(CreateAccount usernamePassword) throws AccountAlreadyExistsException {
-        byte[] salt = hasher.salt();
+        byte[] salt = hash.salt();
         String salt64 = Base64.toBase64String(salt);
-        String hash64 = hasher.hash(usernamePassword.getPassword(), salt);
+        String hash64 = hash.hash(usernamePassword.getPassword(), salt);
         Account account = new Account(usernamePassword.getUsername(), Now.get(), Now.get(), hash64, salt64, Roles.USER);
         accountDAO.addAccount(account);
     }
@@ -76,9 +76,9 @@ public class AccountService<C> {
             throw new AccountDoesNotExistException("change password", username);
         }
         Account account = maybe.get();
-        byte[] salt = hasher.salt();
+        byte[] salt = hash.salt();
         String salt64 = Base64.toBase64String(salt);
-        String hash64 = hasher.hash(password, salt);
+        String hash64 = hash.hash(password, salt);
         UpdateAccount update = new UpdateAccount(username, hash64, salt64, account.roles);
         account = new Account(account, update, now);
         accountDAO.updateAccount(account);
