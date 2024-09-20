@@ -45,7 +45,7 @@ public class Expense extends TableImpl<ExpenseRecord> {
     private static final long serialVersionUID = 1L;
 
     /**
-     * The reference instance of <code>expense</code>
+     * The reference instance of <code>EXPENSE</code>
      */
     public static final Expense EXPENSE = new Expense();
 
@@ -58,49 +58,49 @@ public class Expense extends TableImpl<ExpenseRecord> {
     }
 
     /**
-     * The column <code>expense.uuid</code>.
+     * The column <code>EXPENSE.UUID</code>.
      */
-    public final TableField<ExpenseRecord, String> UUID = createField(DSL.name("uuid"), SQLDataType.VARCHAR(1000), this, "");
+    public final TableField<ExpenseRecord, String> UUID = createField(DSL.name("UUID"), SQLDataType.VARCHAR(1000), this, "");
 
     /**
-     * The column <code>expense.owner</code>.
+     * The column <code>EXPENSE.OWNER</code>.
      */
-    public final TableField<ExpenseRecord, String> OWNER = createField(DSL.name("owner"), SQLDataType.VARCHAR(1000), this, "");
+    public final TableField<ExpenseRecord, String> OWNER = createField(DSL.name("OWNER"), SQLDataType.VARCHAR(1000), this, "");
 
     /**
-     * The column <code>expense.amount</code>.
+     * The column <code>EXPENSE.AMOUNT</code>.
      */
-    public final TableField<ExpenseRecord, Integer> AMOUNT = createField(DSL.name("amount"), SQLDataType.INTEGER, this, "");
+    public final TableField<ExpenseRecord, Integer> AMOUNT = createField(DSL.name("AMOUNT"), SQLDataType.INTEGER, this, "");
 
     /**
-     * The column <code>expense.occurred</code>.
+     * The column <code>EXPENSE.OCCURRED</code>.
      */
-    public final TableField<ExpenseRecord, LocalDateTime> OCCURRED = createField(DSL.name("occurred"), SQLDataType.LOCALDATETIME(0).nullable(false), this, "");
+    public final TableField<ExpenseRecord, LocalDateTime> OCCURRED = createField(DSL.name("OCCURRED"), SQLDataType.LOCALDATETIME(0).nullable(false), this, "");
 
     /**
-     * The column <code>expense.category</code>.
+     * The column <code>EXPENSE.CATEGORY</code>.
      */
-    public final TableField<ExpenseRecord, String> CATEGORY = createField(DSL.name("category"), SQLDataType.VARCHAR(1000), this, "");
+    public final TableField<ExpenseRecord, String> CATEGORY = createField(DSL.name("CATEGORY"), SQLDataType.VARCHAR(1000), this, "");
 
     /**
-     * The column <code>expense.description</code>.
+     * The column <code>EXPENSE.DESCRIPTION</code>.
      */
-    public final TableField<ExpenseRecord, String> DESCRIPTION = createField(DSL.name("description"), SQLDataType.VARCHAR(1000), this, "");
+    public final TableField<ExpenseRecord, String> DESCRIPTION = createField(DSL.name("DESCRIPTION"), SQLDataType.VARCHAR(1000), this, "");
 
     /**
-     * The column <code>expense.bucket</code>.
+     * The column <code>EXPENSE.BUCKET</code>.
      */
-    public final TableField<ExpenseRecord, String> BUCKET = createField(DSL.name("bucket"), SQLDataType.VARCHAR(1000), this, "");
+    public final TableField<ExpenseRecord, String> BUCKET = createField(DSL.name("BUCKET"), SQLDataType.VARCHAR(1000), this, "");
 
     /**
-     * The column <code>expense.created</code>.
+     * The column <code>EXPENSE.CREATED</code>.
      */
-    public final TableField<ExpenseRecord, LocalDateTime> CREATED = createField(DSL.name("created"), SQLDataType.LOCALDATETIME(0).nullable(false), this, "");
+    public final TableField<ExpenseRecord, LocalDateTime> CREATED = createField(DSL.name("CREATED"), SQLDataType.LOCALDATETIME(0).nullable(false), this, "");
 
     /**
-     * The column <code>expense.updated</code>.
+     * The column <code>EXPENSE.UPDATED</code>.
      */
-    public final TableField<ExpenseRecord, LocalDateTime> UPDATED = createField(DSL.name("updated"), SQLDataType.LOCALDATETIME(0).nullable(false), this, "");
+    public final TableField<ExpenseRecord, LocalDateTime> UPDATED = createField(DSL.name("UPDATED"), SQLDataType.LOCALDATETIME(0).nullable(false), this, "");
 
     private Expense(Name alias, Table<ExpenseRecord> aliased) {
         this(alias, aliased, (Field<?>[]) null, null);
@@ -111,24 +111,24 @@ public class Expense extends TableImpl<ExpenseRecord> {
     }
 
     /**
-     * Create an aliased <code>expense</code> table reference
+     * Create an aliased <code>EXPENSE</code> table reference
      */
     public Expense(String alias) {
         this(DSL.name(alias), EXPENSE);
     }
 
     /**
-     * Create an aliased <code>expense</code> table reference
+     * Create an aliased <code>EXPENSE</code> table reference
      */
     public Expense(Name alias) {
         this(alias, EXPENSE);
     }
 
     /**
-     * Create a <code>expense</code> table reference
+     * Create a <code>EXPENSE</code> table reference
      */
     public Expense() {
-        this(DSL.name("expense"), null);
+        this(DSL.name("EXPENSE"), null);
     }
 
     public <O extends Record> Expense(Table<O> path, ForeignKey<O, ExpenseRecord> childPath, InverseForeignKey<O, ExpenseRecord> parentPath) {
@@ -182,7 +182,7 @@ public class Expense extends TableImpl<ExpenseRecord> {
     private transient AccountPath _account;
 
     /**
-     * Get the implicit join path to the <code>account</code> table.
+     * Get the implicit join path to the <code>ACCOUNT</code> table.
      */
     public AccountPath account() {
         if (_account == null)
@@ -194,7 +194,7 @@ public class Expense extends TableImpl<ExpenseRecord> {
     private transient BucketPath _bucket;
 
     /**
-     * Get the implicit join path to the <code>bucket</code> table.
+     * Get the implicit join path to the <code>BUCKET</code> table.
      */
     public BucketPath bucket() {
         if (_bucket == null)

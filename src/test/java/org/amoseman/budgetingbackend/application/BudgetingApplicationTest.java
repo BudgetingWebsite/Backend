@@ -61,7 +61,7 @@ class BudgetingApplicationTest {
     static final String address = "http://127.0.0.1:8080";
     static final String adminUsername = "admin_user";
     static final String adminPassword = "admin_pass";
-    static final String databaseURL = "jdbc:sqlite:test-database.db";
+    static final String databaseURL = "jdbc:h2:mem:test";
     static final String configurationLocation = "test-config.yaml";
 
     static final StatusTest successTest = (code) -> code > 199 && code < 300;
@@ -123,9 +123,10 @@ class BudgetingApplicationTest {
 
     @Test
     void expenseCRUD() {
-        ExpenseInfo create = new ExpenseInfo(0, 1, 1, 1, "", "", "");
+        String bucket = tester.post("/bucket", toJSON(new CreateBucket("example", 0.5)), successTest); // some SQL dialects require foreign key references to exist, such as H2, but not SQLite
+        ExpenseInfo create = new ExpenseInfo(0, 1, 1, 1, "", "", bucket);
         String uuid = tester.post("/record/expense", toJSON(create), successTest);
-        ExpenseInfo update = new ExpenseInfo(1, 1, 1, 1, "", "", "");
+        ExpenseInfo update = new ExpenseInfo(1, 1, 1, 1, "", "", bucket);
         tester.put("/record/expense/" + uuid, toJSON(update), successTest);
         tester.get("/record/expense/", new String[]{"startYear=1", "startMonth=1", "startDay=1", "endYear=2", "endMonth=1", "endDay=1"}, successTest);
         tester.delete("/record/expense/" + uuid, successTest);

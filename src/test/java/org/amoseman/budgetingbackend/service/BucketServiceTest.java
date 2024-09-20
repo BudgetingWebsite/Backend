@@ -1,13 +1,16 @@
 package org.amoseman.budgetingbackend.service;
 
 import org.amoseman.InitTestDatabase;
+import org.amoseman.budgetingbackend.application.auth.hashing.ArgonHasher;
 import org.amoseman.budgetingbackend.dao.BucketDAO;
 import org.amoseman.budgetingbackend.dao.FinanceRecordDAO;
+import org.amoseman.budgetingbackend.dao.impl.sql.AccountDAOImpl;
 import org.amoseman.budgetingbackend.dao.impl.sql.BucketDAOImpl;
 import org.amoseman.budgetingbackend.dao.impl.sql.FinanceRecordDAOImpl;
 import org.amoseman.budgetingbackend.database.DatabaseConnection;
 import org.amoseman.budgetingbackend.database.impl.sql.sqlite.DatabaseConnectionImpl;
 import org.amoseman.budgetingbackend.exception.*;
+import org.amoseman.budgetingbackend.pojo.account.op.CreateAccount;
 import org.amoseman.budgetingbackend.pojo.bucket.Bucket;
 import org.amoseman.budgetingbackend.pojo.bucket.op.CreateBucket;
 import org.amoseman.budgetingbackend.pojo.bucket.op.UpdateBucket;
@@ -16,20 +19,22 @@ import org.amoseman.budgetingbackend.pojo.record.info.IncomeInfo;
 import org.jooq.DSLContext;
 import org.junit.jupiter.api.*;
 
+import java.security.SecureRandom;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class BucketServiceTest {
-    private static final String databaseURL = "jdbc:sqlite:test.db";
+    String databaseURL = "jdbc:h2:mem:test";
     private static BucketService<DSLContext> bucketService;
     private static FinanceRecordService<DSLContext> financeRecordService;
+    static DatabaseConnection<DSLContext> connection;
 
     @BeforeEach
     void setup() {
         InitTestDatabase.init(databaseURL, "schema.sql");
-        DatabaseConnection<DSLContext> connection = new DatabaseConnectionImpl(databaseURL);
+        connection = new DatabaseConnectionImpl(databaseURL);
         BucketDAO<DSLContext> bucketDAO = new BucketDAOImpl(connection);
         FinanceRecordDAO<DSLContext> financeRecordDAO = new FinanceRecordDAOImpl(connection);
         bucketService = new BucketService<>(bucketDAO, financeRecordDAO);
@@ -39,6 +44,11 @@ class BucketServiceTest {
     @Test
     @Order(1)
     void testCRUD() {
+        try {
+            new AccountService<>(new AccountDAOImpl(connection), new ArgonHasher(new SecureRandom(), 16, 16, 2, 8000, 1)).addAccount(new CreateAccount("alice", "password"));
+        } catch (UserAlreadyExistsException e) {
+            fail(e);
+        }
         String uuid = null;
         try {
             uuid = bucketService.addBucket("alice", new CreateBucket("savings", 0.2));
@@ -85,6 +95,11 @@ class BucketServiceTest {
     @Test
     @Order(1)
     void testRecords() {
+        try {
+            new AccountService<>(new AccountDAOImpl(connection), new ArgonHasher(new SecureRandom(), 16, 16, 2, 8000, 1)).addAccount(new CreateAccount("alice", "password"));
+        } catch (UserAlreadyExistsException e) {
+            fail(e);
+        }
         try {
             bucketService.addBucket("alice", new CreateBucket("savings", 0.2));
             bucketService.addBucket("alice", new CreateBucket("expenses", 0.5));
@@ -138,5 +153,6 @@ class BucketServiceTest {
         assertEquals(60, other.amount);
 
         InitTestDatabase.close(databaseURL);
+        connection.close();
     }
 }

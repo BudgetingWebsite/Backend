@@ -1,22 +1,26 @@
 package org.amoseman.budgetingbackend.dao.impl.sql;
 
 import org.amoseman.InitTestDatabase;
+import org.amoseman.budgetingbackend.application.auth.hashing.ArgonHasher;
 import org.amoseman.budgetingbackend.dao.FinanceRecordDAO;
 import org.amoseman.budgetingbackend.database.DatabaseConnection;
 import org.amoseman.budgetingbackend.database.impl.sql.sqlite.DatabaseConnectionImpl;
-import org.amoseman.budgetingbackend.exception.FinanceRecordAlreadyExistsException;
-import org.amoseman.budgetingbackend.exception.FinanceRecordDoesNotExistException;
-import org.amoseman.budgetingbackend.exception.NegativeValueException;
+import org.amoseman.budgetingbackend.exception.*;
 import org.amoseman.budgetingbackend.pojo.TimeRange;
+import org.amoseman.budgetingbackend.pojo.account.op.CreateAccount;
+import org.amoseman.budgetingbackend.pojo.bucket.op.CreateBucket;
 import org.amoseman.budgetingbackend.pojo.record.Expense;
 import org.amoseman.budgetingbackend.pojo.record.Income;
 import org.amoseman.budgetingbackend.pojo.record.info.ExpenseInfo;
 import org.amoseman.budgetingbackend.pojo.record.info.IncomeInfo;
+import org.amoseman.budgetingbackend.service.AccountService;
+import org.amoseman.budgetingbackend.service.BucketService;
 import org.amoseman.budgetingbackend.util.Now;
 import org.jooq.DSLContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -26,13 +30,26 @@ import static org.junit.jupiter.api.Assertions.*;
 class FinanceRecordDAOImplTest {
 
     private static FinanceRecordDAO<DSLContext> financeRecordDAO;
+    static String databaseURL = "jdbc:h2:mem:test";
+    static String bucket;
+
 
     @BeforeEach
     void setup() {
-        String databaseURL = "jdbc:sqlite:test.db";
         InitTestDatabase.init(databaseURL, "schema.sql");
         DatabaseConnection<DSLContext> connection = new DatabaseConnectionImpl(databaseURL);
         financeRecordDAO = new FinanceRecordDAOImpl(connection);
+        try {
+            new AccountService<>(new AccountDAOImpl(connection), new ArgonHasher(new SecureRandom(), 16, 16, 2, 8000, 1)).addAccount(new CreateAccount("person", "password"));
+        } catch (UserAlreadyExistsException e) {
+            fail(e);
+        }
+        try {
+            bucket = new BucketService<>(new BucketDAOImpl(connection), financeRecordDAO).addBucket("person", new CreateBucket("bucket", 0.5));
+        }
+        catch (TotalBucketShareExceededException | BucketAlreadyExistsException e) {
+            fail(e);
+        }
     }
 
     @Test
@@ -101,7 +118,7 @@ class FinanceRecordDAOImplTest {
         assertEquals(0, records.size());
         records = financeRecordDAO.getIncomeInRange("person", new TimeRange(LocalDateTime.of(2023, 1, 1, 0, 0), LocalDateTime.of(2024, 1, 2, 0, 0)));
         assertEquals(0, records.size());
-        InitTestDatabase.close("jdbc:sqlite:test.db");
+        InitTestDatabase.close(databaseURL);
     }
 
     @Test
@@ -119,7 +136,7 @@ class FinanceRecordDAOImplTest {
                     occurred,
                     "category",
                     "description",
-                    "bucket"
+                    bucket
             );
         }
         catch (NegativeValueException e) {
@@ -141,7 +158,7 @@ class FinanceRecordDAOImplTest {
         assertEquals(100, retrieved.amount);
         assertEquals("category", retrieved.category);
         assertEquals("description", retrieved.description);
-        assertEquals("bucket", retrieved.bucket);
+        assertEquals(bucket, retrieved.bucket);
 
         List<Expense> records = financeRecordDAO.getAllExpenses("person");
         assertEquals(1, records.size());
@@ -150,7 +167,7 @@ class FinanceRecordDAOImplTest {
         assertEquals(1, records.size());
 
         try {
-            financeRecordDAO.updateExpense("person", "12345", new ExpenseInfo(0, 2024, 1, 1, "", "", ""));
+            financeRecordDAO.updateExpense("person", "12345", new ExpenseInfo(0, 2024, 1, 1, "", "", bucket));
         }
         catch (FinanceRecordDoesNotExistException | NegativeValueException e) {
             fail(e);
@@ -171,6 +188,6 @@ class FinanceRecordDAOImplTest {
         assertEquals(0, records.size());
         records = financeRecordDAO.getExpensesInRange("person", new TimeRange(LocalDateTime.of(2023, 1, 1, 0, 0), LocalDateTime.of(2024, 1, 2, 0, 0)));
         assertEquals(0, records.size());
-        InitTestDatabase.close("jdbc:sqlite:test.db");
+        InitTestDatabase.close(databaseURL);
     }
 }

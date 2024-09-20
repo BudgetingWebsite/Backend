@@ -21,7 +21,7 @@ class AccountDAOImplTest {
 
     @Test
     void testCRUD() {
-        String databaseURL = "jdbc:sqlite:test.db";
+        String databaseURL = "jdbc:h2:mem:test";
         InitTestDatabase.init(databaseURL, "schema.sql");
         DatabaseConnection<DSLContext> connection = new DatabaseConnectionImpl(databaseURL);
         AccountDAO<DSLContext> accountDAO = new AccountDAOImpl(connection);

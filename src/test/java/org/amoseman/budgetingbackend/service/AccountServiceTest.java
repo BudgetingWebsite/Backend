@@ -23,13 +23,15 @@ import static org.junit.jupiter.api.Assertions.*;
 class AccountServiceTest {
     private static AccountService<DSLContext> accountService;
 
+    static String databaseURL = "jdbc:h2:mem:test";
+    static DatabaseConnection<DSLContext> connection;
+
     @BeforeEach
     void setup() {
         SecureRandom random = new SecureRandom();
         Hasher hasher = new ArgonHasher(random, 16, 16, 2, 8000, 1);
-        String databaseURL = "jdbc:sqlite:test.db";
         InitTestDatabase.init(databaseURL, "schema.sql");
-        DatabaseConnection<DSLContext> connection = new DatabaseConnectionImpl(databaseURL);
+        connection = new DatabaseConnectionImpl(databaseURL);
         AccountDAO<DSLContext> accountDAO = new AccountDAOImpl(connection);
         accountService = new AccountService<>(accountDAO, hasher);
     }
@@ -88,6 +90,7 @@ class AccountServiceTest {
             fail("Able to retrieve account after it should have been deleted");
         }
 
-        InitTestDatabase.close("jdbc:sqlite:test.db");
+        InitTestDatabase.close(databaseURL);
+        connection.close();
     }
 }

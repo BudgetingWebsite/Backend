@@ -20,126 +20,126 @@ public class ExpenseRecord extends UpdatableRecordImpl<ExpenseRecord> {
     private static final long serialVersionUID = 1L;
 
     /**
-     * Setter for <code>expense.uuid</code>.
+     * Setter for <code>EXPENSE.UUID</code>.
      */
     public void setUuid(String value) {
         set(0, value);
     }
 
     /**
-     * Getter for <code>expense.uuid</code>.
+     * Getter for <code>EXPENSE.UUID</code>.
      */
     public String getUuid() {
         return (String) get(0);
     }
 
     /**
-     * Setter for <code>expense.owner</code>.
+     * Setter for <code>EXPENSE.OWNER</code>.
      */
     public void setOwner(String value) {
         set(1, value);
     }
 
     /**
-     * Getter for <code>expense.owner</code>.
+     * Getter for <code>EXPENSE.OWNER</code>.
      */
     public String getOwner() {
         return (String) get(1);
     }
 
     /**
-     * Setter for <code>expense.amount</code>.
+     * Setter for <code>EXPENSE.AMOUNT</code>.
      */
     public void setAmount(Integer value) {
         set(2, value);
     }
 
     /**
-     * Getter for <code>expense.amount</code>.
+     * Getter for <code>EXPENSE.AMOUNT</code>.
      */
     public Integer getAmount() {
         return (Integer) get(2);
     }
 
     /**
-     * Setter for <code>expense.occurred</code>.
+     * Setter for <code>EXPENSE.OCCURRED</code>.
      */
     public void setOccurred(LocalDateTime value) {
         set(3, value);
     }
 
     /**
-     * Getter for <code>expense.occurred</code>.
+     * Getter for <code>EXPENSE.OCCURRED</code>.
      */
     public LocalDateTime getOccurred() {
         return (LocalDateTime) get(3);
     }
 
     /**
-     * Setter for <code>expense.category</code>.
+     * Setter for <code>EXPENSE.CATEGORY</code>.
      */
     public void setCategory(String value) {
         set(4, value);
     }
 
     /**
-     * Getter for <code>expense.category</code>.
+     * Getter for <code>EXPENSE.CATEGORY</code>.
      */
     public String getCategory() {
         return (String) get(4);
     }
 
     /**
-     * Setter for <code>expense.description</code>.
+     * Setter for <code>EXPENSE.DESCRIPTION</code>.
      */
     public void setDescription(String value) {
         set(5, value);
     }
 
     /**
-     * Getter for <code>expense.description</code>.
+     * Getter for <code>EXPENSE.DESCRIPTION</code>.
      */
     public String getDescription() {
         return (String) get(5);
     }
 
     /**
-     * Setter for <code>expense.bucket</code>.
+     * Setter for <code>EXPENSE.BUCKET</code>.
      */
     public void setBucket(String value) {
         set(6, value);
     }
 
     /**
-     * Getter for <code>expense.bucket</code>.
+     * Getter for <code>EXPENSE.BUCKET</code>.
      */
     public String getBucket() {
         return (String) get(6);
     }
 
     /**
-     * Setter for <code>expense.created</code>.
+     * Setter for <code>EXPENSE.CREATED</code>.
      */
     public void setCreated(LocalDateTime value) {
         set(7, value);
     }
 
     /**
-     * Getter for <code>expense.created</code>.
+     * Getter for <code>EXPENSE.CREATED</code>.
      */
     public LocalDateTime getCreated() {
         return (LocalDateTime) get(7);
     }
 
     /**
-     * Setter for <code>expense.updated</code>.
+     * Setter for <code>EXPENSE.UPDATED</code>.
      */
     public void setUpdated(LocalDateTime value) {
         set(8, value);
     }
 
     /**
-     * Getter for <code>expense.updated</code>.
+     * Getter for <code>EXPENSE.UPDATED</code>.
      */
     public LocalDateTime getUpdated() {
         return (LocalDateTime) get(8);

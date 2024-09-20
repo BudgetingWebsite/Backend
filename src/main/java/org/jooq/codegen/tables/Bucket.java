@@ -45,7 +45,7 @@ public class Bucket extends TableImpl<BucketRecord> {
     private static final long serialVersionUID = 1L;
 
     /**
-     * The reference instance of <code>bucket</code>
+     * The reference instance of <code>BUCKET</code>
      */
     public static final Bucket BUCKET = new Bucket();
 
@@ -58,34 +58,34 @@ public class Bucket extends TableImpl<BucketRecord> {
     }
 
     /**
-     * The column <code>bucket.uuid</code>.
+     * The column <code>BUCKET.UUID</code>.
      */
-    public final TableField<BucketRecord, String> UUID = createField(DSL.name("uuid"), SQLDataType.VARCHAR(1000), this, "");
+    public final TableField<BucketRecord, String> UUID = createField(DSL.name("UUID"), SQLDataType.VARCHAR(1000), this, "");
 
     /**
-     * The column <code>bucket.owner</code>.
+     * The column <code>BUCKET.OWNER</code>.
      */
-    public final TableField<BucketRecord, String> OWNER = createField(DSL.name("owner"), SQLDataType.VARCHAR(1000), this, "");
+    public final TableField<BucketRecord, String> OWNER = createField(DSL.name("OWNER"), SQLDataType.VARCHAR(1000), this, "");
 
     /**
-     * The column <code>bucket.name</code>.
+     * The column <code>BUCKET.NAME</code>.
      */
-    public final TableField<BucketRecord, String> NAME = createField(DSL.name("name"), SQLDataType.VARCHAR(1000), this, "");
+    public final TableField<BucketRecord, String> NAME = createField(DSL.name("NAME"), SQLDataType.VARCHAR(1000), this, "");
 
     /**
-     * The column <code>bucket.share</code>.
+     * The column <code>BUCKET.SHARE</code>.
      */
-    public final TableField<BucketRecord, Double> SHARE = createField(DSL.name("share"), SQLDataType.DOUBLE, this, "");
+    public final TableField<BucketRecord, Double> SHARE = createField(DSL.name("SHARE"), SQLDataType.DOUBLE, this, "");
 
     /**
-     * The column <code>bucket.created</code>.
+     * The column <code>BUCKET.CREATED</code>.
      */
-    public final TableField<BucketRecord, LocalDateTime> CREATED = createField(DSL.name("created"), SQLDataType.LOCALDATETIME(0).nullable(false), this, "");
+    public final TableField<BucketRecord, LocalDateTime> CREATED = createField(DSL.name("CREATED"), SQLDataType.LOCALDATETIME(0).nullable(false), this, "");
 
     /**
-     * The column <code>bucket.updated</code>.
+     * The column <code>BUCKET.UPDATED</code>.
      */
-    public final TableField<BucketRecord, LocalDateTime> UPDATED = createField(DSL.name("updated"), SQLDataType.LOCALDATETIME(0).nullable(false), this, "");
+    public final TableField<BucketRecord, LocalDateTime> UPDATED = createField(DSL.name("UPDATED"), SQLDataType.LOCALDATETIME(0).nullable(false), this, "");
 
     private Bucket(Name alias, Table<BucketRecord> aliased) {
         this(alias, aliased, (Field<?>[]) null, null);
@@ -96,24 +96,24 @@ public class Bucket extends TableImpl<BucketRecord> {
     }
 
     /**
-     * Create an aliased <code>bucket</code> table reference
+     * Create an aliased <code>BUCKET</code> table reference
      */
     public Bucket(String alias) {
         this(DSL.name(alias), BUCKET);
     }
 
     /**
-     * Create an aliased <code>bucket</code> table reference
+     * Create an aliased <code>BUCKET</code> table reference
      */
     public Bucket(Name alias) {
         this(alias, BUCKET);
     }
 
     /**
-     * Create a <code>bucket</code> table reference
+     * Create a <code>BUCKET</code> table reference
      */
     public Bucket() {
-        this(DSL.name("bucket"), null);
+        this(DSL.name("BUCKET"), null);
     }
 
     public <O extends Record> Bucket(Table<O> path, ForeignKey<O, BucketRecord> childPath, InverseForeignKey<O, BucketRecord> parentPath) {
@@ -167,7 +167,7 @@ public class Bucket extends TableImpl<BucketRecord> {
     private transient AccountPath _account;
 
     /**
-     * Get the implicit join path to the <code>account</code> table.
+     * Get the implicit join path to the <code>ACCOUNT</code> table.
      */
     public AccountPath account() {
         if (_account == null)
@@ -179,7 +179,7 @@ public class Bucket extends TableImpl<BucketRecord> {
     private transient ExpensePath _expense;
 
     /**
-     * Get the implicit to-many join path to the <code>expense</code> table
+     * Get the implicit to-many join path to the <code>EXPENSE</code> table
      */
     public ExpensePath expense() {
         if (_expense == null)

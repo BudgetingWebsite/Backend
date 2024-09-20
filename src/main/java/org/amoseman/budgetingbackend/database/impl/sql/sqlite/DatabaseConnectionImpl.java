@@ -42,7 +42,7 @@ public class DatabaseConnectionImpl extends DatabaseConnection<DSLContext> {
     }
 
     @Override
-    protected void close() {
+    public void close() {
         try {
             connection.close();
         }

@@ -20,84 +20,84 @@ public class AccountRecord extends UpdatableRecordImpl<AccountRecord> {
     private static final long serialVersionUID = 1L;
 
     /**
-     * Setter for <code>account.uuid</code>.
+     * Setter for <code>ACCOUNT.UUID</code>.
      */
     public void setUuid(String value) {
         set(0, value);
     }
 
     /**
-     * Getter for <code>account.uuid</code>.
+     * Getter for <code>ACCOUNT.UUID</code>.
      */
     public String getUuid() {
         return (String) get(0);
     }
 
     /**
-     * Setter for <code>account.roles</code>.
+     * Setter for <code>ACCOUNT.ROLES</code>.
      */
     public void setRoles(String value) {
         set(1, value);
     }
 
     /**
-     * Getter for <code>account.roles</code>.
+     * Getter for <code>ACCOUNT.ROLES</code>.
      */
     public String getRoles() {
         return (String) get(1);
     }
 
     /**
-     * Setter for <code>account.hash</code>.
+     * Setter for <code>ACCOUNT.HASH</code>.
      */
     public void setHash(String value) {
         set(2, value);
     }
 
     /**
-     * Getter for <code>account.hash</code>.
+     * Getter for <code>ACCOUNT.HASH</code>.
      */
     public String getHash() {
         return (String) get(2);
     }
 
     /**
-     * Setter for <code>account.salt</code>.
+     * Setter for <code>ACCOUNT.SALT</code>.
      */
     public void setSalt(String value) {
         set(3, value);
     }
 
     /**
-     * Getter for <code>account.salt</code>.
+     * Getter for <code>ACCOUNT.SALT</code>.
      */
     public String getSalt() {
         return (String) get(3);
     }
 
     /**
-     * Setter for <code>account.created</code>.
+     * Setter for <code>ACCOUNT.CREATED</code>.
      */
     public void setCreated(LocalDateTime value) {
         set(4, value);
     }
 
     /**
-     * Getter for <code>account.created</code>.
+     * Getter for <code>ACCOUNT.CREATED</code>.
      */
     public LocalDateTime getCreated() {
         return (LocalDateTime) get(4);
     }
 
     /**
-     * Setter for <code>account.updated</code>.
+     * Setter for <code>ACCOUNT.UPDATED</code>.
      */
     public void setUpdated(LocalDateTime value) {
         set(5, value);
     }
 
     /**
-     * Getter for <code>account.updated</code>.
+     * Getter for <code>ACCOUNT.UPDATED</code>.
      */
     public LocalDateTime getUpdated() {
         return (LocalDateTime) get(5);
