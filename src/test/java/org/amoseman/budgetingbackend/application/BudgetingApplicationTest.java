@@ -9,7 +9,7 @@ import org.amoseman.InitTestDatabase;
 import org.amoseman.StatusTest;
 import org.amoseman.StatusTester;
 import org.amoseman.budgetingbackend.pojo.account.op.CreateAccount;
-import org.amoseman.budgetingbackend.pojo.bucket.op.BucketInfo;
+import org.amoseman.budgetingbackend.pojo.bucket.BucketInfo;
 import org.amoseman.budgetingbackend.pojo.record.info.ExpenseInfo;
 import org.amoseman.budgetingbackend.pojo.record.info.IncomeInfo;
 import org.glassfish.jersey.client.JerseyClientBuilder;

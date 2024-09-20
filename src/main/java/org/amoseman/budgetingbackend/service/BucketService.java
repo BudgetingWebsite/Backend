@@ -8,7 +8,7 @@ import org.amoseman.budgetingbackend.exception.TotalBucketShareExceededException
 import org.amoseman.budgetingbackend.pojo.record.Expense;
 import org.amoseman.budgetingbackend.pojo.record.Income;
 import org.amoseman.budgetingbackend.pojo.bucket.Bucket;
-import org.amoseman.budgetingbackend.pojo.bucket.op.BucketInfo;
+import org.amoseman.budgetingbackend.pojo.bucket.BucketInfo;
 import org.amoseman.budgetingbackend.util.Now;
 import org.amoseman.budgetingbackend.util.Split;
 import org.amoseman.budgetingbackend.util.Splitter;

@@ -1,7 +1,6 @@
 package org.amoseman.budgetingbackend.pojo.bucket;
 
 import org.amoseman.budgetingbackend.pojo.OwnedEntity;
-import org.amoseman.budgetingbackend.pojo.bucket.op.BucketInfo;
 
 import java.beans.ConstructorProperties;
 import java.time.LocalDateTime;
