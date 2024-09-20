@@ -25,10 +25,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class BucketServiceTest {
-    String databaseURL = "jdbc:h2:mem:test";
+    private static final String databaseURL = "jdbc:h2:mem:test";
     private static BucketService<DSLContext> bucketService;
     private static FinanceRecordService<DSLContext> financeRecordService;
     static DatabaseConnection<DSLContext> connection;
+
+    @AfterEach
+    void cleanup() {
+        InitTestDatabase.close(databaseURL);
+    }
 
     @BeforeEach
     void setup() {
@@ -87,8 +92,6 @@ class BucketServiceTest {
         }
         buckets = bucketService.getBuckets("alice");
         assertEquals(0, buckets.size());
-
-        InitTestDatabase.close(databaseURL);
     }
 
     @Test
@@ -150,8 +153,5 @@ class BucketServiceTest {
         assertEquals(0, savings.amount);
         assertEquals(40, expenses.amount);
         assertEquals(60, other.amount);
-
-        InitTestDatabase.close(databaseURL);
-        connection.close();
     }
 }

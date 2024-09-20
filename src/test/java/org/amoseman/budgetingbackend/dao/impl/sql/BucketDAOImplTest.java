@@ -14,6 +14,8 @@ import org.amoseman.budgetingbackend.pojo.bucket.BucketInfo;
 import org.amoseman.budgetingbackend.service.AccountService;
 import org.amoseman.budgetingbackend.util.Now;
 import org.jooq.DSLContext;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.security.SecureRandom;
@@ -25,9 +27,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class BucketDAOImplTest {
 
+    private static final String databaseURL = "jdbc:h2:mem:test";
+
+    @AfterAll
+    static void cleanup() {
+        InitTestDatabase.close(databaseURL);
+    }
+
     @Test
     void textCRUD() {
-        String databaseURL = "jdbc:h2:mem:test";
         InitTestDatabase.init(databaseURL, "schema.sql");
         DatabaseConnection<DSLContext> connection = new DatabaseConnectionImpl(databaseURL);
         BucketDAO<DSLContext> bucketDAO = new BucketDAOImpl(connection);
@@ -102,6 +110,5 @@ class BucketDAOImplTest {
         }
         buckets = bucketDAO.getBuckets("alice");
         assertEquals(0, buckets.size());
-        InitTestDatabase.close(databaseURL);
     }
 }

@@ -10,6 +10,7 @@ import org.amoseman.budgetingbackend.pojo.account.Account;
 import org.amoseman.budgetingbackend.pojo.account.op.UpdateAccount;
 import org.amoseman.budgetingbackend.util.Now;
 import org.jooq.DSLContext;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -19,9 +20,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class AccountDAOImplTest {
 
+    private static final String databaseURL = "jdbc:h2:mem:test";
+
+    @AfterAll
+    static void cleanup() {
+        InitTestDatabase.close(databaseURL);
+    }
+
     @Test
     void testCRUD() {
-        String databaseURL = "jdbc:h2:mem:test";
         InitTestDatabase.init(databaseURL, "schema.sql");
         DatabaseConnection<DSLContext> connection = new DatabaseConnectionImpl(databaseURL);
         AccountDAO<DSLContext> accountDAO = new AccountDAOImpl(connection);
@@ -73,6 +80,5 @@ class AccountDAOImplTest {
         if (maybe.isPresent()) {
             fail("Retrieved account when it should have been deleted");
         }
-        InitTestDatabase.close(databaseURL);
     }
 }

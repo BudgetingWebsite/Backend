@@ -16,6 +16,7 @@ import org.amoseman.budgetingbackend.pojo.record.Income;
 import org.amoseman.budgetingbackend.pojo.record.info.ExpenseInfo;
 import org.amoseman.budgetingbackend.pojo.record.info.IncomeInfo;
 import org.jooq.DSLContext;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -26,7 +27,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class FinanceRecordServiceTest {
-    static String databaseURL = "jdbc:h2:mem:test";
+    private static final String databaseURL = "jdbc:h2:mem:test";
     private static FinanceRecordService<DSLContext> financeRecordService;
     static FinanceRecordDAO<DSLContext> financeRecordDAO;
     static DatabaseConnection<DSLContext> connection;
@@ -39,13 +40,23 @@ class FinanceRecordServiceTest {
         financeRecordService = new FinanceRecordService<>(financeRecordDAO);
     }
 
-    @Test
-    void testIncomeCRUD() {
+    @AfterEach
+    void cleanup() {
+        InitTestDatabase.close(databaseURL);
+    }
+
+    void addAlice() {
         try {
             new AccountService<>(new AccountDAOImpl(connection), new ArgonHash(new SecureRandom(), 16, 16, 2, 8000, 1)).addAccount(new CreateAccount("alice", "password"));
-        } catch (AccountAlreadyExistsException e) {
+        }
+        catch (AccountAlreadyExistsException e) {
             fail(e);
         }
+    }
+
+    @Test
+    void testIncomeCRUD() {
+        addAlice();
         try {
             financeRecordService.addIncome("alice", new IncomeInfo(
                     100,
@@ -112,17 +123,11 @@ class FinanceRecordServiceTest {
                 2
         );
         assertEquals(0, records.size());
-
-        InitTestDatabase.close(databaseURL);
     }
 
     @Test
     void testExpenseCRUD() {
-        try {
-            new AccountService<>(new AccountDAOImpl(connection), new ArgonHash(new SecureRandom(), 16, 16, 2, 8000, 1)).addAccount(new CreateAccount("alice", "password"));
-        } catch (AccountAlreadyExistsException e) {
-            fail(e);
-        }
+        addAlice();
         String bucket = null;
         try {
             bucket = new BucketService<>(new BucketDAOImpl(connection), financeRecordDAO).addBucket("alice", new BucketInfo("bucket", 0.5));
@@ -198,7 +203,5 @@ class FinanceRecordServiceTest {
                 2
         );
         assertEquals(0, records.size());
-
-        InitTestDatabase.close(databaseURL);
     }
 }

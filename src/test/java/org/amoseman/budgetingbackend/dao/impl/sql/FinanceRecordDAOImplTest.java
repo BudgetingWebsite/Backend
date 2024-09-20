@@ -17,6 +17,8 @@ import org.amoseman.budgetingbackend.service.AccountService;
 import org.amoseman.budgetingbackend.service.BucketService;
 import org.amoseman.budgetingbackend.util.Now;
 import org.jooq.DSLContext;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -30,8 +32,13 @@ import static org.junit.jupiter.api.Assertions.*;
 class FinanceRecordDAOImplTest {
 
     private static FinanceRecordDAO<DSLContext> financeRecordDAO;
-    static String databaseURL = "jdbc:h2:mem:test";
+    private static final String databaseURL = "jdbc:h2:mem:test";
     static String bucket;
+
+    @AfterEach
+    void cleanup() {
+        InitTestDatabase.close(databaseURL);
+    }
 
 
     @BeforeEach
@@ -118,7 +125,6 @@ class FinanceRecordDAOImplTest {
         assertEquals(0, records.size());
         records = financeRecordDAO.getIncomeInRange("person", new TimeRange(LocalDateTime.of(2023, 1, 1, 0, 0), LocalDateTime.of(2024, 1, 2, 0, 0)));
         assertEquals(0, records.size());
-        InitTestDatabase.close(databaseURL);
     }
 
     @Test
@@ -188,6 +194,5 @@ class FinanceRecordDAOImplTest {
         assertEquals(0, records.size());
         records = financeRecordDAO.getExpensesInRange("person", new TimeRange(LocalDateTime.of(2023, 1, 1, 0, 0), LocalDateTime.of(2024, 1, 2, 0, 0)));
         assertEquals(0, records.size());
-        InitTestDatabase.close(databaseURL);
     }
 }

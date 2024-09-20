@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class AccountServiceTest {
     private static AccountService<DSLContext> accountService;
 
-    static String databaseURL = "jdbc:h2:mem:test";
+    private static final String databaseURL = "jdbc:h2:mem:test";
     static DatabaseConnection<DSLContext> connection;
 
     @BeforeEach
@@ -91,6 +91,5 @@ class AccountServiceTest {
         }
 
         InitTestDatabase.close(databaseURL);
-        connection.close();
     }
 }
