@@ -10,6 +10,7 @@ import org.amoseman.budgetingbackend.application.auth.Roles;
 import org.amoseman.budgetingbackend.application.auth.User;
 import org.amoseman.budgetingbackend.exception.AccountAlreadyExistsException;
 import org.amoseman.budgetingbackend.exception.AccountDoesNotExistException;
+import org.amoseman.budgetingbackend.exception.UsernameExceedsMaxLengthException;
 import org.amoseman.budgetingbackend.pojo.account.op.CreateAccount;
 import org.amoseman.budgetingbackend.service.AccountService;
 
@@ -24,7 +25,7 @@ public class AccountResource<C> {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createAccount(CreateAccount account) throws AccountAlreadyExistsException {
+    public Response createAccount(CreateAccount account) throws AccountAlreadyExistsException, UsernameExceedsMaxLengthException {
         accountService.addAccount(account);
         return Response.ok().build();
     }

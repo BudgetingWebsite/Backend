@@ -1,6 +1,7 @@
 package org.amoseman.budgetingbackend.service;
 
 import org.amoseman.InitTestDatabase;
+import org.amoseman.budgetingbackend.application.BudgetingConfiguration;
 import org.amoseman.budgetingbackend.application.auth.hashing.ArgonHash;
 import org.amoseman.budgetingbackend.dao.FinanceRecordDAO;
 import org.amoseman.budgetingbackend.dao.impl.sql.AccountDAOImpl;
@@ -47,9 +48,9 @@ class FinanceRecordServiceTest {
 
     void addAlice() {
         try {
-            new AccountService<>(new AccountDAOImpl(connection), new ArgonHash(new SecureRandom(), 16, 16, 2, 8000, 1)).addAccount(new CreateAccount("alice", "password"));
+            new AccountService<>(new BudgetingConfiguration().setMaxUsernameLength(64), new AccountDAOImpl(connection), new ArgonHash(new SecureRandom(), 16, 16, 2, 8000, 1)).addAccount(new CreateAccount("alice", "password"));
         }
-        catch (AccountAlreadyExistsException e) {
+        catch (AccountAlreadyExistsException | UsernameExceedsMaxLengthException e) {
             fail(e);
         }
     }

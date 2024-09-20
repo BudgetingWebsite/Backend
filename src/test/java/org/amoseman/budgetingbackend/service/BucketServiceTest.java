@@ -1,6 +1,7 @@
 package org.amoseman.budgetingbackend.service;
 
 import org.amoseman.InitTestDatabase;
+import org.amoseman.budgetingbackend.application.BudgetingConfiguration;
 import org.amoseman.budgetingbackend.application.auth.hashing.ArgonHash;
 import org.amoseman.budgetingbackend.dao.BucketDAO;
 import org.amoseman.budgetingbackend.dao.FinanceRecordDAO;
@@ -43,16 +44,16 @@ class BucketServiceTest {
         FinanceRecordDAO<DSLContext> financeRecordDAO = new FinanceRecordDAOImpl(connection);
         bucketService = new BucketService<>(bucketDAO, financeRecordDAO);
         financeRecordService = new FinanceRecordService<>(financeRecordDAO);
+        try {
+            new AccountService<>(new BudgetingConfiguration().setMaxUsernameLength(64), new AccountDAOImpl(connection), new ArgonHash(new SecureRandom(), 16, 16, 2, 8000, 1)).addAccount(new CreateAccount("alice", "password"));
+        } catch (AccountAlreadyExistsException | UsernameExceedsMaxLengthException e) {
+            fail(e);
+        }
     }
 
     @Test
     @Order(1)
     void testCRUD() {
-        try {
-            new AccountService<>(new AccountDAOImpl(connection), new ArgonHash(new SecureRandom(), 16, 16, 2, 8000, 1)).addAccount(new CreateAccount("alice", "password"));
-        } catch (AccountAlreadyExistsException e) {
-            fail(e);
-        }
         String uuid = null;
         try {
             uuid = bucketService.addBucket("alice", new BucketInfo("savings", 0.2));
@@ -97,11 +98,6 @@ class BucketServiceTest {
     @Test
     @Order(1)
     void testRecords() {
-        try {
-            new AccountService<>(new AccountDAOImpl(connection), new ArgonHash(new SecureRandom(), 16, 16, 2, 8000, 1)).addAccount(new CreateAccount("alice", "password"));
-        } catch (AccountAlreadyExistsException e) {
-            fail(e);
-        }
         try {
             bucketService.addBucket("alice", new BucketInfo("savings", 0.2));
             bucketService.addBucket("alice", new BucketInfo("expenses", 0.5));

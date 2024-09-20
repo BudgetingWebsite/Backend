@@ -1,6 +1,7 @@
 package org.amoseman.budgetingbackend.service;
 
 import org.amoseman.InitTestDatabase;
+import org.amoseman.budgetingbackend.application.BudgetingConfiguration;
 import org.amoseman.budgetingbackend.application.auth.hashing.ArgonHash;
 import org.amoseman.budgetingbackend.application.auth.hashing.Hash;
 import org.amoseman.budgetingbackend.dao.AccountDAO;
@@ -9,6 +10,7 @@ import org.amoseman.budgetingbackend.database.DatabaseConnection;
 import org.amoseman.budgetingbackend.database.impl.sql.sqlite.DatabaseConnectionImpl;
 import org.amoseman.budgetingbackend.exception.AccountAlreadyExistsException;
 import org.amoseman.budgetingbackend.exception.AccountDoesNotExistException;
+import org.amoseman.budgetingbackend.exception.UsernameExceedsMaxLengthException;
 import org.amoseman.budgetingbackend.pojo.account.Account;
 import org.amoseman.budgetingbackend.pojo.account.op.CreateAccount;
 import org.jooq.DSLContext;
@@ -33,7 +35,7 @@ class AccountServiceTest {
         InitTestDatabase.init(databaseURL, "schema.sql");
         connection = new DatabaseConnectionImpl(databaseURL);
         AccountDAO<DSLContext> accountDAO = new AccountDAOImpl(connection);
-        accountService = new AccountService<>(accountDAO, hash);
+        accountService = new AccountService<>(new BudgetingConfiguration().setMaxUsernameLength(64), accountDAO, hash);
     }
 
     @Test
@@ -41,7 +43,7 @@ class AccountServiceTest {
         try {
             accountService.addAccount(new CreateAccount("alice", "12345"));
         }
-        catch (AccountAlreadyExistsException e) {
+        catch (AccountAlreadyExistsException | UsernameExceedsMaxLengthException e) {
             fail(e);
         }
         Optional<Account> maybe =  accountService.getAccount("alice");

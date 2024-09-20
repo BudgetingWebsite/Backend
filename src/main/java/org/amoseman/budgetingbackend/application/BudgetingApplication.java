@@ -47,7 +47,7 @@ public class BudgetingApplication extends Application<BudgetingConfiguration> {
         FinanceRecordDAO<DSLContext> financeRecordDAO = new FinanceRecordDAOImpl(connection);
         BucketDAO<DSLContext> bucketDAO = new BucketDAOImpl(connection);
 
-        AccountService<DSLContext> accountService = new AccountService<>(accountDAO, hash);
+        AccountService<DSLContext> accountService = new AccountService<>(configuration, accountDAO, hash);
         FinanceRecordService<DSLContext> financeRecordService = new FinanceRecordService<>(financeRecordDAO);
         BucketService<DSLContext> bucketService =  new BucketService<>(bucketDAO, financeRecordDAO);
 

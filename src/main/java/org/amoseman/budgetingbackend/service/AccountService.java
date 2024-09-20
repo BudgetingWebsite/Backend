@@ -1,10 +1,12 @@
 package org.amoseman.budgetingbackend.service;
 
+import org.amoseman.budgetingbackend.application.BudgetingConfiguration;
 import org.amoseman.budgetingbackend.application.auth.hashing.Hash;
 import org.amoseman.budgetingbackend.application.auth.Roles;
 import org.amoseman.budgetingbackend.dao.AccountDAO;
 import org.amoseman.budgetingbackend.exception.AccountAlreadyExistsException;
 import org.amoseman.budgetingbackend.exception.AccountDoesNotExistException;
+import org.amoseman.budgetingbackend.exception.UsernameExceedsMaxLengthException;
 import org.amoseman.budgetingbackend.pojo.account.Account;
 import org.amoseman.budgetingbackend.pojo.account.op.CreateAccount;
 import org.amoseman.budgetingbackend.pojo.account.op.UpdateAccount;
@@ -19,15 +21,18 @@ import java.util.Optional;
  * @param <C> the client type.
  */
 public class AccountService<C> {
+    private final BudgetingConfiguration configuration;
     private final AccountDAO<C> accountDAO;
     private final Hash hash;
 
     /**
      * Instantiate a new account service.
+     * @param configuration the configuration of the budgeting service.
      * @param accountDAO the account data access object to use.
      * @param hash what to use for password hashing.
      */
-    public AccountService(AccountDAO<C> accountDAO, Hash hash) {
+    public AccountService(BudgetingConfiguration configuration, AccountDAO<C> accountDAO, Hash hash) {
+        this.configuration = configuration;
         this.accountDAO = accountDAO;
         this.hash = hash;
     }
@@ -37,7 +42,10 @@ public class AccountService<C> {
      * @param usernamePassword the username and password of the new account.
      * @throws AccountAlreadyExistsException if the username is already in use.
      */
-    public void addAccount(CreateAccount usernamePassword) throws AccountAlreadyExistsException {
+    public void addAccount(CreateAccount usernamePassword) throws AccountAlreadyExistsException, UsernameExceedsMaxLengthException {
+        if (usernamePassword.getUsername().length() > configuration.getMaxUsernameLength()) {
+            throw new UsernameExceedsMaxLengthException(configuration.getMaxUsernameLength() , usernamePassword.getUsername());
+        }
         byte[] salt = hash.salt();
         String salt64 = Base64.toBase64String(salt);
         String hash64 = hash.hash(usernamePassword.getPassword(), salt);
