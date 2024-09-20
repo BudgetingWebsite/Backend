@@ -22,8 +22,11 @@ import org.amoseman.budgetingbackend.resource.AccountResource;
 import org.amoseman.budgetingbackend.resource.FinanceRecordResource;
 import org.amoseman.budgetingbackend.resource.BucketResource;
 import org.amoseman.budgetingbackend.service.AccountService;
-import org.amoseman.budgetingbackend.service.FinanceRecordService;
 import org.amoseman.budgetingbackend.service.BucketService;
+import org.amoseman.budgetingbackend.service.FinanceRecordService;
+import org.amoseman.budgetingbackend.service.impl.AccountServiceImpl;
+import org.amoseman.budgetingbackend.service.impl.FinanceRecordServiceImpl;
+import org.amoseman.budgetingbackend.service.impl.BucketServiceImpl;
 import org.amoseman.budgetingbackend.util.Now;
 import org.bouncycastle.util.encoders.Base64;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
@@ -47,9 +50,9 @@ public class BudgetingApplication extends Application<BudgetingConfiguration> {
         FinanceRecordDAO<DSLContext> financeRecordDAO = new FinanceRecordDAOImpl(connection);
         BucketDAO<DSLContext> bucketDAO = new BucketDAOImpl(connection);
 
-        AccountService<DSLContext> accountService = new AccountService<>(configuration, accountDAO, hash);
-        FinanceRecordService<DSLContext> financeRecordService = new FinanceRecordService<>(financeRecordDAO);
-        BucketService<DSLContext> bucketService =  new BucketService<>(bucketDAO, financeRecordDAO);
+        AccountService<DSLContext> accountService = new AccountServiceImpl<>(configuration, accountDAO, hash);
+        FinanceRecordService<DSLContext> financeRecordService = new FinanceRecordServiceImpl<>(financeRecordDAO);
+        BucketService<DSLContext> bucketService =  new BucketServiceImpl<>(bucketDAO, financeRecordDAO);
 
         AccountResource<DSLContext> accountResource = new AccountResource<>(accountService);
         FinanceRecordResource<DSLContext> financeRecordResource = new FinanceRecordResource<>(financeRecordService);

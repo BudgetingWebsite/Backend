@@ -14,11 +14,10 @@ import org.amoseman.budgetingbackend.pojo.record.Expense;
 import org.amoseman.budgetingbackend.pojo.record.Income;
 import org.amoseman.budgetingbackend.pojo.record.info.ExpenseInfo;
 import org.amoseman.budgetingbackend.pojo.record.info.IncomeInfo;
-import org.amoseman.budgetingbackend.service.AccountService;
-import org.amoseman.budgetingbackend.service.BucketService;
+import org.amoseman.budgetingbackend.service.impl.AccountServiceImpl;
+import org.amoseman.budgetingbackend.service.impl.BucketServiceImpl;
 import org.amoseman.budgetingbackend.util.Now;
 import org.jooq.DSLContext;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,12 +47,12 @@ class FinanceRecordDAOImplTest {
         DatabaseConnection<DSLContext> connection = new DatabaseConnectionImpl(databaseURL);
         financeRecordDAO = new FinanceRecordDAOImpl(connection);
         try {
-            new AccountService<>(new BudgetingConfiguration().setMaxUsernameLength(64), new AccountDAOImpl(connection), new ArgonHash(new SecureRandom(), 16, 16, 2, 8000, 1)).addAccount(new CreateAccount("person", "password"));
+            new AccountServiceImpl<>(new BudgetingConfiguration().setMaxUsernameLength(64), new AccountDAOImpl(connection), new ArgonHash(new SecureRandom(), 16, 16, 2, 8000, 1)).addAccount(new CreateAccount("person", "password"));
         } catch (AccountAlreadyExistsException | UsernameExceedsMaxLengthException e) {
             fail(e);
         }
         try {
-            bucket = new BucketService<>(new BucketDAOImpl(connection), financeRecordDAO).addBucket("person", new BucketInfo("bucket", 0.5));
+            bucket = new BucketServiceImpl<>(new BucketDAOImpl(connection), financeRecordDAO).addBucket("person", new BucketInfo("bucket", 0.5));
         }
         catch (TotalBucketShareExceededException | BucketAlreadyExistsException e) {
             fail(e);

@@ -16,6 +16,9 @@ import org.amoseman.budgetingbackend.pojo.bucket.Bucket;
 import org.amoseman.budgetingbackend.pojo.bucket.BucketInfo;
 import org.amoseman.budgetingbackend.pojo.record.info.ExpenseInfo;
 import org.amoseman.budgetingbackend.pojo.record.info.IncomeInfo;
+import org.amoseman.budgetingbackend.service.impl.AccountServiceImpl;
+import org.amoseman.budgetingbackend.service.impl.BucketServiceImpl;
+import org.amoseman.budgetingbackend.service.impl.FinanceRecordServiceImpl;
 import org.jooq.DSLContext;
 import org.junit.jupiter.api.*;
 
@@ -25,10 +28,10 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class BucketServiceTest {
+class BucketServiceImplTest {
     private static final String databaseURL = "jdbc:h2:mem:test";
-    private static BucketService<DSLContext> bucketService;
-    private static FinanceRecordService<DSLContext> financeRecordService;
+    private static BucketServiceImpl<DSLContext> bucketService;
+    private static FinanceRecordServiceImpl<DSLContext> financeRecordService;
     static DatabaseConnection<DSLContext> connection;
 
     @AfterEach
@@ -42,10 +45,10 @@ class BucketServiceTest {
         connection = new DatabaseConnectionImpl(databaseURL);
         BucketDAO<DSLContext> bucketDAO = new BucketDAOImpl(connection);
         FinanceRecordDAO<DSLContext> financeRecordDAO = new FinanceRecordDAOImpl(connection);
-        bucketService = new BucketService<>(bucketDAO, financeRecordDAO);
-        financeRecordService = new FinanceRecordService<>(financeRecordDAO);
+        bucketService = new BucketServiceImpl<>(bucketDAO, financeRecordDAO);
+        financeRecordService = new FinanceRecordServiceImpl<>(financeRecordDAO);
         try {
-            new AccountService<>(new BudgetingConfiguration().setMaxUsernameLength(64), new AccountDAOImpl(connection), new ArgonHash(new SecureRandom(), 16, 16, 2, 8000, 1)).addAccount(new CreateAccount("alice", "password"));
+            new AccountServiceImpl<>(new BudgetingConfiguration().setMaxUsernameLength(64), new AccountDAOImpl(connection), new ArgonHash(new SecureRandom(), 16, 16, 2, 8000, 1)).addAccount(new CreateAccount("alice", "password"));
         } catch (AccountAlreadyExistsException | UsernameExceedsMaxLengthException e) {
             fail(e);
         }

@@ -16,6 +16,9 @@ import org.amoseman.budgetingbackend.pojo.record.Expense;
 import org.amoseman.budgetingbackend.pojo.record.Income;
 import org.amoseman.budgetingbackend.pojo.record.info.ExpenseInfo;
 import org.amoseman.budgetingbackend.pojo.record.info.IncomeInfo;
+import org.amoseman.budgetingbackend.service.impl.AccountServiceImpl;
+import org.amoseman.budgetingbackend.service.impl.BucketServiceImpl;
+import org.amoseman.budgetingbackend.service.impl.FinanceRecordServiceImpl;
 import org.jooq.DSLContext;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,9 +30,9 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class FinanceRecordServiceTest {
+class FinanceRecordServiceImplTest {
     private static final String databaseURL = "jdbc:h2:mem:test";
-    private static FinanceRecordService<DSLContext> financeRecordService;
+    private static FinanceRecordServiceImpl<DSLContext> financeRecordService;
     static FinanceRecordDAO<DSLContext> financeRecordDAO;
     static DatabaseConnection<DSLContext> connection;
 
@@ -38,7 +41,7 @@ class FinanceRecordServiceTest {
         InitTestDatabase.init(databaseURL, "schema.sql");
         connection = new DatabaseConnectionImpl(databaseURL);
         financeRecordDAO = new FinanceRecordDAOImpl(connection);
-        financeRecordService = new FinanceRecordService<>(financeRecordDAO);
+        financeRecordService = new FinanceRecordServiceImpl<>(financeRecordDAO);
     }
 
     @AfterEach
@@ -48,7 +51,7 @@ class FinanceRecordServiceTest {
 
     void addAlice() {
         try {
-            new AccountService<>(new BudgetingConfiguration().setMaxUsernameLength(64), new AccountDAOImpl(connection), new ArgonHash(new SecureRandom(), 16, 16, 2, 8000, 1)).addAccount(new CreateAccount("alice", "password"));
+            new AccountServiceImpl<>(new BudgetingConfiguration().setMaxUsernameLength(64), new AccountDAOImpl(connection), new ArgonHash(new SecureRandom(), 16, 16, 2, 8000, 1)).addAccount(new CreateAccount("alice", "password"));
         }
         catch (AccountAlreadyExistsException | UsernameExceedsMaxLengthException e) {
             fail(e);
@@ -131,7 +134,7 @@ class FinanceRecordServiceTest {
         addAlice();
         String bucket = null;
         try {
-            bucket = new BucketService<>(new BucketDAOImpl(connection), financeRecordDAO).addBucket("alice", new BucketInfo("bucket", 0.5));
+            bucket = new BucketServiceImpl<>(new BucketDAOImpl(connection), financeRecordDAO).addBucket("alice", new BucketInfo("bucket", 0.5));
         }
         catch (TotalBucketShareExceededException | BucketAlreadyExistsException e) {
             fail(e);

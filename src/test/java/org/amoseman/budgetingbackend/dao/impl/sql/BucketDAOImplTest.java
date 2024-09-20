@@ -13,11 +13,10 @@ import org.amoseman.budgetingbackend.exception.UsernameExceedsMaxLengthException
 import org.amoseman.budgetingbackend.pojo.account.op.CreateAccount;
 import org.amoseman.budgetingbackend.pojo.bucket.Bucket;
 import org.amoseman.budgetingbackend.pojo.bucket.BucketInfo;
-import org.amoseman.budgetingbackend.service.AccountService;
+import org.amoseman.budgetingbackend.service.impl.AccountServiceImpl;
 import org.amoseman.budgetingbackend.util.Now;
 import org.jooq.DSLContext;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.security.SecureRandom;
@@ -43,7 +42,7 @@ class BucketDAOImplTest {
         BucketDAO<DSLContext> bucketDAO = new BucketDAOImpl(connection);
 
         try {
-            new AccountService<>(new BudgetingConfiguration().setMaxUsernameLength(64), new AccountDAOImpl(connection), new ArgonHash(new SecureRandom(), 16, 16, 2, 8000, 1)).addAccount(new CreateAccount("alice", "password"));
+            new AccountServiceImpl<>(new BudgetingConfiguration().setMaxUsernameLength(64), new AccountDAOImpl(connection), new ArgonHash(new SecureRandom(), 16, 16, 2, 8000, 1)).addAccount(new CreateAccount("alice", "password"));
         } catch (AccountAlreadyExistsException | UsernameExceedsMaxLengthException e) {
             fail(e);
         }

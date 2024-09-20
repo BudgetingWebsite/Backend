@@ -13,6 +13,7 @@ import org.amoseman.budgetingbackend.exception.AccountDoesNotExistException;
 import org.amoseman.budgetingbackend.exception.UsernameExceedsMaxLengthException;
 import org.amoseman.budgetingbackend.pojo.account.Account;
 import org.amoseman.budgetingbackend.pojo.account.op.CreateAccount;
+import org.amoseman.budgetingbackend.service.impl.AccountServiceImpl;
 import org.jooq.DSLContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,8 +23,8 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class AccountServiceTest {
-    private static AccountService<DSLContext> accountService;
+class AccountServiceImplTest {
+    private static AccountServiceImpl<DSLContext> accountService;
 
     private static final String databaseURL = "jdbc:h2:mem:test";
     static DatabaseConnection<DSLContext> connection;
@@ -35,7 +36,7 @@ class AccountServiceTest {
         InitTestDatabase.init(databaseURL, "schema.sql");
         connection = new DatabaseConnectionImpl(databaseURL);
         AccountDAO<DSLContext> accountDAO = new AccountDAOImpl(connection);
-        accountService = new AccountService<>(new BudgetingConfiguration().setMaxUsernameLength(64), accountDAO, hash);
+        accountService = new AccountServiceImpl<>(new BudgetingConfiguration().setMaxUsernameLength(64), accountDAO, hash);
     }
 
     @Test
