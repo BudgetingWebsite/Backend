@@ -1,7 +1,6 @@
 package org.amoseman.budgetingbackend.model.record;
 
 
-import org.amoseman.budgetingbackend.exception.NegativeValueException;
 import org.amoseman.budgetingbackend.model.OwnedEntity;
 
 import java.beans.ConstructorProperties;
@@ -26,13 +25,13 @@ public abstract class FinanceRecord extends OwnedEntity {
      * @param occurred when the record occurred in reality.
      * @param category the category of the record.
      * @param description the description of the record.
-     * @throws NegativeValueException if the dollar amount provided is negative.
+     * @throws IllegalArgumentException if the dollar amount provided is negative.
      */
     @ConstructorProperties({"uuid", "created", "updated", "owner", "amount", "occurred", "category", "description"})
-    public FinanceRecord(String uuid, LocalDateTime created, LocalDateTime updated, String owner, long amount, LocalDateTime occurred, String category, String description) throws NegativeValueException {
+    public FinanceRecord(String uuid, LocalDateTime created, LocalDateTime updated, String owner, long amount, LocalDateTime occurred, String category, String description) throws IllegalArgumentException {
         super(uuid, created, updated, owner);
         if (amount < 0) {
-            throw new NegativeValueException(amount);
+            throw new IllegalArgumentException(String.format("Finance records must have amounts 0 or greater, not the negative value %d", amount));
         }
         this.amount = amount;
         this.occurred = occurred;

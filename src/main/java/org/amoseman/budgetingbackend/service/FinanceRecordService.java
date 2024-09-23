@@ -4,7 +4,6 @@ package org.amoseman.budgetingbackend.service;
 import org.amoseman.budgetingbackend.dao.FinanceRecordDAO;
 import org.amoseman.budgetingbackend.exception.FinanceRecordAlreadyExistsException;
 import org.amoseman.budgetingbackend.exception.FinanceRecordDoesNotExistException;
-import org.amoseman.budgetingbackend.exception.NegativeValueException;
 import org.amoseman.budgetingbackend.model.record.Expense;
 import org.amoseman.budgetingbackend.model.record.Income;
 import org.amoseman.budgetingbackend.model.record.info.ExpenseInfo;
@@ -33,9 +32,9 @@ public abstract class FinanceRecordService<C> {
      * @param create the income info.
      * @return the UUID of the new record.
      * @throws FinanceRecordAlreadyExistsException if the record already exists.
-     * @throws NegativeValueException if the amount provided in the record is negative.
+     * @throws IllegalArgumentException if the amount provided in the record is negative.
      */
-    public abstract String addIncome(String user, IncomeInfo create) throws FinanceRecordAlreadyExistsException, NegativeValueException;
+    public abstract String addIncome(String user, IncomeInfo create) throws FinanceRecordAlreadyExistsException, IllegalArgumentException;
 
     /**
      * Add an expense record.
@@ -43,9 +42,9 @@ public abstract class FinanceRecordService<C> {
      * @param create the expense info.
      * @return the UUID of the new record.
      * @throws FinanceRecordAlreadyExistsException if the record already exists.
-     * @throws NegativeValueException if the amount provided in the record is negative.
+     * @throws IllegalArgumentException if the amount provided in the record is negative.
      */
-    public abstract String addExpense(String user, ExpenseInfo create) throws FinanceRecordAlreadyExistsException, NegativeValueException;
+    public abstract String addExpense(String user, ExpenseInfo create) throws FinanceRecordAlreadyExistsException, IllegalArgumentException;
 
     /**
      * Remove an income record.
@@ -110,18 +109,18 @@ public abstract class FinanceRecordService<C> {
      * @param user the UUID of the user.
      * @param uuid the UUID of the record.
      * @param update the updated record information.
-     * @throws NegativeValueException if amount in the updated is negative.
+     * @throws IllegalArgumentException if amount in the updated information is negative.
      * @throws FinanceRecordDoesNotExistException if the record does not exist.
      */
-    public abstract void updateIncome(String user, String uuid, IncomeInfo update) throws NegativeValueException, FinanceRecordDoesNotExistException;
+    public abstract void updateIncome(String user, String uuid, IncomeInfo update) throws IllegalArgumentException, FinanceRecordDoesNotExistException;
 
     /**
      * Update an expense record.
      * @param user the UUID of the user.
      * @param uuid the UUID of the record.
      * @param update the updated record information.
-     * @throws NegativeValueException if amount in the updated is negative.
+     * @throws IllegalArgumentException if amount in the updated information is negative.
      * @throws FinanceRecordDoesNotExistException if the record does not exist.
      */
-    public abstract void updateExpense(String user, String uuid, ExpenseInfo update) throws NegativeValueException, FinanceRecordDoesNotExistException;
+    public abstract void updateExpense(String user, String uuid, ExpenseInfo update) throws IllegalArgumentException, FinanceRecordDoesNotExistException;
 }

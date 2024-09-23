@@ -1,6 +1,5 @@
 package org.amoseman.budgetingbackend.model.record;
 
-import org.amoseman.budgetingbackend.exception.NegativeValueException;
 import org.amoseman.budgetingbackend.model.record.info.ExpenseInfo;
 
 import java.beans.ConstructorProperties;
@@ -23,10 +22,10 @@ public class Expense extends FinanceRecord {
      * @param category the category of the expense.
      * @param description the description of the expense.
      * @param bucket the bucket associated with the expense.
-     * @throws NegativeValueException if the dollar amount provided is negative.
+     * @throws IllegalArgumentException if the dollar amount provided is negative.
      */
     @ConstructorProperties({"uuid", "created", "updated", "owner", "amount", "occurred", "category", "description", "bucket"})
-    public Expense(String uuid, LocalDateTime created, LocalDateTime updated, String owner, long amount, LocalDateTime occurred, String category, String description, String bucket) throws NegativeValueException {
+    public Expense(String uuid, LocalDateTime created, LocalDateTime updated, String owner, long amount, LocalDateTime occurred, String category, String description, String bucket) throws IllegalArgumentException {
         super(uuid, created, updated, owner, amount, occurred, category, description);
         this.bucket = bucket;
     }
@@ -36,9 +35,9 @@ public class Expense extends FinanceRecord {
      * @param expense the expense.
      * @param update the updated information.
      * @param updated when this update occurred.
-     * @throws NegativeValueException if the provided amount is negative.
+     * @throws IllegalArgumentException if the provided amount is negative.
      */
-    public Expense(Expense expense, ExpenseInfo update, LocalDateTime updated) throws NegativeValueException {
+    public Expense(Expense expense, ExpenseInfo update, LocalDateTime updated) throws IllegalArgumentException {
         super(
                 expense.uuid,
                 expense.created,

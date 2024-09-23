@@ -182,7 +182,7 @@ public class FinanceRecordDAOImpl extends FinanceRecordDAO<DSLContext> {
     }
 
     @Override
-    public void updateIncome(String user, String uuid, IncomeInfo update) throws FinanceRecordDoesNotExistException, NegativeValueException {
+    public void updateIncome(String user, String uuid, IncomeInfo update) throws FinanceRecordDoesNotExistException, IllegalArgumentException {
         LocalDateTime now = Now.get();
         Optional<Income> maybe = getIncome(user, uuid);
         if (maybe.isEmpty()) {
@@ -195,7 +195,7 @@ public class FinanceRecordDAOImpl extends FinanceRecordDAO<DSLContext> {
     }
 
     @Override
-    public void updateExpense(String user, String uuid, ExpenseInfo update) throws FinanceRecordDoesNotExistException, NegativeValueException {
+    public void updateExpense(String user, String uuid, ExpenseInfo update) throws FinanceRecordDoesNotExistException, IllegalArgumentException {
         LocalDateTime now = Now.get();
         Optional<Expense> maybe = getExpense(user, uuid);
         if (maybe.isEmpty()) {

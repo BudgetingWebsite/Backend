@@ -1,6 +1,5 @@
 package org.amoseman.budgetingbackend.model.record;
 
-import org.amoseman.budgetingbackend.exception.NegativeValueException;
 import org.amoseman.budgetingbackend.model.record.info.IncomeInfo;
 
 import java.beans.ConstructorProperties;
@@ -21,10 +20,10 @@ public class Income extends FinanceRecord {
      * @param occurred when the income occurred in reality.
      * @param category the category of the income.
      * @param description the description of the income.
-     * @throws NegativeValueException if the dollar amount provided is negative.
+     * @throws IllegalArgumentException if the dollar amount provided is negative.
      */
     @ConstructorProperties({"uuid", "created", "updated", "owner", "amount", "occurred", "category", "description"})
-    public Income(String uuid, LocalDateTime created, LocalDateTime updated, String owner, long amount, LocalDateTime occurred, String category, String description) throws NegativeValueException {
+    public Income(String uuid, LocalDateTime created, LocalDateTime updated, String owner, long amount, LocalDateTime occurred, String category, String description) throws IllegalArgumentException {
         super(uuid, created, updated, owner, amount, occurred, category, description);
     }
 
@@ -33,9 +32,9 @@ public class Income extends FinanceRecord {
      * @param income the income.
      * @param update the updated information.
      * @param updated when this update occurred.
-     * @throws NegativeValueException if the provided amount is negative.
+     * @throws IllegalArgumentException if the provided amount is negative.
      */
-    public Income(Income income, IncomeInfo update, LocalDateTime updated) throws NegativeValueException {
+    public Income(Income income, IncomeInfo update, LocalDateTime updated) throws IllegalArgumentException {
         super(
                 income.uuid,
                 income.created,

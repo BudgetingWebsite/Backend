@@ -112,7 +112,7 @@ class BucketServiceImplTest {
         try {
             financeRecordService.addIncome("alice", new IncomeInfo(200, 2024, 1, 1, "", ""));
         }
-        catch (FinanceRecordAlreadyExistsException | NegativeValueException e) {
+        catch (FinanceRecordAlreadyExistsException | IllegalArgumentException e) {
             fail(e);
         }
 
@@ -142,7 +142,7 @@ class BucketServiceImplTest {
         try {
             financeRecordService.addExpense("alice", new ExpenseInfo(100, 2024, 1, 1, "", "", savings.uuid));
         }
-        catch (NegativeValueException | FinanceRecordAlreadyExistsException e) {
+        catch (IllegalArgumentException | FinanceRecordAlreadyExistsException e) {
             fail(e);
         }
         buckets = bucketService.getBuckets("alice");

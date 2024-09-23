@@ -76,7 +76,7 @@ class FinanceRecordDAOImplTest {
                     "description"
             );
         }
-        catch (NegativeValueException e) {
+        catch (IllegalArgumentException e) {
             fail(e);
         }
         try {
@@ -105,7 +105,7 @@ class FinanceRecordDAOImplTest {
         try {
             financeRecordDAO.updateIncome("person", "12345", new IncomeInfo(0, 2024, 1, 1, "", ""));
         }
-        catch (FinanceRecordDoesNotExistException | NegativeValueException e) {
+        catch (FinanceRecordDoesNotExistException | IllegalArgumentException e) {
             fail(e);
         }
         maybe = financeRecordDAO.getIncome("person", "12345");
@@ -145,7 +145,7 @@ class FinanceRecordDAOImplTest {
                     bucket
             );
         }
-        catch (NegativeValueException e) {
+        catch (IllegalArgumentException e) {
             fail(e);
         }
         try {
@@ -175,7 +175,7 @@ class FinanceRecordDAOImplTest {
         try {
             financeRecordDAO.updateExpense("person", "12345", new ExpenseInfo(0, 2024, 1, 1, "", "", bucket));
         }
-        catch (FinanceRecordDoesNotExistException | NegativeValueException e) {
+        catch (FinanceRecordDoesNotExistException | IllegalArgumentException e) {
             fail(e);
         }
         maybe = financeRecordDAO.getExpense("person", "12345");

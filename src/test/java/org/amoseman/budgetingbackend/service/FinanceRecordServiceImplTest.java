@@ -71,7 +71,7 @@ class FinanceRecordServiceImplTest {
                     "description"
             ));
         }
-        catch (FinanceRecordAlreadyExistsException | NegativeValueException e) {
+        catch (FinanceRecordAlreadyExistsException | IllegalArgumentException e) {
             fail(e);
         }
 
@@ -95,7 +95,7 @@ class FinanceRecordServiceImplTest {
         try {
             financeRecordService.updateIncome("alice", income.uuid, new IncomeInfo(0, 2024, 1, 1, "", ""));
         }
-        catch (NegativeValueException | FinanceRecordDoesNotExistException e) {
+        catch (IllegalArgumentException | FinanceRecordDoesNotExistException e) {
             fail(e);
         }
         records = financeRecordService.getIncome(
@@ -150,7 +150,7 @@ class FinanceRecordServiceImplTest {
                     bucket
             ));
         }
-        catch (FinanceRecordAlreadyExistsException | NegativeValueException e) {
+        catch (FinanceRecordAlreadyExistsException | IllegalArgumentException e) {
             fail(e);
         }
 
@@ -175,7 +175,7 @@ class FinanceRecordServiceImplTest {
         try {
             financeRecordService.updateExpense("alice", expense.uuid, new ExpenseInfo(0, 2024, 1, 1, "", "", bucket));
         }
-        catch (NegativeValueException | FinanceRecordDoesNotExistException e) {
+        catch (IllegalArgumentException | FinanceRecordDoesNotExistException e) {
             fail(e);
         }
         records = financeRecordService.getExpenses(

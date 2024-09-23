@@ -8,7 +8,6 @@ import jakarta.ws.rs.core.Response;
 import org.amoseman.budgetingbackend.application.auth.User;
 import org.amoseman.budgetingbackend.exception.FinanceRecordAlreadyExistsException;
 import org.amoseman.budgetingbackend.exception.FinanceRecordDoesNotExistException;
-import org.amoseman.budgetingbackend.exception.NegativeValueException;
 import org.amoseman.budgetingbackend.model.record.Expense;
 import org.amoseman.budgetingbackend.model.record.Income;
 import org.amoseman.budgetingbackend.model.record.info.ExpenseInfo;
@@ -31,7 +30,7 @@ public class FinanceRecordResource<C> {
     @Consumes(MediaType.APPLICATION_JSON)
     @PermitAll
     @Path("/income")
-    public Response addIncome(@Auth User user, IncomeInfo create) throws NegativeValueException, FinanceRecordAlreadyExistsException, DateTimeException {
+    public Response addIncome(@Auth User user, IncomeInfo create) throws IllegalArgumentException, FinanceRecordAlreadyExistsException, DateTimeException {
         String uuid = financeRecordService.addIncome(user.getName(), create);
         return Response.ok(uuid).build();
     }
@@ -40,7 +39,7 @@ public class FinanceRecordResource<C> {
     @Consumes(MediaType.APPLICATION_JSON)
     @PermitAll
     @Path("/expense")
-    public Response addExpense(@Auth User user, ExpenseInfo create) throws NegativeValueException, FinanceRecordAlreadyExistsException, DateTimeException {
+    public Response addExpense(@Auth User user, ExpenseInfo create) throws IllegalArgumentException, FinanceRecordAlreadyExistsException, DateTimeException {
         String uuid = financeRecordService.addExpense(user.getName(), create);
         return Response.ok(uuid).build();
     }
@@ -107,7 +106,7 @@ public class FinanceRecordResource<C> {
     @PermitAll
     @Path("/income/{uuid}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateIncome(@Auth User user, @PathParam("uuid") String uuid, IncomeInfo update) throws NegativeValueException, FinanceRecordDoesNotExistException {
+    public Response updateIncome(@Auth User user, @PathParam("uuid") String uuid, IncomeInfo update) throws IllegalArgumentException, FinanceRecordDoesNotExistException {
         financeRecordService.updateIncome(user.getName(), uuid, update);
         return Response.ok().build();
     }
@@ -116,7 +115,7 @@ public class FinanceRecordResource<C> {
     @PermitAll
     @Path("/expense/{uuid}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateExpense(@Auth User user, @PathParam("uuid") String uuid, ExpenseInfo update) throws NegativeValueException, FinanceRecordDoesNotExistException {
+    public Response updateExpense(@Auth User user, @PathParam("uuid") String uuid, ExpenseInfo update) throws IllegalArgumentException, FinanceRecordDoesNotExistException {
         financeRecordService.updateExpense(user.getName(), uuid, update);
         return Response.ok().build();
     }

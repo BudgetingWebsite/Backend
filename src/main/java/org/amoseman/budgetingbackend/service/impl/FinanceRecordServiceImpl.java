@@ -20,7 +20,7 @@ public class FinanceRecordServiceImpl<C> extends FinanceRecordService<C> {
     }
 
     @Override
-    public String addIncome(String user, IncomeInfo create) throws FinanceRecordAlreadyExistsException, NegativeValueException {
+    public String addIncome(String user, IncomeInfo create) throws FinanceRecordAlreadyExistsException, IllegalArgumentException {
         String uuid = UUID.randomUUID().toString();
         LocalDateTime now = Now.get();
         LocalDateTime occurred = LocalDateTime.of(create.getYear(), create.getMonth(), create.getDay(), 0, 0);
@@ -39,7 +39,7 @@ public class FinanceRecordServiceImpl<C> extends FinanceRecordService<C> {
     }
 
     @Override
-    public String addExpense(String user, ExpenseInfo create) throws FinanceRecordAlreadyExistsException, NegativeValueException {
+    public String addExpense(String user, ExpenseInfo create) throws FinanceRecordAlreadyExistsException, IllegalArgumentException {
         String uuid = UUID.randomUUID().toString();
         LocalDateTime now = Now.get();
         LocalDateTime occurred = LocalDateTime.of(create.getYear(), create.getMonth(), create.getDay(), 0, 0);
@@ -99,12 +99,12 @@ public class FinanceRecordServiceImpl<C> extends FinanceRecordService<C> {
     }
 
     @Override
-    public void updateIncome(String user, String uuid, IncomeInfo update) throws NegativeValueException, FinanceRecordDoesNotExistException {
+    public void updateIncome(String user, String uuid, IncomeInfo update) throws IllegalArgumentException, FinanceRecordDoesNotExistException {
         financeRecordDAO.updateIncome(user, uuid, update);
     }
 
     @Override
-    public void updateExpense(String user, String uuid, ExpenseInfo update) throws NegativeValueException, FinanceRecordDoesNotExistException {
+    public void updateExpense(String user, String uuid, ExpenseInfo update) throws IllegalArgumentException, FinanceRecordDoesNotExistException {
         financeRecordDAO.updateExpense(user, uuid, update);
     }
 }

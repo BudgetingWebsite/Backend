@@ -94,7 +94,7 @@ public class BudgetingApplication extends Application<BudgetingConfiguration> {
     private void registerExceptionMappers(Environment environment) {
         environment.jersey().register(new IdentifierAlreadyExistsExceptionMapper());
         environment.jersey().register(new IdentifierDoesNotExistExceptionMapper());
-        environment.jersey().register(new NegativeValueExceptionMapper());
+        environment.jersey().register(new IllegalArgumentExceptionMapper());
         environment.jersey().register(new TotalBucketShareExceededExceptionMapper());
         environment.jersey().register(new DateTimeExceptionMapper());
     }
