@@ -23,15 +23,17 @@ public final class Splitter {
         double[] loss = new double[len];
         double totalLoss = 0;
         List<Integer> indices = new ArrayList<>();
+        long remainder = amount;
         for (int i = 0; i < len; i++) {
             double raw = buckets.get(i).share * amount;
             rounded[i] = Math.round(raw);
             loss[i] = raw - rounded[i];
             totalLoss += loss[i];
             indices.add(i);
+            remainder -= rounded[i];
         }
         indices = sortIndices(indices, loss);
-        return toSplit(rounded, indices, amount, totalLoss);
+        return toSplit(rounded, indices, remainder, totalLoss);
     }
 
     private static Split toSplit(long[] rounded, List<Integer> indices, long remainder, double totalLoss) {
@@ -41,7 +43,7 @@ public final class Splitter {
             remainingLoss--;
             index++;
             rounded[indices.get(index)]++;
-            remainder -= rounded[index];
+            remainder--;
         }
         return new Split(rounded, remainder);
     }
