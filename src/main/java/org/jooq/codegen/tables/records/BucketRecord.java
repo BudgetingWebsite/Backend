@@ -20,84 +20,84 @@ public class BucketRecord extends UpdatableRecordImpl<BucketRecord> {
     private static final long serialVersionUID = 1L;
 
     /**
-     * Setter for <code>bucket.uuid</code>.
+     * Setter for <code>BUCKET.UUID</code>.
      */
     public void setUuid(String value) {
         set(0, value);
     }
 
     /**
-     * Getter for <code>bucket.uuid</code>.
+     * Getter for <code>BUCKET.UUID</code>.
      */
     public String getUuid() {
         return (String) get(0);
     }
 
     /**
-     * Setter for <code>bucket.owner</code>.
+     * Setter for <code>BUCKET.OWNER</code>.
      */
     public void setOwner(String value) {
         set(1, value);
     }
 
     /**
-     * Getter for <code>bucket.owner</code>.
+     * Getter for <code>BUCKET.OWNER</code>.
      */
     public String getOwner() {
         return (String) get(1);
     }
 
     /**
-     * Setter for <code>bucket.name</code>.
+     * Setter for <code>BUCKET.NAME</code>.
      */
     public void setName(String value) {
         set(2, value);
     }
 
     /**
-     * Getter for <code>bucket.name</code>.
+     * Getter for <code>BUCKET.NAME</code>.
      */
     public String getName() {
         return (String) get(2);
     }
 
     /**
-     * Setter for <code>bucket.share</code>.
+     * Setter for <code>BUCKET.SHARE</code>.
      */
     public void setShare(Double value) {
         set(3, value);
     }
 
     /**
-     * Getter for <code>bucket.share</code>.
+     * Getter for <code>BUCKET.SHARE</code>.
      */
     public Double getShare() {
         return (Double) get(3);
     }
 
     /**
-     * Setter for <code>bucket.created</code>.
+     * Setter for <code>BUCKET.CREATED</code>.
      */
     public void setCreated(LocalDateTime value) {
         set(4, value);
     }
 
     /**
-     * Getter for <code>bucket.created</code>.
+     * Getter for <code>BUCKET.CREATED</code>.
      */
     public LocalDateTime getCreated() {
         return (LocalDateTime) get(4);
     }
 
     /**
-     * Setter for <code>bucket.updated</code>.
+     * Setter for <code>BUCKET.UPDATED</code>.
      */
     public void setUpdated(LocalDateTime value) {
         set(5, value);
     }
 
     /**
-     * Getter for <code>bucket.updated</code>.
+     * Getter for <code>BUCKET.UPDATED</code>.
      */
     public LocalDateTime getUpdated() {
         return (LocalDateTime) get(5);

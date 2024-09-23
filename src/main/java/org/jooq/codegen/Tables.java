@@ -17,22 +17,22 @@ import org.jooq.codegen.tables.Income;
 public class Tables {
 
     /**
-     * The table <code>account</code>.
+     * The table <code>ACCOUNT</code>.
      */
     public static final Account ACCOUNT = Account.ACCOUNT;
 
     /**
-     * The table <code>bucket</code>.
+     * The table <code>BUCKET</code>.
      */
     public static final Bucket BUCKET = Bucket.BUCKET;
 
     /**
-     * The table <code>expense</code>.
+     * The table <code>EXPENSE</code>.
      */
     public static final Expense EXPENSE = Expense.EXPENSE;
 
     /**
-     * The table <code>income</code>.
+     * The table <code>INCOME</code>.
      */
     public static final Income INCOME = Income.INCOME;
 }

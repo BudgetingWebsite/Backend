@@ -44,7 +44,7 @@ public class Income extends TableImpl<IncomeRecord> {
     private static final long serialVersionUID = 1L;
 
     /**
-     * The reference instance of <code>income</code>
+     * The reference instance of <code>INCOME</code>
      */
     public static final Income INCOME = new Income();
 
@@ -57,44 +57,44 @@ public class Income extends TableImpl<IncomeRecord> {
     }
 
     /**
-     * The column <code>income.uuid</code>.
+     * The column <code>INCOME.UUID</code>.
      */
-    public final TableField<IncomeRecord, String> UUID = createField(DSL.name("uuid"), SQLDataType.VARCHAR(1000), this, "");
+    public final TableField<IncomeRecord, String> UUID = createField(DSL.name("UUID"), SQLDataType.VARCHAR(1000), this, "");
 
     /**
-     * The column <code>income.owner</code>.
+     * The column <code>INCOME.OWNER</code>.
      */
-    public final TableField<IncomeRecord, String> OWNER = createField(DSL.name("owner"), SQLDataType.VARCHAR(1000), this, "");
+    public final TableField<IncomeRecord, String> OWNER = createField(DSL.name("OWNER"), SQLDataType.VARCHAR(1000), this, "");
 
     /**
-     * The column <code>income.amount</code>.
+     * The column <code>INCOME.AMOUNT</code>.
      */
-    public final TableField<IncomeRecord, Integer> AMOUNT = createField(DSL.name("amount"), SQLDataType.INTEGER, this, "");
+    public final TableField<IncomeRecord, Integer> AMOUNT = createField(DSL.name("AMOUNT"), SQLDataType.INTEGER, this, "");
 
     /**
-     * The column <code>income.occurred</code>.
+     * The column <code>INCOME.OCCURRED</code>.
      */
-    public final TableField<IncomeRecord, LocalDateTime> OCCURRED = createField(DSL.name("occurred"), SQLDataType.LOCALDATETIME(0).nullable(false), this, "");
+    public final TableField<IncomeRecord, LocalDateTime> OCCURRED = createField(DSL.name("OCCURRED"), SQLDataType.LOCALDATETIME(0).nullable(false), this, "");
 
     /**
-     * The column <code>income.category</code>.
+     * The column <code>INCOME.CATEGORY</code>.
      */
-    public final TableField<IncomeRecord, String> CATEGORY = createField(DSL.name("category"), SQLDataType.VARCHAR(1000), this, "");
+    public final TableField<IncomeRecord, String> CATEGORY = createField(DSL.name("CATEGORY"), SQLDataType.VARCHAR(1000), this, "");
 
     /**
-     * The column <code>income.description</code>.
+     * The column <code>INCOME.DESCRIPTION</code>.
      */
-    public final TableField<IncomeRecord, String> DESCRIPTION = createField(DSL.name("description"), SQLDataType.VARCHAR(1000), this, "");
+    public final TableField<IncomeRecord, String> DESCRIPTION = createField(DSL.name("DESCRIPTION"), SQLDataType.VARCHAR(1000), this, "");
 
     /**
-     * The column <code>income.created</code>.
+     * The column <code>INCOME.CREATED</code>.
      */
-    public final TableField<IncomeRecord, LocalDateTime> CREATED = createField(DSL.name("created"), SQLDataType.LOCALDATETIME(0).nullable(false), this, "");
+    public final TableField<IncomeRecord, LocalDateTime> CREATED = createField(DSL.name("CREATED"), SQLDataType.LOCALDATETIME(0).nullable(false), this, "");
 
     /**
-     * The column <code>income.updated</code>.
+     * The column <code>INCOME.UPDATED</code>.
      */
-    public final TableField<IncomeRecord, LocalDateTime> UPDATED = createField(DSL.name("updated"), SQLDataType.LOCALDATETIME(0).nullable(false), this, "");
+    public final TableField<IncomeRecord, LocalDateTime> UPDATED = createField(DSL.name("UPDATED"), SQLDataType.LOCALDATETIME(0).nullable(false), this, "");
 
     private Income(Name alias, Table<IncomeRecord> aliased) {
         this(alias, aliased, (Field<?>[]) null, null);
@@ -105,24 +105,24 @@ public class Income extends TableImpl<IncomeRecord> {
     }
 
     /**
-     * Create an aliased <code>income</code> table reference
+     * Create an aliased <code>INCOME</code> table reference
      */
     public Income(String alias) {
         this(DSL.name(alias), INCOME);
     }
 
     /**
-     * Create an aliased <code>income</code> table reference
+     * Create an aliased <code>INCOME</code> table reference
      */
     public Income(Name alias) {
         this(alias, INCOME);
     }
 
     /**
-     * Create a <code>income</code> table reference
+     * Create a <code>INCOME</code> table reference
      */
     public Income() {
-        this(DSL.name("income"), null);
+        this(DSL.name("INCOME"), null);
     }
 
     public <O extends Record> Income(Table<O> path, ForeignKey<O, IncomeRecord> childPath, InverseForeignKey<O, IncomeRecord> parentPath) {
@@ -176,7 +176,7 @@ public class Income extends TableImpl<IncomeRecord> {
     private transient AccountPath _account;
 
     /**
-     * Get the implicit join path to the <code>account</code> table.
+     * Get the implicit join path to the <code>ACCOUNT</code> table.
      */
     public AccountPath account() {
         if (_account == null)

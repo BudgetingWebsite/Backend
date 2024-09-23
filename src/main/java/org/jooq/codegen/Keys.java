@@ -30,17 +30,17 @@ public class Keys {
     // UNIQUE and PRIMARY KEY definitions
     // -------------------------------------------------------------------------
 
-    public static final UniqueKey<AccountRecord> ACCOUNT__PK_ACCOUNT = Internal.createUniqueKey(Account.ACCOUNT, DSL.name("pk_account"), new TableField[] { Account.ACCOUNT.UUID }, true);
-    public static final UniqueKey<BucketRecord> BUCKET__PK_BUCKET = Internal.createUniqueKey(Bucket.BUCKET, DSL.name("pk_bucket"), new TableField[] { Bucket.BUCKET.UUID }, true);
-    public static final UniqueKey<ExpenseRecord> EXPENSE__PK_EXPENSE = Internal.createUniqueKey(Expense.EXPENSE, DSL.name("pk_expense"), new TableField[] { Expense.EXPENSE.UUID }, true);
-    public static final UniqueKey<IncomeRecord> INCOME__PK_INCOME = Internal.createUniqueKey(Income.INCOME, DSL.name("pk_income"), new TableField[] { Income.INCOME.UUID }, true);
+    public static final UniqueKey<AccountRecord> ACCOUNT__PK_ACCOUNT = Internal.createUniqueKey(Account.ACCOUNT, DSL.name("pk_ACCOUNT"), new TableField[] { Account.ACCOUNT.UUID }, true);
+    public static final UniqueKey<BucketRecord> BUCKET__PK_BUCKET = Internal.createUniqueKey(Bucket.BUCKET, DSL.name("pk_BUCKET"), new TableField[] { Bucket.BUCKET.UUID }, true);
+    public static final UniqueKey<ExpenseRecord> EXPENSE__PK_EXPENSE = Internal.createUniqueKey(Expense.EXPENSE, DSL.name("pk_EXPENSE"), new TableField[] { Expense.EXPENSE.UUID }, true);
+    public static final UniqueKey<IncomeRecord> INCOME__PK_INCOME = Internal.createUniqueKey(Income.INCOME, DSL.name("pk_INCOME"), new TableField[] { Income.INCOME.UUID }, true);
 
     // -------------------------------------------------------------------------
     // FOREIGN KEY definitions
     // -------------------------------------------------------------------------
 
-    public static final ForeignKey<BucketRecord, AccountRecord> BUCKET__FK_BUCKET_PK_ACCOUNT = Internal.createForeignKey(Bucket.BUCKET, DSL.name("fk_bucket_pk_account"), new TableField[] { Bucket.BUCKET.OWNER }, Keys.ACCOUNT__PK_ACCOUNT, new TableField[] { Account.ACCOUNT.UUID }, true);
-    public static final ForeignKey<ExpenseRecord, AccountRecord> EXPENSE__FK_EXPENSE_PK_ACCOUNT = Internal.createForeignKey(Expense.EXPENSE, DSL.name("fk_expense_pk_account"), new TableField[] { Expense.EXPENSE.OWNER }, Keys.ACCOUNT__PK_ACCOUNT, new TableField[] { Account.ACCOUNT.UUID }, true);
-    public static final ForeignKey<ExpenseRecord, BucketRecord> EXPENSE__FK_EXPENSE_PK_BUCKET = Internal.createForeignKey(Expense.EXPENSE, DSL.name("fk_expense_pk_bucket"), new TableField[] { Expense.EXPENSE.BUCKET }, Keys.BUCKET__PK_BUCKET, new TableField[] { Bucket.BUCKET.UUID }, true);
-    public static final ForeignKey<IncomeRecord, AccountRecord> INCOME__FK_INCOME_PK_ACCOUNT = Internal.createForeignKey(Income.INCOME, DSL.name("fk_income_pk_account"), new TableField[] { Income.INCOME.OWNER }, Keys.ACCOUNT__PK_ACCOUNT, new TableField[] { Account.ACCOUNT.UUID }, true);
+    public static final ForeignKey<BucketRecord, AccountRecord> BUCKET__FK_BUCKET_PK_ACCOUNT = Internal.createForeignKey(Bucket.BUCKET, DSL.name("fk_BUCKET_pk_ACCOUNT"), new TableField[] { Bucket.BUCKET.OWNER }, Keys.ACCOUNT__PK_ACCOUNT, new TableField[] { Account.ACCOUNT.UUID }, true);
+    public static final ForeignKey<ExpenseRecord, AccountRecord> EXPENSE__FK_EXPENSE_PK_ACCOUNT = Internal.createForeignKey(Expense.EXPENSE, DSL.name("fk_EXPENSE_pk_ACCOUNT"), new TableField[] { Expense.EXPENSE.OWNER }, Keys.ACCOUNT__PK_ACCOUNT, new TableField[] { Account.ACCOUNT.UUID }, true);
+    public static final ForeignKey<ExpenseRecord, BucketRecord> EXPENSE__FK_EXPENSE_PK_BUCKET = Internal.createForeignKey(Expense.EXPENSE, DSL.name("fk_EXPENSE_pk_BUCKET"), new TableField[] { Expense.EXPENSE.BUCKET }, Keys.BUCKET__PK_BUCKET, new TableField[] { Bucket.BUCKET.UUID }, true);
+    public static final ForeignKey<IncomeRecord, AccountRecord> INCOME__FK_INCOME_PK_ACCOUNT = Internal.createForeignKey(Income.INCOME, DSL.name("fk_INCOME_pk_ACCOUNT"), new TableField[] { Income.INCOME.OWNER }, Keys.ACCOUNT__PK_ACCOUNT, new TableField[] { Account.ACCOUNT.UUID }, true);
 }

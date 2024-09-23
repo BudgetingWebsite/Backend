@@ -3,11 +3,11 @@ package org.amoseman.budgetingbackend.dao.impl.sql;
 import org.amoseman.budgetingbackend.dao.FinanceRecordDAO;
 import org.amoseman.budgetingbackend.database.DatabaseConnection;
 import org.amoseman.budgetingbackend.exception.*;
-import org.amoseman.budgetingbackend.pojo.TimeRange;
-import org.amoseman.budgetingbackend.pojo.record.Expense;
-import org.amoseman.budgetingbackend.pojo.record.Income;
-import org.amoseman.budgetingbackend.pojo.record.info.ExpenseInfo;
-import org.amoseman.budgetingbackend.pojo.record.info.IncomeInfo;
+import org.amoseman.budgetingbackend.model.TimeRange;
+import org.amoseman.budgetingbackend.model.record.Expense;
+import org.amoseman.budgetingbackend.model.record.Income;
+import org.amoseman.budgetingbackend.model.record.info.ExpenseInfo;
+import org.amoseman.budgetingbackend.model.record.info.IncomeInfo;
 import org.amoseman.budgetingbackend.util.Now;
 import org.jooq.*;
 
@@ -17,6 +17,7 @@ import java.util.Optional;
 
 import static org.jooq.codegen.Tables.*;
 import org.jooq.codegen.tables.records.*;
+import org.jooq.exception.DataAccessException;
 
 public class FinanceRecordDAOImpl extends FinanceRecordDAO<DSLContext> {
 
@@ -25,27 +26,21 @@ public class FinanceRecordDAOImpl extends FinanceRecordDAO<DSLContext> {
     }
 
     @Override
-    public void addIncome(Income income) throws FinanceRecordAlreadyExistsException {
-        try {
-            IncomeRecord record = connection.get().newRecord(INCOME, income);
-            connection.get().executeInsert(record);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
+    public void addIncome(Income income) throws FinanceRecordAlreadyExistsException, DataAccessException {
+        if (getIncome(income.owner, income.uuid).isPresent()) {
             throw new FinanceRecordAlreadyExistsException("add", income.uuid);
         }
+        IncomeRecord record = connection.get().newRecord(INCOME, income);
+        connection.get().executeInsert(record);
     }
 
     @Override
-    public void addExpense(Expense expense) throws FinanceRecordAlreadyExistsException {
-        try {
-            ExpenseRecord record = connection.get().newRecord(EXPENSE, expense);
-            connection.get().executeInsert(record);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
+    public void addExpense(Expense expense) throws FinanceRecordAlreadyExistsException, DataAccessException {
+        if (getExpense(expense.owner, expense.uuid).isPresent()) {
             throw new FinanceRecordAlreadyExistsException("add", expense.uuid);
         }
+        ExpenseRecord record = connection.get().newRecord(EXPENSE, expense);
+        connection.get().executeInsert(record);
     }
 
     @Override
@@ -148,46 +143,48 @@ public class FinanceRecordDAOImpl extends FinanceRecordDAO<DSLContext> {
 
     @Override
     public Optional<Income> getIncome(String user, String uuid) {
+        List<Income> list;
         try {
-            List<Income> list = connection.get()
+            list = connection.get()
                     .selectFrom(INCOME)
                     .where(
                             INCOME.OWNER.eq(user).and(INCOME.UUID.eq(uuid))
                     )
                     .fetch()
                     .into(Income.class);
-            if (list.isEmpty()) {
-                return Optional.empty();
-            }
-            return Optional.of(list.get(0));
         }
         catch (Exception e) {
             throw new RuntimeException(e);
         }
+        if (list.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(list.get(0));
     }
 
     @Override
     public Optional<Expense> getExpense(String user, String uuid) {
+        List<Expense> list;
         try {
-            List<Expense> list = connection.get()
+            list = connection.get()
                     .selectFrom(EXPENSE)
                     .where(
                             EXPENSE.OWNER.eq(user).and(EXPENSE.UUID.eq(uuid))
                     )
                     .fetch()
                     .into(Expense.class);
-            if (list.isEmpty()) {
-                return Optional.empty();
-            }
-            return Optional.of(list.get(0));
         }
         catch (Exception e) {
             throw new RuntimeException(e);
         }
+        if (list.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(list.get(0));
     }
 
     @Override
-    public void updateIncome(String user, String uuid, IncomeInfo update) throws FinanceRecordDoesNotExistException, NegativeValueException {
+    public void updateIncome(String user, String uuid, IncomeInfo update) throws FinanceRecordDoesNotExistException, IllegalArgumentException {
         LocalDateTime now = Now.get();
         Optional<Income> maybe = getIncome(user, uuid);
         if (maybe.isEmpty()) {
@@ -200,7 +197,7 @@ public class FinanceRecordDAOImpl extends FinanceRecordDAO<DSLContext> {
     }
 
     @Override
-    public void updateExpense(String user, String uuid, ExpenseInfo update) throws FinanceRecordDoesNotExistException, NegativeValueException {
+    public void updateExpense(String user, String uuid, ExpenseInfo update) throws FinanceRecordDoesNotExistException, IllegalArgumentException {
         LocalDateTime now = Now.get();
         Optional<Expense> maybe = getExpense(user, uuid);
         if (maybe.isEmpty()) {

@@ -30,22 +30,22 @@ public class DefaultSchema extends SchemaImpl {
     public static final DefaultSchema DEFAULT_SCHEMA = new DefaultSchema();
 
     /**
-     * The table <code>account</code>.
+     * The table <code>ACCOUNT</code>.
      */
     public final Account ACCOUNT = Account.ACCOUNT;
 
     /**
-     * The table <code>bucket</code>.
+     * The table <code>BUCKET</code>.
      */
     public final Bucket BUCKET = Bucket.BUCKET;
 
     /**
-     * The table <code>expense</code>.
+     * The table <code>EXPENSE</code>.
      */
     public final Expense EXPENSE = Expense.EXPENSE;
 
     /**
-     * The table <code>income</code>.
+     * The table <code>INCOME</code>.
      */
     public final Income INCOME = Income.INCOME;
 

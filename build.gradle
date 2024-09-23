@@ -34,6 +34,14 @@ dependencies {
     implementation 'io.dropwizard:dropwizard-auth:4.0.8'
     // https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc
     implementation 'org.xerial:sqlite-jdbc:3.46.1.0'
+    // https://mvnrepository.com/artifact/com.h2database/h2
+    testImplementation 'com.h2database:h2:2.3.232'
+    // https://mvnrepository.com/artifact/org.postgresql/postgresql
+    implementation 'org.postgresql:postgresql:42.7.4'
+    // https://mvnrepository.com/artifact/org.mariadb.jdbc/mariadb-java-client
+    implementation 'org.mariadb.jdbc:mariadb-java-client:3.4.1'
+    // https://mvnrepository.com/artifact/com.mysql/mysql-connector-j
+    implementation 'com.mysql:mysql-connector-j:9.0.0'
 }
 
 test {

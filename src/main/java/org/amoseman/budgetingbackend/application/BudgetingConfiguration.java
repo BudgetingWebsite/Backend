@@ -32,4 +32,24 @@ public class BudgetingConfiguration extends Configuration {
     public int getMaxUsernameLength() {
         return maxUsernameLength;
     }
+
+    public BudgetingConfiguration setDatabaseURL(String databaseURL) {
+        this.databaseURL = databaseURL;
+        return this;
+    }
+
+    public BudgetingConfiguration setAdminUsername(String adminUsername) {
+        this.adminUsername = adminUsername;
+        return this;
+    }
+
+    public BudgetingConfiguration setAdminPassword(String adminPassword) {
+        this.adminPassword = adminPassword;
+        return this;
+    }
+
+    public BudgetingConfiguration setMaxUsernameLength(int maxUsernameLength) {
+        this.maxUsernameLength = maxUsernameLength;
+        return this;
+    }
 }

@@ -9,9 +9,8 @@ import org.amoseman.budgetingbackend.application.auth.User;
 import org.amoseman.budgetingbackend.exception.BucketAlreadyExistsException;
 import org.amoseman.budgetingbackend.exception.BucketDoesNotExistException;
 import org.amoseman.budgetingbackend.exception.TotalBucketShareExceededException;
-import org.amoseman.budgetingbackend.pojo.bucket.Bucket;
-import org.amoseman.budgetingbackend.pojo.bucket.op.CreateBucket;
-import org.amoseman.budgetingbackend.pojo.bucket.op.UpdateBucket;
+import org.amoseman.budgetingbackend.model.bucket.Bucket;
+import org.amoseman.budgetingbackend.model.bucket.BucketInfo;
 import org.amoseman.budgetingbackend.service.BucketService;
 
 import java.util.List;
@@ -28,7 +27,7 @@ public class BucketResource<C> {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @PermitAll
-    public Response addBucket(@Auth User user, CreateBucket create) throws TotalBucketShareExceededException, BucketAlreadyExistsException {
+    public Response addBucket(@Auth User user, BucketInfo create) throws TotalBucketShareExceededException, BucketAlreadyExistsException {
         String uuid = bucketService.addBucket(user.getName(), create);
         return Response.ok(uuid).build();
     }
@@ -51,7 +50,7 @@ public class BucketResource<C> {
     @PUT
     @PermitAll
     @Path("/{uuid}")
-    public Response updateBucket(@Auth User user, @PathParam("uuid") String uuid, UpdateBucket update) throws BucketDoesNotExistException {
+    public Response updateBucket(@Auth User user, @PathParam("uuid") String uuid, BucketInfo update) throws BucketDoesNotExistException, TotalBucketShareExceededException {
         bucketService.updateBucket(user.getName(), uuid, update);
         return Response.ok().build();
     }

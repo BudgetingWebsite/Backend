@@ -4,12 +4,13 @@ import org.amoseman.InitTestDatabase;
 import org.amoseman.budgetingbackend.dao.AccountDAO;
 import org.amoseman.budgetingbackend.database.DatabaseConnection;
 import org.amoseman.budgetingbackend.database.impl.sql.sqlite.DatabaseConnectionImpl;
-import org.amoseman.budgetingbackend.exception.UserAlreadyExistsException;
-import org.amoseman.budgetingbackend.exception.UserDoesNotExistException;
-import org.amoseman.budgetingbackend.pojo.account.Account;
-import org.amoseman.budgetingbackend.pojo.account.op.UpdateAccount;
+import org.amoseman.budgetingbackend.exception.AccountAlreadyExistsException;
+import org.amoseman.budgetingbackend.exception.AccountDoesNotExistException;
+import org.amoseman.budgetingbackend.model.account.Account;
+import org.amoseman.budgetingbackend.model.account.op.UpdateAccount;
 import org.amoseman.budgetingbackend.util.Now;
 import org.jooq.DSLContext;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -19,9 +20,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class AccountDAOImplTest {
 
+    private static final String databaseURL = "jdbc:h2:mem:test";
+
+    @AfterAll
+    static void cleanup() {
+        InitTestDatabase.clean(databaseURL);
+    }
+
     @Test
     void testCRUD() {
-        String databaseURL = "jdbc:sqlite:test.db";
         InitTestDatabase.init(databaseURL, "schema.sql");
         DatabaseConnection<DSLContext> connection = new DatabaseConnectionImpl(databaseURL);
         AccountDAO<DSLContext> accountDAO = new AccountDAOImpl(connection);
@@ -37,7 +44,7 @@ class AccountDAOImplTest {
         try {
             accountDAO.addAccount(account);
         }
-        catch (UserAlreadyExistsException e) {
+        catch (AccountAlreadyExistsException e) {
             fail(e);
         }
         Optional<Account> maybe = accountDAO.getAccount("12345");
@@ -52,7 +59,7 @@ class AccountDAOImplTest {
         try {
             accountDAO.updateAccount(update);
         }
-        catch (UserDoesNotExistException e) {
+        catch (AccountDoesNotExistException e) {
             fail(e);
         }
         maybe = accountDAO.getAccount("12345");
@@ -66,13 +73,12 @@ class AccountDAOImplTest {
         try {
             accountDAO.removeAccount("12345");
         }
-        catch (UserDoesNotExistException e) {
+        catch (AccountDoesNotExistException e) {
             fail(e);
         }
         maybe = accountDAO.getAccount("12345");
         if (maybe.isPresent()) {
             fail("Retrieved account when it should have been deleted");
         }
-        InitTestDatabase.close(databaseURL);
     }
 }

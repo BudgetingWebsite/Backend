@@ -1,11 +1,17 @@
 # Budgeting Website Backend
 This is the backend for the budgeting website. It should provide for the majority of processing and logic for the website. Users should be able to create secure accounts, store income and expense records, categorize those records into bucket, and budget their finances. Statistics should also be provided, such as net income over time.
 
+Currently, several databases are intended to be supported. They include MySQL, PostgreSQL, MariaDB, SQLite, and H2. For testing, H2 is being used.
+
 # Technology
 - Java 17
 - Dropwizard
 - Jooq
 - SQLite JDBC
+- H2 JDBC
+- MySQL JDBC
+- PostgreSQL JDBC
+- MariaDB JDBC
 - Bouncycastle
 - JUnit
 - Jackson

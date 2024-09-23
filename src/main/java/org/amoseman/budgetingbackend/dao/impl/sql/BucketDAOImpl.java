@@ -4,7 +4,7 @@ import org.amoseman.budgetingbackend.dao.BucketDAO;
 import org.amoseman.budgetingbackend.database.DatabaseConnection;
 import org.amoseman.budgetingbackend.exception.BucketAlreadyExistsException;
 import org.amoseman.budgetingbackend.exception.BucketDoesNotExistException;
-import org.amoseman.budgetingbackend.pojo.bucket.Bucket;
+import org.amoseman.budgetingbackend.model.bucket.Bucket;
 import org.jooq.*;
 
 import java.util.List;
@@ -12,6 +12,7 @@ import java.util.Optional;
 
 import static org.jooq.codegen.Tables.*;
 import org.jooq.codegen.tables.records.*;
+import org.jooq.exception.DataAccessException;
 
 public class BucketDAOImpl extends BucketDAO<DSLContext> {
 
@@ -20,15 +21,12 @@ public class BucketDAOImpl extends BucketDAO<DSLContext> {
     }
 
     @Override
-    public void addBucket(Bucket bucket) throws BucketAlreadyExistsException {
-        try {
-            BucketRecord record = connection.get().newRecord(BUCKET, bucket);
-            connection.get().executeInsert(record);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
+    public void addBucket(Bucket bucket) throws BucketAlreadyExistsException, DataAccessException {
+        if (getBucket(bucket.owner, bucket.uuid).isPresent()) {
             throw new BucketAlreadyExistsException("add", bucket.uuid);
         }
+        BucketRecord record = connection.get().newRecord(BUCKET, bucket);
+        connection.get().executeInsert(record);
     }
 
     @Override
@@ -53,20 +51,21 @@ public class BucketDAOImpl extends BucketDAO<DSLContext> {
 
     @Override
     public Optional<Bucket> getBucket(String owner, String uuid) {
+        List<Bucket> list;
         try {
-            List<Bucket> list = connection.get()
+            list = connection.get()
                     .selectFrom(BUCKET)
                     .where(BUCKET.UUID.eq(uuid))
                     .fetch()
                     .into(Bucket.class);
-            if (list.isEmpty()) {
-                return Optional.empty();
-            }
-            return Optional.of(list.get(0));
         }
         catch (Exception e) {
             throw new RuntimeException(e);
         }
+        if (list.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(list.get(0));
     }
 
     @Override

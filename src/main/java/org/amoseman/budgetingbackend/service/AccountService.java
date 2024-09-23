@@ -1,88 +1,64 @@
 package org.amoseman.budgetingbackend.service;
 
-import org.amoseman.budgetingbackend.application.auth.hashing.Hasher;
-import org.amoseman.budgetingbackend.application.auth.Roles;
+import org.amoseman.budgetingbackend.application.BudgetingConfiguration;
+import org.amoseman.budgetingbackend.application.auth.hashing.Hash;
 import org.amoseman.budgetingbackend.dao.AccountDAO;
-import org.amoseman.budgetingbackend.exception.UserAlreadyExistsException;
-import org.amoseman.budgetingbackend.exception.UserDoesNotExistException;
-import org.amoseman.budgetingbackend.pojo.account.Account;
-import org.amoseman.budgetingbackend.pojo.account.op.CreateAccount;
-import org.amoseman.budgetingbackend.pojo.account.op.UpdateAccount;
-import org.amoseman.budgetingbackend.util.Now;
-import org.bouncycastle.util.encoders.Base64;
+import org.amoseman.budgetingbackend.exception.AccountAlreadyExistsException;
+import org.amoseman.budgetingbackend.exception.AccountDoesNotExistException;
+import org.amoseman.budgetingbackend.exception.UsernameExceedsMaxLengthException;
+import org.amoseman.budgetingbackend.model.account.Account;
+import org.amoseman.budgetingbackend.model.account.op.CreateAccount;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 /**
  * A service for account logic.
  * @param <C> the client type.
  */
-public class AccountService<C> {
-    private final AccountDAO<C> accountDAO;
-    private final Hasher hasher;
+public abstract class AccountService<C> {
+    protected final BudgetingConfiguration configuration;
+    protected final AccountDAO<C> accountDAO;
+    protected final Hash hash;
 
     /**
      * Instantiate a new account service.
+     * @param configuration the configuration of the budgeting service.
      * @param accountDAO the account data access object to use.
-     * @param hasher what to use for password hashing.
+     * @param hash what to use for password hashing.
      */
-    public AccountService(AccountDAO<C> accountDAO, Hasher hasher) {
+    public AccountService(BudgetingConfiguration configuration, AccountDAO<C> accountDAO, Hash hash) {
+        this.configuration = configuration;
         this.accountDAO = accountDAO;
-        this.hasher = hasher;
+        this.hash = hash;
     }
 
     /**
      * Add a new account.
      * @param usernamePassword the username and password of the new account.
-     * @throws UserAlreadyExistsException if the username is already in use.
+     * @throws AccountAlreadyExistsException if the username is already in use.
      */
-    public void addAccount(CreateAccount usernamePassword) throws UserAlreadyExistsException {
-        byte[] salt = hasher.salt();
-        String salt64 = Base64.toBase64String(salt);
-        String hash64 = hasher.hash(usernamePassword.getPassword(), salt);
-        Account account = new Account(usernamePassword.getUsername(), Now.get(), Now.get(), hash64, salt64, Roles.USER);
-        accountDAO.addAccount(account);
-    }
+    public abstract void addAccount(CreateAccount usernamePassword) throws AccountAlreadyExistsException, UsernameExceedsMaxLengthException;
 
     /**
      * Remove an account.
      * @param username the username of the account.
-     * @throws UserDoesNotExistException if the account does not exist.
+     * @throws AccountDoesNotExistException if the account does not exist.
      */
-    public void removeAccount(String username) throws UserDoesNotExistException {
-        accountDAO.removeAccount(username);
-    }
-
+    public abstract void removeAccount(String username) throws AccountDoesNotExistException;
     /**
      * Get an account.
      * @param username the username of the account.
      * @return the account.
      */
-    public Optional<Account> getAccount(String username) {
-        return accountDAO.getAccount(username);
-    }
+    public abstract Optional<Account> getAccount(String username);
 
     /**
      * Change the password of an account.
      * @param username the username of the account.
      * @param password the new password of the account.
-     * @throws UserDoesNotExistException if the account does not exist.
+     * @throws AccountDoesNotExistException if the account does not exist.
      */
-    public void changePassword(String username, String password) throws UserDoesNotExistException {
-        LocalDateTime now = Now.get();
-        Optional<Account> maybe = accountDAO.getAccount(username);
-        if (maybe.isEmpty()) {
-            throw new UserDoesNotExistException("change password", username);
-        }
-        Account account = maybe.get();
-        byte[] salt = hasher.salt();
-        String salt64 = Base64.toBase64String(salt);
-        String hash64 = hasher.hash(password, salt);
-        UpdateAccount update = new UpdateAccount(username, hash64, salt64, account.roles);
-        account = new Account(account, update, now);
-        accountDAO.updateAccount(account);
-    }
+    public abstract void changePassword(String username, String password) throws AccountDoesNotExistException;
 
     /**
      * Change the roles of an account.
@@ -90,17 +66,7 @@ public class AccountService<C> {
      * Valid roles are ADMIN and USER.
      * @param username the username of the account.
      * @param roles the new roles of the account.
-     * @throws UserDoesNotExistException if the account does not exist.
+     * @throws AccountDoesNotExistException if the account does not exist.
      */
-    public void changeRoles(String username, String roles) throws UserDoesNotExistException {
-        LocalDateTime now = Now.get();
-        Optional<Account> maybe = accountDAO.getAccount(username);
-        if (maybe.isEmpty()) {
-            throw new UserDoesNotExistException("change password", username);
-        }
-        Account account = maybe.get();
-        UpdateAccount update = new UpdateAccount(username, account.hash, account.salt, roles);
-        account = new Account(account, update, now);
-        accountDAO.updateAccount(account);
-    }
+    public abstract void changeRoles(String username, String roles) throws AccountDoesNotExistException;
 }

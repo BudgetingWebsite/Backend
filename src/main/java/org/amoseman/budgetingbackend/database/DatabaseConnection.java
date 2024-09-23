@@ -25,11 +25,11 @@ public abstract class DatabaseConnection<C> {
     /**
      * Close the connection to the database.
      */
-    protected abstract void close();
+    public abstract void close();
 
     /**
      * Get the client for the database.
-     * @return
+     * @return C the client.
      */
     public C get() {
         return client;

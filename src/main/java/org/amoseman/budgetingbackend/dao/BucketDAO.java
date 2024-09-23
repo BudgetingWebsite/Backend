@@ -3,7 +3,7 @@ package org.amoseman.budgetingbackend.dao;
 import org.amoseman.budgetingbackend.database.DatabaseConnection;
 import org.amoseman.budgetingbackend.exception.BucketAlreadyExistsException;
 import org.amoseman.budgetingbackend.exception.BucketDoesNotExistException;
-import org.amoseman.budgetingbackend.pojo.bucket.Bucket;
+import org.amoseman.budgetingbackend.model.bucket.Bucket;
 
 import java.util.List;
 import java.util.Optional;

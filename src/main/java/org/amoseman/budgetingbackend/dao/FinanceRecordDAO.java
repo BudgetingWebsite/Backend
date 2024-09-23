@@ -3,12 +3,11 @@ package org.amoseman.budgetingbackend.dao;
 import org.amoseman.budgetingbackend.database.DatabaseConnection;
 import org.amoseman.budgetingbackend.exception.FinanceRecordAlreadyExistsException;
 import org.amoseman.budgetingbackend.exception.FinanceRecordDoesNotExistException;
-import org.amoseman.budgetingbackend.exception.NegativeValueException;
-import org.amoseman.budgetingbackend.pojo.TimeRange;
-import org.amoseman.budgetingbackend.pojo.record.Expense;
-import org.amoseman.budgetingbackend.pojo.record.Income;
-import org.amoseman.budgetingbackend.pojo.record.info.ExpenseInfo;
-import org.amoseman.budgetingbackend.pojo.record.info.IncomeInfo;
+import org.amoseman.budgetingbackend.model.TimeRange;
+import org.amoseman.budgetingbackend.model.record.Expense;
+import org.amoseman.budgetingbackend.model.record.Income;
+import org.amoseman.budgetingbackend.model.record.info.ExpenseInfo;
+import org.amoseman.budgetingbackend.model.record.info.IncomeInfo;
 
 import java.util.List;
 import java.util.Optional;
@@ -108,8 +107,9 @@ public abstract class FinanceRecordDAO<C> extends DAO<C> {
      * @param uuid the UUID of the income.
      * @param update the updated information of the income.
      * @throws FinanceRecordDoesNotExistException if the income does not exist.
+     * @throws IllegalArgumentException if the amount in the record is negative.
      */
-    public abstract void updateIncome(String user, String uuid, IncomeInfo update) throws FinanceRecordDoesNotExistException, NegativeValueException;
+    public abstract void updateIncome(String user, String uuid, IncomeInfo update) throws FinanceRecordDoesNotExistException, IllegalArgumentException;
 
     /**
      * Update an expense record.
@@ -117,6 +117,7 @@ public abstract class FinanceRecordDAO<C> extends DAO<C> {
      * @param uuid the UUID of the expense.
      * @param update the updated information of the expense.
      * @throws FinanceRecordDoesNotExistException if the expense does not exist.
+     * @throws IllegalArgumentException if the amount in the record is negative.
      */
-    public abstract void updateExpense(String user, String uuid, ExpenseInfo update) throws FinanceRecordDoesNotExistException, NegativeValueException;
+    public abstract void updateExpense(String user, String uuid, ExpenseInfo update) throws FinanceRecordDoesNotExistException, IllegalArgumentException;
 }

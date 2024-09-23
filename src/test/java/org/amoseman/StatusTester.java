@@ -5,9 +5,6 @@ import jakarta.ws.rs.client.Invocation;
 import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.UriBuilder;
-
-import java.net.URI;
 
 import static org.junit.jupiter.api.Assertions.fail;
 

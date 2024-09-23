@@ -44,7 +44,7 @@ public class Account extends TableImpl<AccountRecord> {
     private static final long serialVersionUID = 1L;
 
     /**
-     * The reference instance of <code>account</code>
+     * The reference instance of <code>ACCOUNT</code>
      */
     public static final Account ACCOUNT = new Account();
 
@@ -57,34 +57,34 @@ public class Account extends TableImpl<AccountRecord> {
     }
 
     /**
-     * The column <code>account.uuid</code>.
+     * The column <code>ACCOUNT.UUID</code>.
      */
-    public final TableField<AccountRecord, String> UUID = createField(DSL.name("uuid"), SQLDataType.VARCHAR(1000), this, "");
+    public final TableField<AccountRecord, String> UUID = createField(DSL.name("UUID"), SQLDataType.VARCHAR(1000), this, "");
 
     /**
-     * The column <code>account.roles</code>.
+     * The column <code>ACCOUNT.ROLES</code>.
      */
-    public final TableField<AccountRecord, String> ROLES = createField(DSL.name("roles"), SQLDataType.VARCHAR(1000), this, "");
+    public final TableField<AccountRecord, String> ROLES = createField(DSL.name("ROLES"), SQLDataType.VARCHAR(1000), this, "");
 
     /**
-     * The column <code>account.hash</code>.
+     * The column <code>ACCOUNT.HASH</code>.
      */
-    public final TableField<AccountRecord, String> HASH = createField(DSL.name("hash"), SQLDataType.VARCHAR(1000), this, "");
+    public final TableField<AccountRecord, String> HASH = createField(DSL.name("HASH"), SQLDataType.VARCHAR(1000), this, "");
 
     /**
-     * The column <code>account.salt</code>.
+     * The column <code>ACCOUNT.SALT</code>.
      */
-    public final TableField<AccountRecord, String> SALT = createField(DSL.name("salt"), SQLDataType.VARCHAR(1000), this, "");
+    public final TableField<AccountRecord, String> SALT = createField(DSL.name("SALT"), SQLDataType.VARCHAR(1000), this, "");
 
     /**
-     * The column <code>account.created</code>.
+     * The column <code>ACCOUNT.CREATED</code>.
      */
-    public final TableField<AccountRecord, LocalDateTime> CREATED = createField(DSL.name("created"), SQLDataType.LOCALDATETIME(0).nullable(false), this, "");
+    public final TableField<AccountRecord, LocalDateTime> CREATED = createField(DSL.name("CREATED"), SQLDataType.LOCALDATETIME(0).nullable(false), this, "");
 
     /**
-     * The column <code>account.updated</code>.
+     * The column <code>ACCOUNT.UPDATED</code>.
      */
-    public final TableField<AccountRecord, LocalDateTime> UPDATED = createField(DSL.name("updated"), SQLDataType.LOCALDATETIME(0).nullable(false), this, "");
+    public final TableField<AccountRecord, LocalDateTime> UPDATED = createField(DSL.name("UPDATED"), SQLDataType.LOCALDATETIME(0).nullable(false), this, "");
 
     private Account(Name alias, Table<AccountRecord> aliased) {
         this(alias, aliased, (Field<?>[]) null, null);
@@ -95,24 +95,24 @@ public class Account extends TableImpl<AccountRecord> {
     }
 
     /**
-     * Create an aliased <code>account</code> table reference
+     * Create an aliased <code>ACCOUNT</code> table reference
      */
     public Account(String alias) {
         this(DSL.name(alias), ACCOUNT);
     }
 
     /**
-     * Create an aliased <code>account</code> table reference
+     * Create an aliased <code>ACCOUNT</code> table reference
      */
     public Account(Name alias) {
         this(alias, ACCOUNT);
     }
 
     /**
-     * Create a <code>account</code> table reference
+     * Create a <code>ACCOUNT</code> table reference
      */
     public Account() {
-        this(DSL.name("account"), null);
+        this(DSL.name("ACCOUNT"), null);
     }
 
     public <O extends Record> Account(Table<O> path, ForeignKey<O, AccountRecord> childPath, InverseForeignKey<O, AccountRecord> parentPath) {
@@ -161,7 +161,7 @@ public class Account extends TableImpl<AccountRecord> {
     private transient BucketPath _bucket;
 
     /**
-     * Get the implicit to-many join path to the <code>bucket</code> table
+     * Get the implicit to-many join path to the <code>BUCKET</code> table
      */
     public BucketPath bucket() {
         if (_bucket == null)
@@ -173,7 +173,7 @@ public class Account extends TableImpl<AccountRecord> {
     private transient ExpensePath _expense;
 
     /**
-     * Get the implicit to-many join path to the <code>expense</code> table
+     * Get the implicit to-many join path to the <code>EXPENSE</code> table
      */
     public ExpensePath expense() {
         if (_expense == null)
@@ -185,7 +185,7 @@ public class Account extends TableImpl<AccountRecord> {
     private transient IncomePath _income;
 
     /**
-     * Get the implicit to-many join path to the <code>income</code> table
+     * Get the implicit to-many join path to the <code>INCOME</code> table
      */
     public IncomePath income() {
         if (_income == null)
