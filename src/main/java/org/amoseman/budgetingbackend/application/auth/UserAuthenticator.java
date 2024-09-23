@@ -5,7 +5,7 @@ import io.dropwizard.auth.Authenticator;
 import io.dropwizard.auth.basic.BasicCredentials;
 import org.amoseman.budgetingbackend.application.auth.hashing.Hash;
 import org.amoseman.budgetingbackend.dao.AccountDAO;
-import org.amoseman.budgetingbackend.pojo.account.Account;
+import org.amoseman.budgetingbackend.model.account.Account;
 
 import java.util.Base64;
 import java.util.Optional;

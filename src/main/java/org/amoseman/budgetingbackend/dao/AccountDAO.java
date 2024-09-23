@@ -3,7 +3,7 @@ package org.amoseman.budgetingbackend.dao;
 import org.amoseman.budgetingbackend.database.DatabaseConnection;
 import org.amoseman.budgetingbackend.exception.AccountAlreadyExistsException;
 import org.amoseman.budgetingbackend.exception.AccountDoesNotExistException;
-import org.amoseman.budgetingbackend.pojo.account.Account;
+import org.amoseman.budgetingbackend.model.account.Account;
 
 import java.util.Optional;
 

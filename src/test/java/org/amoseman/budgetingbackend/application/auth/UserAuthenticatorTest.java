@@ -5,7 +5,7 @@ import io.dropwizard.auth.basic.BasicCredentials;
 import org.amoseman.budgetingbackend.application.auth.hashing.ArgonHash;
 import org.amoseman.budgetingbackend.application.auth.hashing.Hash;
 import org.amoseman.budgetingbackend.dao.AccountDAO;
-import org.amoseman.budgetingbackend.pojo.account.Account;
+import org.amoseman.budgetingbackend.model.account.Account;
 import org.bouncycastle.util.encoders.Base64;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

@@ -1,4 +1,4 @@
-package org.amoseman.budgetingbackend.pojo.account.op;
+package org.amoseman.budgetingbackend.model.account.op;
 
 /**
  * Represents an account update operation.

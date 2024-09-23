@@ -11,8 +11,8 @@ import org.amoseman.budgetingbackend.database.impl.sql.sqlite.DatabaseConnection
 import org.amoseman.budgetingbackend.exception.AccountAlreadyExistsException;
 import org.amoseman.budgetingbackend.exception.AccountDoesNotExistException;
 import org.amoseman.budgetingbackend.exception.UsernameExceedsMaxLengthException;
-import org.amoseman.budgetingbackend.pojo.account.Account;
-import org.amoseman.budgetingbackend.pojo.account.op.CreateAccount;
+import org.amoseman.budgetingbackend.model.account.Account;
+import org.amoseman.budgetingbackend.model.account.op.CreateAccount;
 import org.amoseman.budgetingbackend.service.impl.AccountServiceImpl;
 import org.jooq.DSLContext;
 import org.junit.jupiter.api.BeforeEach;

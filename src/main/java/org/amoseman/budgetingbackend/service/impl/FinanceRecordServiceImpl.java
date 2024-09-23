@@ -2,11 +2,11 @@ package org.amoseman.budgetingbackend.service.impl;
 
 import org.amoseman.budgetingbackend.dao.FinanceRecordDAO;
 import org.amoseman.budgetingbackend.exception.*;
-import org.amoseman.budgetingbackend.pojo.*;
-import org.amoseman.budgetingbackend.pojo.record.Expense;
-import org.amoseman.budgetingbackend.pojo.record.Income;
-import org.amoseman.budgetingbackend.pojo.record.info.ExpenseInfo;
-import org.amoseman.budgetingbackend.pojo.record.info.IncomeInfo;
+import org.amoseman.budgetingbackend.model.*;
+import org.amoseman.budgetingbackend.model.record.Expense;
+import org.amoseman.budgetingbackend.model.record.Income;
+import org.amoseman.budgetingbackend.model.record.info.ExpenseInfo;
+import org.amoseman.budgetingbackend.model.record.info.IncomeInfo;
 import org.amoseman.budgetingbackend.service.FinanceRecordService;
 import org.amoseman.budgetingbackend.util.Now;
 

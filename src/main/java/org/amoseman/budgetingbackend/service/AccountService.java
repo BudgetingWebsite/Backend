@@ -6,8 +6,8 @@ import org.amoseman.budgetingbackend.dao.AccountDAO;
 import org.amoseman.budgetingbackend.exception.AccountAlreadyExistsException;
 import org.amoseman.budgetingbackend.exception.AccountDoesNotExistException;
 import org.amoseman.budgetingbackend.exception.UsernameExceedsMaxLengthException;
-import org.amoseman.budgetingbackend.pojo.account.Account;
-import org.amoseman.budgetingbackend.pojo.account.op.CreateAccount;
+import org.amoseman.budgetingbackend.model.account.Account;
+import org.amoseman.budgetingbackend.model.account.op.CreateAccount;
 
 import java.util.Optional;
 

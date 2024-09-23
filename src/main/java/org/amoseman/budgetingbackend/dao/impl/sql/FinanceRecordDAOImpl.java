@@ -3,11 +3,11 @@ package org.amoseman.budgetingbackend.dao.impl.sql;
 import org.amoseman.budgetingbackend.dao.FinanceRecordDAO;
 import org.amoseman.budgetingbackend.database.DatabaseConnection;
 import org.amoseman.budgetingbackend.exception.*;
-import org.amoseman.budgetingbackend.pojo.TimeRange;
-import org.amoseman.budgetingbackend.pojo.record.Expense;
-import org.amoseman.budgetingbackend.pojo.record.Income;
-import org.amoseman.budgetingbackend.pojo.record.info.ExpenseInfo;
-import org.amoseman.budgetingbackend.pojo.record.info.IncomeInfo;
+import org.amoseman.budgetingbackend.model.TimeRange;
+import org.amoseman.budgetingbackend.model.record.Expense;
+import org.amoseman.budgetingbackend.model.record.Income;
+import org.amoseman.budgetingbackend.model.record.info.ExpenseInfo;
+import org.amoseman.budgetingbackend.model.record.info.IncomeInfo;
 import org.amoseman.budgetingbackend.util.Now;
 import org.jooq.*;
 

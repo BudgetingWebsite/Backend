@@ -11,7 +11,7 @@ import org.amoseman.budgetingbackend.application.auth.User;
 import org.amoseman.budgetingbackend.exception.AccountAlreadyExistsException;
 import org.amoseman.budgetingbackend.exception.AccountDoesNotExistException;
 import org.amoseman.budgetingbackend.exception.UsernameExceedsMaxLengthException;
-import org.amoseman.budgetingbackend.pojo.account.op.CreateAccount;
+import org.amoseman.budgetingbackend.model.account.op.CreateAccount;
 import org.amoseman.budgetingbackend.service.AccountService;
 
 @Path("/account")

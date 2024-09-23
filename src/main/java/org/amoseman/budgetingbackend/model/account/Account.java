@@ -1,7 +1,7 @@
-package org.amoseman.budgetingbackend.pojo.account;
+package org.amoseman.budgetingbackend.model.account;
 
-import org.amoseman.budgetingbackend.pojo.Entity;
-import org.amoseman.budgetingbackend.pojo.account.op.UpdateAccount;
+import org.amoseman.budgetingbackend.model.Entity;
+import org.amoseman.budgetingbackend.model.account.op.UpdateAccount;
 
 import java.beans.ConstructorProperties;
 import java.time.LocalDateTime;

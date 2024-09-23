@@ -1,6 +1,6 @@
 package org.amoseman.budgetingbackend.application.auth;
 
-import org.amoseman.budgetingbackend.pojo.account.Account;
+import org.amoseman.budgetingbackend.model.account.Account;
 
 import java.security.Principal;
 import java.util.Set;

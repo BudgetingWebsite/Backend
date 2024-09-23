@@ -1,4 +1,4 @@
-package org.amoseman.budgetingbackend.pojo.bucket;
+package org.amoseman.budgetingbackend.model.bucket;
 
 /**
  * Represents the information of a bucket.

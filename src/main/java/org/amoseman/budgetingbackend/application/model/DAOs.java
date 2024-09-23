@@ -1,4 +1,4 @@
-package org.amoseman.budgetingbackend.application.pojo;
+package org.amoseman.budgetingbackend.application.model;
 
 import org.amoseman.budgetingbackend.dao.AccountDAO;
 import org.amoseman.budgetingbackend.dao.BucketDAO;

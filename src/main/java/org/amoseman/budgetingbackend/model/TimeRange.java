@@ -1,4 +1,4 @@
-package org.amoseman.budgetingbackend.pojo;
+package org.amoseman.budgetingbackend.model;
 
 import java.time.LocalDateTime;
 

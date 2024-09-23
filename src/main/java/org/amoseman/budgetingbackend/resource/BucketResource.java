@@ -9,8 +9,8 @@ import org.amoseman.budgetingbackend.application.auth.User;
 import org.amoseman.budgetingbackend.exception.BucketAlreadyExistsException;
 import org.amoseman.budgetingbackend.exception.BucketDoesNotExistException;
 import org.amoseman.budgetingbackend.exception.TotalBucketShareExceededException;
-import org.amoseman.budgetingbackend.pojo.bucket.Bucket;
-import org.amoseman.budgetingbackend.pojo.bucket.BucketInfo;
+import org.amoseman.budgetingbackend.model.bucket.Bucket;
+import org.amoseman.budgetingbackend.model.bucket.BucketInfo;
 import org.amoseman.budgetingbackend.service.BucketService;
 
 import java.util.List;

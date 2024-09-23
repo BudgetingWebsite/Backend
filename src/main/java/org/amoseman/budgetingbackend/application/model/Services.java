@@ -1,4 +1,4 @@
-package org.amoseman.budgetingbackend.application.pojo;
+package org.amoseman.budgetingbackend.application.model;
 
 import org.amoseman.budgetingbackend.service.AccountService;
 import org.amoseman.budgetingbackend.service.BucketService;

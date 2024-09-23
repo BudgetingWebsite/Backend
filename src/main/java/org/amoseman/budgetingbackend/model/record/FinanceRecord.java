@@ -1,8 +1,8 @@
-package org.amoseman.budgetingbackend.pojo.record;
+package org.amoseman.budgetingbackend.model.record;
 
 
 import org.amoseman.budgetingbackend.exception.NegativeValueException;
-import org.amoseman.budgetingbackend.pojo.OwnedEntity;
+import org.amoseman.budgetingbackend.model.OwnedEntity;
 
 import java.beans.ConstructorProperties;
 import java.time.LocalDateTime;

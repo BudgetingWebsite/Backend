@@ -1,6 +1,6 @@
 package org.amoseman.budgetingbackend.util;
 
-import org.amoseman.budgetingbackend.pojo.bucket.Bucket;
+import org.amoseman.budgetingbackend.model.bucket.Bucket;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
