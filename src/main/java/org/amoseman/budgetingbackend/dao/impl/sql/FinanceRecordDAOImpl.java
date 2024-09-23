@@ -143,42 +143,44 @@ public class FinanceRecordDAOImpl extends FinanceRecordDAO<DSLContext> {
 
     @Override
     public Optional<Income> getIncome(String user, String uuid) {
+        List<Income> list;
         try {
-            List<Income> list = connection.get()
+            list = connection.get()
                     .selectFrom(INCOME)
                     .where(
                             INCOME.OWNER.eq(user).and(INCOME.UUID.eq(uuid))
                     )
                     .fetch()
                     .into(Income.class);
-            if (list.isEmpty()) {
-                return Optional.empty();
-            }
-            return Optional.of(list.get(0));
         }
         catch (Exception e) {
             throw new RuntimeException(e);
         }
+        if (list.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(list.get(0));
     }
 
     @Override
     public Optional<Expense> getExpense(String user, String uuid) {
+        List<Expense> list;
         try {
-            List<Expense> list = connection.get()
+            list = connection.get()
                     .selectFrom(EXPENSE)
                     .where(
                             EXPENSE.OWNER.eq(user).and(EXPENSE.UUID.eq(uuid))
                     )
                     .fetch()
                     .into(Expense.class);
-            if (list.isEmpty()) {
-                return Optional.empty();
-            }
-            return Optional.of(list.get(0));
         }
         catch (Exception e) {
             throw new RuntimeException(e);
         }
+        if (list.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(list.get(0));
     }
 
     @Override

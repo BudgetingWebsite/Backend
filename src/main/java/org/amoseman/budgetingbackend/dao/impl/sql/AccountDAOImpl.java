@@ -40,11 +40,17 @@ public class AccountDAOImpl extends AccountDAO<DSLContext> {
 
     @Override
     public Optional<Account> getAccount(String uuid) {
-        List<Account> list = connection.get()
-                .selectFrom(ACCOUNT)
-                .where(ACCOUNT.UUID.eq(uuid))
-                .fetch()
-                .into(Account.class);
+        List<Account> list;
+        try {
+            list = connection.get()
+                    .selectFrom(ACCOUNT)
+                    .where(ACCOUNT.UUID.eq(uuid))
+                    .fetch()
+                    .into(Account.class);
+        }
+        catch (DataAccessException e) {
+            return Optional.empty();
+        }
         if (list.isEmpty()) {
             return Optional.empty();
         }

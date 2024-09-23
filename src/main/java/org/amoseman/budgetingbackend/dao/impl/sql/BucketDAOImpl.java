@@ -51,20 +51,21 @@ public class BucketDAOImpl extends BucketDAO<DSLContext> {
 
     @Override
     public Optional<Bucket> getBucket(String owner, String uuid) {
+        List<Bucket> list;
         try {
-            List<Bucket> list = connection.get()
+            list = connection.get()
                     .selectFrom(BUCKET)
                     .where(BUCKET.UUID.eq(uuid))
                     .fetch()
                     .into(Bucket.class);
-            if (list.isEmpty()) {
-                return Optional.empty();
-            }
-            return Optional.of(list.get(0));
         }
         catch (Exception e) {
             throw new RuntimeException(e);
         }
+        if (list.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(list.get(0));
     }
 
     @Override
