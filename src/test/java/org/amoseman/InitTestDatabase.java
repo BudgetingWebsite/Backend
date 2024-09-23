@@ -13,6 +13,8 @@ import java.sql.SQLException;
 
 import static org.jooq.impl.DSL.table;
 
+import static org.jooq.codegen.Tables.*;
+
 public class InitTestDatabase {
     static Connection connection;
 
@@ -42,9 +44,9 @@ public class InitTestDatabase {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        context.deleteFrom(table("INCOME")).where(DSL.trueCondition()).execute();
-        context.deleteFrom(table("EXPENSE")).where(DSL.trueCondition()).execute();
-        context.deleteFrom(table("BUCKET")).where(DSL.trueCondition()).execute();
-        context.deleteFrom(table("ACCOUNT")).where(DSL.trueCondition()).execute();
+        context.deleteFrom(INCOME).where(DSL.trueCondition()).execute();
+        context.deleteFrom(EXPENSE).where(DSL.trueCondition()).execute();
+        context.deleteFrom(BUCKET).where(DSL.trueCondition()).execute();
+        context.deleteFrom(ACCOUNT).where(DSL.trueCondition()).execute();
     }
 }
