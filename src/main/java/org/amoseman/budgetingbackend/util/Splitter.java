@@ -3,9 +3,11 @@ package org.amoseman.budgetingbackend.util;
 import org.amoseman.budgetingbackend.pojo.bucket.Bucket;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * Provides dollar amount splitting functionality.
@@ -69,10 +71,6 @@ public final class Splitter {
      * @return the sum.
      */
     public static long sum(long[] x) {
-        long y = 0;
-        for (long e : x) {
-            y += e;
-        }
-        return y;
+        return Arrays.stream(x).sum();
     }
 }
