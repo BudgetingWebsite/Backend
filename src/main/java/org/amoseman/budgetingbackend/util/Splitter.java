@@ -31,8 +31,10 @@ public final class Splitter {
             indices.add(i);
         }
         indices = sortIndices(indices, loss);
+        return toSplit(rounded, indices, amount, totalLoss);
+    }
 
-        long remainder = amount;
+    private static Split toSplit(long[] rounded, List<Integer> indices, long remainder, double totalLoss) {
         int index = 0;
         long remainingLoss = (long) Math.floor(totalLoss);
         while (remainingLoss > 0 && index < indices.size()) {
@@ -44,6 +46,12 @@ public final class Splitter {
         return new Split(rounded, remainder);
     }
 
+    /**
+     * Sort a list of indices by a provided array of loss.
+     * @param indices the indices.
+     * @param loss the loss.
+     * @return the sorted list of indices.
+     */
     public static List<Integer> sortIndices(List<Integer> indices, double[] loss) {
         return IntStream.range(0, indices.size())
                 .boxed()
@@ -53,6 +61,11 @@ public final class Splitter {
                 .toList();
     }
 
+    /**
+     * Sum the array of long.
+     * @param x the array.
+     * @return the sum.
+     */
     public static long sum(long[] x) {
         long y = 0;
         for (long e : x) {
