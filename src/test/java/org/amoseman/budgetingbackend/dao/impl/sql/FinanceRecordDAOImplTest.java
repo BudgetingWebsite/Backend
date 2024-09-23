@@ -37,7 +37,7 @@ class FinanceRecordDAOImplTest {
 
     @AfterEach
     void cleanup() {
-        InitTestDatabase.close(databaseURL);
+        InitTestDatabase.clean(databaseURL);
     }
 
 

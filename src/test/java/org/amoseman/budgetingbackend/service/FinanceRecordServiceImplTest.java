@@ -46,7 +46,7 @@ class FinanceRecordServiceImplTest {
 
     @AfterEach
     void cleanup() {
-        InitTestDatabase.close(databaseURL);
+        InitTestDatabase.clean(databaseURL);
     }
 
     void addAlice() {

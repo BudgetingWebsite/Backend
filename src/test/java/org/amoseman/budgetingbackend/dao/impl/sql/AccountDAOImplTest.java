@@ -24,7 +24,7 @@ class AccountDAOImplTest {
 
     @AfterAll
     static void cleanup() {
-        InitTestDatabase.close(databaseURL);
+        InitTestDatabase.clean(databaseURL);
     }
 
     @Test

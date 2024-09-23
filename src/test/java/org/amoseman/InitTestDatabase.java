@@ -1,12 +1,17 @@
 package org.amoseman;
 
 import org.apache.ibatis.jdbc.ScriptRunner;
+import org.jooq.DSLContext;
+import org.jooq.SQLDialect;
+import org.jooq.impl.DSL;
 
 import java.io.File;
 import java.io.FileReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+
+import static org.jooq.impl.DSL.table;
 
 public class InitTestDatabase {
     static Connection connection;
@@ -30,13 +35,16 @@ public class InitTestDatabase {
         }
     }
 
-    public static void close(String databaseURL) {
+    public static void clean(String databaseURL) {
+        DSLContext context;
         try {
-            connection.createStatement().execute("SHUTDOWN");
+            context = DSL.using(DriverManager.getConnection(databaseURL), SQLDialect.H2);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        new File(databaseURL.split(":")[2]).delete();
-
+        context.deleteFrom(table("INCOME")).where(DSL.trueCondition()).execute();
+        context.deleteFrom(table("EXPENSE")).where(DSL.trueCondition()).execute();
+        context.deleteFrom(table("BUCKET")).where(DSL.trueCondition()).execute();
+        context.deleteFrom(table("ACCOUNT")).where(DSL.trueCondition()).execute();
     }
 }

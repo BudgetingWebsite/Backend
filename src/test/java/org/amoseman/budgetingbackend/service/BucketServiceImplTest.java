@@ -36,7 +36,7 @@ class BucketServiceImplTest {
 
     @AfterEach
     void cleanup() {
-        InitTestDatabase.close(databaseURL);
+        InitTestDatabase.clean(databaseURL);
     }
 
     @BeforeEach

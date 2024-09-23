@@ -93,6 +93,6 @@ class AccountServiceImplTest {
             fail("Able to retrieve account after it should have been deleted");
         }
 
-        InitTestDatabase.close(databaseURL);
+        InitTestDatabase.clean(databaseURL);
     }
 }
