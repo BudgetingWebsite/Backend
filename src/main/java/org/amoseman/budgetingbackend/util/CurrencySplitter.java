@@ -7,19 +7,18 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 /**
  * Provides dollar amount splitting functionality.
  */
-public final class Splitter {
+public final class CurrencySplitter {
     /**
      * Split the provided amount based on the provided buckets.
      * @param buckets the buckets.
      * @param amount the dollar amount to split.
      * @return the split amount.
      */
-    public static Split get(List<Bucket> buckets, long amount) {
+    public static SplitCurrency get(List<Bucket> buckets, long amount) {
         int len = buckets.size();
         long[] rounded = new long[len];
         double[] loss = new double[len];
@@ -38,7 +37,7 @@ public final class Splitter {
         return toSplit(rounded, indices, remainder, totalLoss);
     }
 
-    private static Split toSplit(long[] rounded, List<Integer> indices, long remainder, double totalLoss) {
+    private static SplitCurrency toSplit(long[] rounded, List<Integer> indices, long remainder, double totalLoss) {
         int index = 0;
         long remainingLoss = (long) Math.floor(totalLoss);
         while (remainingLoss > 0 && index < indices.size()) {
@@ -47,7 +46,7 @@ public final class Splitter {
             rounded[indices.get(index)]++;
             remainder--;
         }
-        return new Split(rounded, remainder);
+        return new SplitCurrency(rounded, remainder);
     }
 
     /**

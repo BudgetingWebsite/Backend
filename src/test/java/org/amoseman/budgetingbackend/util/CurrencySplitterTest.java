@@ -8,7 +8,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class SplitterTest {
+class CurrencySplitterTest {
 
     @Test
     void get() {
@@ -24,8 +24,8 @@ class SplitterTest {
         buckets.add(new Bucket(null, null, null, null, null, BUCKET_SHARE_TWO, 0));
         buckets.add(new Bucket(null, null, null, null, null, BUCKET_SHARE_THREE, 0));
 
-        Split split = Splitter.get(buckets, AMOUNT);
-        long sum = Splitter.sum(split.getAmounts());
+        SplitCurrency split = CurrencySplitter.get(buckets, AMOUNT);
+        long sum = CurrencySplitter.sum(split.getAmounts());
         assertEquals(AMOUNT, sum);
         assertEquals(0, split.getRemainder());
     }

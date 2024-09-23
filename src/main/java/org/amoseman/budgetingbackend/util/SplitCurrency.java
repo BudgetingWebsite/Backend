@@ -3,7 +3,7 @@ package org.amoseman.budgetingbackend.util;
 /**
  * Represents a dollar amount split into several amounts.
  */
-public final class Split {
+public final class SplitCurrency {
     private final long[] amounts;
     private final long remainder;
 
@@ -12,7 +12,7 @@ public final class Split {
      * @param amounts the amounts it was split into.
      * @param remainder the remaining dollar amount.
      */
-    Split(long[] amounts, long remainder) {
+    SplitCurrency(long[] amounts, long remainder) {
         this.amounts = amounts;
         this.remainder = remainder;
     }

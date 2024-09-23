@@ -11,8 +11,8 @@ import org.amoseman.budgetingbackend.pojo.bucket.Bucket;
 import org.amoseman.budgetingbackend.pojo.bucket.BucketInfo;
 import org.amoseman.budgetingbackend.service.BucketService;
 import org.amoseman.budgetingbackend.util.Now;
-import org.amoseman.budgetingbackend.util.Split;
-import org.amoseman.budgetingbackend.util.Splitter;
+import org.amoseman.budgetingbackend.util.SplitCurrency;
+import org.amoseman.budgetingbackend.util.CurrencySplitter;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -87,7 +87,7 @@ public class BucketServiceImpl<C> extends BucketService<C> {
     @Override
     protected void applyIncome(List<Bucket> buckets, List<Income> incomeRecords) {
         incomeRecords.forEach(income -> {
-            Split split = Splitter.get(buckets, income.amount);
+            SplitCurrency split = CurrencySplitter.get(buckets, income.amount);
             for (int i = 0; i < buckets.size(); i++) {
                 long amount = split.getAmounts()[i];
                 Bucket bucket = buckets.get(i);
