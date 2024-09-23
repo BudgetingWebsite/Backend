@@ -22,7 +22,6 @@ public final class Splitter {
         long[] rounded = new long[len];
         double[] loss = new double[len];
         double totalLoss = 0;
-        long remainder = amount;
         List<Integer> indices = new ArrayList<>();
         for (int i = 0; i < len; i++) {
             double raw = buckets.get(i).share * amount;
@@ -30,21 +29,29 @@ public final class Splitter {
             loss[i] = raw - rounded[i];
             totalLoss += loss[i];
             indices.add(i);
-            remainder -= rounded[i];
         }
         indices = sortIndices(indices, loss);
+        return toSplit(rounded, indices, amount, totalLoss);
+    }
 
+    private static Split toSplit(long[] rounded, List<Integer> indices, long remainder, double totalLoss) {
         int index = 0;
         long remainingLoss = (long) Math.floor(totalLoss);
         while (remainingLoss > 0 && index < indices.size()) {
             remainingLoss--;
             index++;
             rounded[indices.get(index)]++;
-            remainder--;
+            remainder -= rounded[index];
         }
         return new Split(rounded, remainder);
     }
 
+    /**
+     * Sort a list of indices by a provided array of loss.
+     * @param indices the indices.
+     * @param loss the loss.
+     * @return the sorted list of indices.
+     */
     public static List<Integer> sortIndices(List<Integer> indices, double[] loss) {
         return IntStream.range(0, indices.size())
                 .boxed()
@@ -54,6 +61,11 @@ public final class Splitter {
                 .toList();
     }
 
+    /**
+     * Sum the array of long.
+     * @param x the array.
+     * @return the sum.
+     */
     public static long sum(long[] x) {
         long y = 0;
         for (long e : x) {
