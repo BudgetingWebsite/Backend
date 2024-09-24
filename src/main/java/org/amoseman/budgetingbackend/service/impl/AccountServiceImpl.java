@@ -10,6 +10,7 @@ import org.amoseman.budgetingbackend.exception.UsernameExceedsMaxLengthException
 import org.amoseman.budgetingbackend.model.account.Account;
 import org.amoseman.budgetingbackend.model.account.op.CreateAccount;
 import org.amoseman.budgetingbackend.model.account.op.UpdateAccount;
+import org.amoseman.budgetingbackend.password.PasswordChecker;
 import org.amoseman.budgetingbackend.service.AccountService;
 import org.amoseman.budgetingbackend.util.Now;
 import org.bouncycastle.util.encoders.Base64;
