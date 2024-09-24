@@ -3,7 +3,7 @@ package org.amoseman.budgetingbackend.password;
 import java.util.Optional;
 
 public class PoolCalculator {
-    private static final String OTHER = "!@#$%^&*()";
+    private static final String OTHER = "!@#$%^&*()-_=+{}[]<>?/";
 
     public Optional<Integer> pool(String password) {
         int lowercase = 0;

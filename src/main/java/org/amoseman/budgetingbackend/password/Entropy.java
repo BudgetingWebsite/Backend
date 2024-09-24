@@ -10,7 +10,8 @@ public class Entropy {
             return Optional.empty();
         }
         int r = pool.get();
-        return Optional.of(log2(Math.pow(r, l)));
+        double e = log2(Math.pow(r, l));
+        return Optional.of(e);
     }
 
     private double log2(double x) {
