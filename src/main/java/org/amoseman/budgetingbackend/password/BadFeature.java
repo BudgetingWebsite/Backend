@@ -9,16 +9,22 @@ public class BadFeature {
         if (containsSequence(password)) {
             score += 1;
         }
-        if (containsPlainWord(password)) {
-            score += 1;
-        }
         return score;
     }
 
     private boolean containsRepetition(String password) {
         // check for repetition using regex
         // likely faster to do manually, as then it could fail fast
-        return password.matches("^(.+)(?:\\1)+$");
+        if (password.length() < 3) {
+            return false;
+        }
+        for (int i = 0; i < password.length() - 3; i++) {
+            String substring = password.substring(i, i + 3);
+            if (substring.matches("^(.+)(?:\\1)+$")) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private boolean containsSequence(String password) {
@@ -48,11 +54,6 @@ public class BadFeature {
                 return true;
             }
         }
-        return false;
-    }
-
-    private boolean containsPlainWord(String password) {
-        // todo: check if password contains plain word (would require dictionary)
         return false;
     }
 }

@@ -13,6 +13,6 @@ public class Result {
 
     @Override
     public String toString() {
-        return String.format("%s: %.4f, %.4f", type, entropyScore, featureScore);
+        return String.format("%s: %.4f, %.4f, %.4f", type, entropyScore, featureScore, entropyScore + featureScore);
     }
 }
