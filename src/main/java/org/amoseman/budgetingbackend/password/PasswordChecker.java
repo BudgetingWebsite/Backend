@@ -3,11 +3,6 @@ package org.amoseman.budgetingbackend.password;
 import java.util.Optional;
 
 public class PasswordChecker {
-    public static void main(String[] args) {
-        String password = "a1b2c3!@#$aaaa";
-        Result result = new PasswordChecker().check(password);
-        System.out.println(result);
-    }
     private static final int MIN_LENGTH = 8;
     private static final int MIN_ENTROPY = 85;
     private static final int MAX_BAD_FEATURE_SCORE = 3;

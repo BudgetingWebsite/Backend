@@ -9,6 +9,7 @@ import org.amoseman.budgetingbackend.exception.UsernameExceedsMaxLengthException
 import org.amoseman.budgetingbackend.model.account.Account;
 import org.amoseman.budgetingbackend.model.account.op.CreateAccount;
 import org.amoseman.budgetingbackend.password.PasswordChecker;
+import org.amoseman.budgetingbackend.password.ResultType;
 
 import java.util.Optional;
 
@@ -39,8 +40,9 @@ public abstract class AccountService<C> {
      * Add a new account.
      * @param usernamePassword the username and password of the new account.
      * @throws AccountAlreadyExistsException if the username is already in use.
+     * @return the result of the password strength check.
      */
-    public abstract void addAccount(CreateAccount usernamePassword) throws AccountAlreadyExistsException, UsernameExceedsMaxLengthException;
+    public abstract ResultType addAccount(CreateAccount usernamePassword) throws AccountAlreadyExistsException, UsernameExceedsMaxLengthException;
 
     /**
      * Remove an account.
@@ -60,8 +62,9 @@ public abstract class AccountService<C> {
      * @param username the username of the account.
      * @param password the new password of the account.
      * @throws AccountDoesNotExistException if the account does not exist.
+     * @return the result of the password strength check.
      */
-    public abstract void changePassword(String username, String password) throws AccountDoesNotExistException;
+    public abstract ResultType changePassword(String username, String password) throws AccountDoesNotExistException;
 
     /**
      * Change the roles of an account.

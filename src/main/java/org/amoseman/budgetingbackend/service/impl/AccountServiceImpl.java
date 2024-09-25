@@ -10,7 +10,8 @@ import org.amoseman.budgetingbackend.exception.UsernameExceedsMaxLengthException
 import org.amoseman.budgetingbackend.model.account.Account;
 import org.amoseman.budgetingbackend.model.account.op.CreateAccount;
 import org.amoseman.budgetingbackend.model.account.op.UpdateAccount;
-import org.amoseman.budgetingbackend.password.PasswordChecker;
+import org.amoseman.budgetingbackend.password.Result;
+import org.amoseman.budgetingbackend.password.ResultType;
 import org.amoseman.budgetingbackend.service.AccountService;
 import org.amoseman.budgetingbackend.util.Now;
 import org.bouncycastle.util.encoders.Base64;
@@ -26,7 +27,12 @@ public class AccountServiceImpl<C> extends AccountService<C> {
     }
 
     @Override
-    public void addAccount(CreateAccount usernamePassword) throws AccountAlreadyExistsException, UsernameExceedsMaxLengthException {
+    public ResultType addAccount(CreateAccount usernamePassword) throws AccountAlreadyExistsException, UsernameExceedsMaxLengthException {
+        Result result = passwordChecker.check(usernamePassword.getPassword());
+        if (result.type != ResultType.SUCCESS) {
+            return result.type;
+        }
+
         if (usernamePassword.getUsername().length() > configuration.getMaxUsernameLength()) {
             throw new UsernameExceedsMaxLengthException(configuration.getMaxUsernameLength() , usernamePassword.getUsername());
         }
@@ -35,6 +41,8 @@ public class AccountServiceImpl<C> extends AccountService<C> {
         String hash64 = hash.hash(usernamePassword.getPassword(), salt);
         Account account = new Account(usernamePassword.getUsername(), Now.get(), Now.get(), hash64, salt64, Roles.USER);
         accountDAO.addAccount(account);
+
+        return result.type;
     }
 
     @Override
@@ -48,7 +56,12 @@ public class AccountServiceImpl<C> extends AccountService<C> {
     }
 
     @Override
-    public void changePassword(String username, String password) throws AccountDoesNotExistException {
+    public ResultType changePassword(String username, String password) throws AccountDoesNotExistException {
+        Result result = passwordChecker.check(password);
+        if (result.type != ResultType.SUCCESS) {
+            return result.type;
+        }
+
         LocalDateTime now = Now.get();
         Optional<Account> maybe = accountDAO.getAccount(username);
         if (maybe.isEmpty()) {
@@ -61,6 +74,8 @@ public class AccountServiceImpl<C> extends AccountService<C> {
         UpdateAccount update = new UpdateAccount(username, hash64, salt64, account.roles);
         account = new Account(account, update, now);
         accountDAO.updateAccount(account);
+
+        return result.type;
     }
 
     @Override
