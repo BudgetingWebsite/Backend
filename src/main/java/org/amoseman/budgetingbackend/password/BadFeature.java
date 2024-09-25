@@ -1,6 +1,18 @@
 package org.amoseman.budgetingbackend.password;
 
+/**
+ * Class for checking if a password contains bad features.
+ */
 public class BadFeature {
+    private final int MIN_BAD_FEATURE_SCORE = 3;
+
+    /**
+     * Calculate the feature score of a password.
+     * The higher the number, the better.
+     * Points are lost if it contains a sequence or repetition.
+     * @param password the password to check.
+     * @return the feature score.
+     */
     public double score(String password) {
         double score = 0;
         if (containsRepetition(password)) {
@@ -9,7 +21,7 @@ public class BadFeature {
         if (containsSequence(password)) {
             score += 1;
         }
-        return score;
+        return (MIN_BAD_FEATURE_SCORE - score) / MIN_BAD_FEATURE_SCORE;
     }
 
     private boolean containsRepetition(String password) {

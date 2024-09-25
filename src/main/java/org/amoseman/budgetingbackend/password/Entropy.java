@@ -2,7 +2,15 @@ package org.amoseman.budgetingbackend.password;
 
 import java.util.Optional;
 
+/**
+ * A class for calculating the bit entropy of a password.
+ */
 public class Entropy {
+    /**
+     * Calculate the bit entropy of a password.
+     * @param password the password.
+     * @return the bit entropy, or empty if it contained an invalid character.
+     */
     public Optional<Double> entropy(String password) {
         int l = password.length();
         Optional<Integer> pool = new PoolCalculator().pool(password);

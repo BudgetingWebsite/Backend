@@ -4,14 +4,20 @@ import org.amoseman.budgetingbackend.application.BudgetingConfiguration;
 
 import java.util.Optional;
 
+/**
+ * A class for checking the strength of passwords.
+ */
 public class PasswordChecker {
     private final int minLength;
     private final int minEntropy;
-    private final int MIN_BAD_FEATURE_SCORE = 3;
     private final double minScore;
     private final boolean requiresUppercase;
     private final boolean requiresSpecial;
 
+    /**
+     * Instantiate a password checker.
+     * @param configuration the configuration to use.
+     */
     public PasswordChecker(BudgetingConfiguration configuration) {
         minLength = configuration.getMinPasswordLength();
         minEntropy = configuration.getMinPasswordEntropy();
@@ -20,14 +26,18 @@ public class PasswordChecker {
         requiresSpecial = configuration.isPasswordRequiresSpecial();
     }
 
+    /**
+     * Check the strength of a password.
+     * @param password the password.
+     * @return the result of the check.
+     */
     public Result check(String password) {
         Optional<Double> entropy = new Entropy().entropy(password);
         if (entropy.isEmpty()) {
             return new Result(ResultType.INVALID_CHARACTER, 0, 0);
         }
         double entropyScore = entropy.get() / minEntropy;
-        double badFeatures = new BadFeature().score(password);
-        double featureScore = (MIN_BAD_FEATURE_SCORE - badFeatures) / MIN_BAD_FEATURE_SCORE;
+        double featureScore = new BadFeature().score(password);
 
         if (password.length() < minLength) {
             return new Result(ResultType.LESS_THAN_MIN_LENGTH, entropyScore, featureScore);

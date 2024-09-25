@@ -2,9 +2,17 @@ package org.amoseman.budgetingbackend.password;
 
 import java.util.Optional;
 
+/**
+ * A class for calculate the pool size of a password.
+ */
 public class PoolCalculator {
     public static final String SPECIAL = "!@#$%^&*()-_=+{}[]<>?/,.|`~;:";
 
+    /**
+     * Calculate the pool size of a password.
+     * @param password the password.
+     * @return the pool size, or empty if it contains an invalid character.
+     */
     public Optional<Integer> pool(String password) {
         int lowercase = 0;
         int uppercase = 0;
