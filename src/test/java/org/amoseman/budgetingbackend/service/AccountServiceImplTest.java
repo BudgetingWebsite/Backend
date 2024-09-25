@@ -36,7 +36,10 @@ class AccountServiceImplTest {
         InitTestDatabase.init(databaseURL, "schema.sql");
         connection = new DatabaseConnectionImpl(databaseURL);
         AccountDAO<DSLContext> accountDAO = new AccountDAOImpl(connection);
-        accountService = new AccountServiceImpl<>(new BudgetingConfiguration().setMaxUsernameLength(64), accountDAO, hash);
+        accountService = new AccountServiceImpl<>(
+                new BudgetingConfiguration().setPasswordRequiresUppercase(false).setPasswordRequiresSpecial(false).setMinPasswordLength(0).setMinPasswordEntropy(0).setMinPasswordScore(0),
+                accountDAO,
+                hash);
     }
 
     @Test

@@ -51,7 +51,11 @@ class FinanceRecordServiceImplTest {
 
     void addAlice() {
         try {
-            new AccountServiceImpl<>(new BudgetingConfiguration().setMaxUsernameLength(64), new AccountDAOImpl(connection), new ArgonHash(new SecureRandom(), 16, 16, 2, 8000, 1)).addAccount(new CreateAccount("alice", "password"));
+            new AccountServiceImpl<>(
+                    new BudgetingConfiguration().setMinPasswordLength(0).setMinPasswordEntropy(0).setMinPasswordScore(0).setPasswordRequiresUppercase(false).setPasswordRequiresSpecial(false),
+                    new AccountDAOImpl(connection),
+                    new ArgonHash(new SecureRandom(), 16, 16, 2, 8000, 1))
+                    .addAccount(new CreateAccount("alice", "password"));
         }
         catch (AccountAlreadyExistsException | UsernameExceedsMaxLengthException e) {
             fail(e);

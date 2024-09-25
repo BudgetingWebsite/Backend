@@ -33,7 +33,7 @@ public abstract class AccountService<C> {
         this.configuration = configuration;
         this.accountDAO = accountDAO;
         this.hash = hash;
-        this.passwordChecker = new PasswordChecker();
+        this.passwordChecker = new PasswordChecker(configuration);
     }
 
     /**

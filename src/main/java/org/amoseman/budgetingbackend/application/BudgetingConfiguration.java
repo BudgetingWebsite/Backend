@@ -11,7 +11,12 @@ public class BudgetingConfiguration extends Configuration {
     private String adminUsername;
     @NotEmpty
     private String adminPassword;
-    private int maxUsernameLength;
+    private int maxUsernameLength = 32;
+    private int minPasswordLength = 8;
+    private int minPasswordEntropy = 85;
+    private int minPasswordScore = 75;
+    private boolean passwordRequiresUppercase = true;
+    private boolean passwordRequiresSpecial = true;
 
     @JsonProperty("database-url")
     public String getDatabaseURL() {
@@ -33,6 +38,31 @@ public class BudgetingConfiguration extends Configuration {
         return maxUsernameLength;
     }
 
+    @JsonProperty("min-password-length")
+    public int getMinPasswordLength() {
+        return minPasswordLength;
+    }
+
+    @JsonProperty("min-password-entropy")
+    public int getMinPasswordEntropy() {
+        return minPasswordEntropy;
+    }
+
+    @JsonProperty("min-password-score")
+    public int getMinPasswordScore() {
+        return minPasswordScore;
+    }
+
+    @JsonProperty("password-requires-uppercase")
+    public boolean isPasswordRequiresUppercase() {
+        return passwordRequiresUppercase;
+    }
+
+    @JsonProperty("password-requires-special")
+    public boolean isPasswordRequiresSpecial() {
+        return passwordRequiresSpecial;
+    }
+
     public BudgetingConfiguration setDatabaseURL(String databaseURL) {
         this.databaseURL = databaseURL;
         return this;
@@ -50,6 +80,31 @@ public class BudgetingConfiguration extends Configuration {
 
     public BudgetingConfiguration setMaxUsernameLength(int maxUsernameLength) {
         this.maxUsernameLength = maxUsernameLength;
+        return this;
+    }
+
+    public BudgetingConfiguration setMinPasswordLength(int minPasswordLength) {
+        this.minPasswordLength = minPasswordLength;
+        return this;
+    }
+
+    public BudgetingConfiguration setMinPasswordEntropy(int minPasswordEntropy) {
+        this.minPasswordEntropy = minPasswordEntropy;
+        return this;
+    }
+
+    public BudgetingConfiguration setMinPasswordScore(int minPasswordScore) {
+        this.minPasswordScore = minPasswordScore;
+        return this;
+    }
+
+    public BudgetingConfiguration setPasswordRequiresUppercase(boolean passwordRequiresUppercase) {
+        this.passwordRequiresUppercase = passwordRequiresUppercase;
+        return this;
+    }
+
+    public BudgetingConfiguration setPasswordRequiresSpecial(boolean passwordRequiresSpecial) {
+        this.passwordRequiresSpecial = passwordRequiresSpecial;
         return this;
     }
 }

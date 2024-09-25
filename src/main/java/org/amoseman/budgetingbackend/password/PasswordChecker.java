@@ -1,32 +1,44 @@
 package org.amoseman.budgetingbackend.password;
 
+import org.amoseman.budgetingbackend.application.BudgetingConfiguration;
+
 import java.util.Optional;
 
 public class PasswordChecker {
-    private static final int MIN_LENGTH = 8;
-    private static final int MIN_ENTROPY = 85;
-    private static final int MAX_BAD_FEATURE_SCORE = 3;
-    private static final double MIN_SCORE = 0.75;
+    private final int minLength;
+    private final int minEntropy;
+    private final int MIN_BAD_FEATURE_SCORE = 3;
+    private final double minScore;
+    private final boolean requiresUppercase;
+    private final boolean requiresSpecial;
+
+    public PasswordChecker(BudgetingConfiguration configuration) {
+        minLength = configuration.getMinPasswordLength();
+        minEntropy = configuration.getMinPasswordEntropy();
+        minScore = configuration.getMinPasswordScore();
+        requiresUppercase = configuration.isPasswordRequiresUppercase();
+        requiresSpecial = configuration.isPasswordRequiresSpecial();
+    }
 
     public Result check(String password) {
         Optional<Double> entropy = new Entropy().entropy(password);
         if (entropy.isEmpty()) {
             return new Result(ResultType.INVALID_CHARACTER, 0, 0);
         }
-        double entropyScore = entropy.get() / MIN_ENTROPY;
+        double entropyScore = entropy.get() / minEntropy;
         double badFeatures = new BadFeature().score(password);
-        double featureScore = (MAX_BAD_FEATURE_SCORE - badFeatures) / MAX_BAD_FEATURE_SCORE;
+        double featureScore = (MIN_BAD_FEATURE_SCORE - badFeatures) / MIN_BAD_FEATURE_SCORE;
 
-        if (password.length() < MIN_LENGTH) {
+        if (password.length() < minLength) {
             return new Result(ResultType.LESS_THAN_MIN_LENGTH, entropyScore, featureScore);
         }
-        if (!containsUppercase(password)) {
+        if (requiresUppercase && !containsUppercase(password)) {
             return new Result(ResultType.MISSING_UPPERCASE, entropyScore, featureScore);
         }
-        if (!containsSpecialCharacter(password)) {
+        if (requiresSpecial && !containsSpecialCharacter(password)) {
             return new Result(ResultType.MISSING_SPECIAL, entropyScore, featureScore);
         }
-        if (entropyScore + featureScore < MIN_SCORE * 2) {
+        if (entropyScore + featureScore < minScore * 2) {
             return new Result(ResultType.WEAK_SCORE, entropyScore, featureScore);
         }
         return new Result(ResultType.SUCCESS, entropyScore, featureScore);

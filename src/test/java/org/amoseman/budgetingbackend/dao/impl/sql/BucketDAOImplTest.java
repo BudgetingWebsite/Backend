@@ -42,7 +42,10 @@ class BucketDAOImplTest {
         BucketDAO<DSLContext> bucketDAO = new BucketDAOImpl(connection);
 
         try {
-            new AccountServiceImpl<>(new BudgetingConfiguration().setMaxUsernameLength(64), new AccountDAOImpl(connection), new ArgonHash(new SecureRandom(), 16, 16, 2, 8000, 1)).addAccount(new CreateAccount("alice", "password"));
+            new AccountServiceImpl<>(new BudgetingConfiguration().setMinPasswordScore(0).setMinPasswordEntropy(0).setMinPasswordLength(0).setPasswordRequiresSpecial(false).setPasswordRequiresUppercase(false),
+                    new AccountDAOImpl(connection),
+                    new ArgonHash(new SecureRandom(), 16, 16, 2, 8000, 1))
+                    .addAccount(new CreateAccount("alice", "password"));
         } catch (AccountAlreadyExistsException | UsernameExceedsMaxLengthException e) {
             fail(e);
         }
