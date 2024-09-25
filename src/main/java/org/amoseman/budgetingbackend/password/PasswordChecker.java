@@ -54,6 +54,11 @@ public class PasswordChecker {
         return new Result(ResultType.SUCCESS, entropyScore, featureScore);
     }
 
+    /**
+     * Check if the provided password contains an uppercase letter.
+     * @param password the password.
+     * @return true if the password contains an uppercase letter, false otherwise.
+     */
     private boolean containsUppercase(String password) {
         for (char c : password.toCharArray()) {
             if (Character.isUpperCase(c)) {
@@ -63,6 +68,11 @@ public class PasswordChecker {
         return false;
     }
 
+    /**
+     * Check if the provided password contains a special letter.
+     * @param password the password.
+     * @return true if the password contains a special letter, false otherwise.
+     */
     private boolean containsSpecialCharacter(String password) {
         for (char c : password.toCharArray()) {
             if (PoolCalculator.SPECIAL.contains("" + c)) {

@@ -24,6 +24,11 @@ public class BadFeature {
         return (MIN_BAD_FEATURE_SCORE - score) / MIN_BAD_FEATURE_SCORE;
     }
 
+    /**
+     * Determine if a password contains a repetition of length 3 or more.
+     * @param password the password.
+     * @return true or false, depending on if the password contains a repetition or not.
+     */
     private boolean containsRepetition(String password) {
         // check for repetition using regex
         // likely faster to do manually, as then it could fail fast
@@ -39,6 +44,11 @@ public class BadFeature {
         return false;
     }
 
+    /**
+     * Determine if a password contains a sequence of length 4 or more.
+     * @param password the password.
+     * @return true or false, depending on if the password contains a sequence or not.
+     */
     private boolean containsSequence(String password) {
         if (password.length() < 4) {
             return false;
@@ -52,6 +62,11 @@ public class BadFeature {
         return false;
     }
 
+    /**
+     * Determine if the provided string is a sequence.
+     * @param string the string.
+     * @return true if it is a sequence, false otherwise.
+     */
     private boolean isSequence(String string) {
         char[] characters = string.toCharArray();
         if (!(Character.isAlphabetic(characters[0]) || Character.isDigit(characters[0]))) {

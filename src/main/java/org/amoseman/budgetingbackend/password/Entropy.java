@@ -22,6 +22,11 @@ public class Entropy {
         return Optional.of(e);
     }
 
+    /**
+     * Calculate the log base 2 of the provided number.
+     * @param x the number.
+     * @return the log base 2 of the provided number.
+     */
     private double log2(double x) {
         return Math.log(x) / Math.log(2);
     }
