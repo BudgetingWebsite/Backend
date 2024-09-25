@@ -14,7 +14,7 @@ public class BudgetingConfiguration extends Configuration {
     private int maxUsernameLength = 32;
     private int minPasswordLength = 8;
     private int minPasswordEntropy = 85;
-    private int minPasswordScore = 75;
+    private double minPasswordScore = 0.75;
     private boolean passwordRequiresUppercase = true;
     private boolean passwordRequiresSpecial = true;
 
@@ -49,7 +49,7 @@ public class BudgetingConfiguration extends Configuration {
     }
 
     @JsonProperty("min-password-score")
-    public int getMinPasswordScore() {
+    public double getMinPasswordScore() {
         return minPasswordScore;
     }
 
@@ -93,7 +93,7 @@ public class BudgetingConfiguration extends Configuration {
         return this;
     }
 
-    public BudgetingConfiguration setMinPasswordScore(int minPasswordScore) {
+    public BudgetingConfiguration setMinPasswordScore(double minPasswordScore) {
         this.minPasswordScore = minPasswordScore;
         return this;
     }
