@@ -35,7 +35,7 @@ public class BadFeatureCalculator {
         }
         for (int i = 0; i < password.length() - 3; i++) {
             String substring = password.substring(i, i + 3);
-            if (substring.matches("^(.+)(?:\\1)+$")) {
+            if (substring.matches("^(.)\\1{1,}$")) { // regex from https://stackoverflow.com/a/29159021 to check if string is repeating characters.
                 return true;
             }
         }
