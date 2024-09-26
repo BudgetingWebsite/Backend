@@ -52,7 +52,7 @@ class FinanceRecordDAOImplTest {
                     new AccountDAOImpl(connection),
                     new ArgonHash(new SecureRandom(), 16, 16, 2, 8000, 1))
                     .addAccount(new CreateAccount("person", "password"));
-        } catch (AccountAlreadyExistsException | UsernameExceedsMaxLengthException e) {
+        } catch (AccountAlreadyExistsException | UsernameExceedsMaxLengthException | InvalidPasswordException e) {
             fail(e);
         }
         try {

@@ -57,7 +57,7 @@ class FinanceRecordServiceImplTest {
                     new ArgonHash(new SecureRandom(), 16, 16, 2, 8000, 1))
                     .addAccount(new CreateAccount("alice", "password"));
         }
-        catch (AccountAlreadyExistsException | UsernameExceedsMaxLengthException e) {
+        catch (AccountAlreadyExistsException | UsernameExceedsMaxLengthException | InvalidPasswordException e) {
             fail(e);
         }
     }

@@ -9,7 +9,7 @@ package org.amoseman.budgetingbackend.password;
  * MISSING_SPECIAL      - The password is missing a special character.
  * WEAK_SCORE           - The password has a poor score based on its entropy and bad features, which are repetition and sequences.
  */
-public enum ResultType {
+public enum PasswordValidationType {
     SUCCESS,
     INVALID_CHARACTER,
     LESS_THAN_MIN_LENGTH,

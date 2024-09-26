@@ -10,6 +10,7 @@ import org.amoseman.budgetingbackend.database.DatabaseConnection;
 import org.amoseman.budgetingbackend.database.impl.sql.sqlite.DatabaseConnectionImpl;
 import org.amoseman.budgetingbackend.exception.AccountAlreadyExistsException;
 import org.amoseman.budgetingbackend.exception.AccountDoesNotExistException;
+import org.amoseman.budgetingbackend.exception.InvalidPasswordException;
 import org.amoseman.budgetingbackend.exception.UsernameExceedsMaxLengthException;
 import org.amoseman.budgetingbackend.model.account.Account;
 import org.amoseman.budgetingbackend.model.account.op.CreateAccount;
@@ -47,7 +48,7 @@ class AccountServiceImplTest {
         try {
             accountService.addAccount(new CreateAccount("alice", "12345"));
         }
-        catch (AccountAlreadyExistsException | UsernameExceedsMaxLengthException e) {
+        catch (AccountAlreadyExistsException | UsernameExceedsMaxLengthException | InvalidPasswordException e) {
             fail(e);
         }
         Optional<Account> maybe =  accountService.getAccount("alice");
@@ -61,7 +62,7 @@ class AccountServiceImplTest {
         try {
             accountService.changePassword("alice", "54321");
         }
-        catch (AccountDoesNotExistException e) {
+        catch (AccountDoesNotExistException | InvalidPasswordException e) {
             fail(e);
         }
         maybe = accountService.getAccount("alice");

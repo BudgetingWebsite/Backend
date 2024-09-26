@@ -16,7 +16,6 @@ import org.amoseman.budgetingbackend.model.bucket.Bucket;
 import org.amoseman.budgetingbackend.model.bucket.BucketInfo;
 import org.amoseman.budgetingbackend.model.record.info.ExpenseInfo;
 import org.amoseman.budgetingbackend.model.record.info.IncomeInfo;
-import org.amoseman.budgetingbackend.password.ResultType;
 import org.amoseman.budgetingbackend.service.impl.AccountServiceImpl;
 import org.amoseman.budgetingbackend.service.impl.BucketServiceImpl;
 import org.amoseman.budgetingbackend.service.impl.FinanceRecordServiceImpl;
@@ -54,7 +53,7 @@ class BucketServiceImplTest {
                     new AccountDAOImpl(connection),
                     new ArgonHash(new SecureRandom(), 16, 16, 2, 8000, 1))
                     .addAccount(new CreateAccount("alice", "password"));
-        } catch (AccountAlreadyExistsException | UsernameExceedsMaxLengthException e) {
+        } catch (AccountAlreadyExistsException | UsernameExceedsMaxLengthException | InvalidPasswordException e) {
             fail(e);
         }
     }

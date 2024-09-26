@@ -31,27 +31,27 @@ public class PasswordChecker {
      * @param password the password.
      * @return the result of the check.
      */
-    public Result check(String password) {
+    public PasswordValidationResult check(String password) {
         Optional<Double> entropy = new Entropy().entropy(password);
         if (entropy.isEmpty()) {
-            return new Result(ResultType.INVALID_CHARACTER, 0, 0);
+            return new PasswordValidationResult(PasswordValidationType.INVALID_CHARACTER, 0, 0);
         }
         double entropyScore = entropy.get() / minEntropy;
         double featureScore = new BadFeature().score(password);
 
         if (password.length() < minLength) {
-            return new Result(ResultType.LESS_THAN_MIN_LENGTH, entropyScore, featureScore);
+            return new PasswordValidationResult(PasswordValidationType.LESS_THAN_MIN_LENGTH, entropyScore, featureScore);
         }
         if (requiresUppercase && !containsUppercase(password)) {
-            return new Result(ResultType.MISSING_UPPERCASE, entropyScore, featureScore);
+            return new PasswordValidationResult(PasswordValidationType.MISSING_UPPERCASE, entropyScore, featureScore);
         }
         if (requiresSpecial && !containsSpecialCharacter(password)) {
-            return new Result(ResultType.MISSING_SPECIAL, entropyScore, featureScore);
+            return new PasswordValidationResult(PasswordValidationType.MISSING_SPECIAL, entropyScore, featureScore);
         }
         if (entropyScore + featureScore < minScore * 2) {
-            return new Result(ResultType.WEAK_SCORE, entropyScore, featureScore);
+            return new PasswordValidationResult(PasswordValidationType.WEAK_SCORE, entropyScore, featureScore);
         }
-        return new Result(ResultType.SUCCESS, entropyScore, featureScore);
+        return new PasswordValidationResult(PasswordValidationType.SUCCESS, entropyScore, featureScore);
     }
 
     /**

@@ -20,7 +20,6 @@ import org.amoseman.budgetingbackend.database.DatabaseConnection;
 import org.amoseman.budgetingbackend.database.impl.sql.sqlite.DatabaseConnectionImpl;
 import org.amoseman.budgetingbackend.exception.mapping.*;
 import org.amoseman.budgetingbackend.model.account.Account;
-import org.amoseman.budgetingbackend.password.PasswordChecker;
 import org.amoseman.budgetingbackend.resource.AccountResource;
 import org.amoseman.budgetingbackend.resource.FinanceRecordResource;
 import org.amoseman.budgetingbackend.resource.BucketResource;
@@ -98,6 +97,7 @@ public class BudgetingApplication extends Application<BudgetingConfiguration> {
         environment.jersey().register(new IllegalArgumentExceptionMapper());
         environment.jersey().register(new TotalBucketShareExceededExceptionMapper());
         environment.jersey().register(new DateTimeExceptionMapper());
+        environment.jersey().register(new InvalidPasswordExceptionMapper());
     }
 
     private void initializeAdminAccount(BudgetingConfiguration configuration, Hash hash, AccountDAO<?> accountDAO) {
