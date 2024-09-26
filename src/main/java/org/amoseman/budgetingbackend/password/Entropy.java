@@ -18,16 +18,7 @@ public class Entropy {
             return Optional.empty();
         }
         int r = pool.get();
-        double e = log2(Math.pow(r, l));
+        double e = Math.log((Math.pow(r, l))) / Math.log(2); // equivalent to log_2(r^l)
         return Optional.of(e);
-    }
-
-    /**
-     * Calculate the log base 2 of the provided number.
-     * @param x the number.
-     * @return the log base 2 of the provided number.
-     */
-    private double log2(double x) {
-        return Math.log(x) / Math.log(2);
     }
 }
