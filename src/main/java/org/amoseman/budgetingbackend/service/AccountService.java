@@ -9,7 +9,7 @@ import org.amoseman.budgetingbackend.exception.UsernameExceedsMaxLengthException
 import org.amoseman.budgetingbackend.exception.InvalidPasswordException;
 import org.amoseman.budgetingbackend.model.account.Account;
 import org.amoseman.budgetingbackend.model.account.op.CreateAccount;
-import org.amoseman.budgetingbackend.password.PasswordChecker;
+import org.amoseman.budgetingbackend.password.PasswordValidator;
 
 import java.util.Optional;
 
@@ -21,7 +21,7 @@ public abstract class AccountService<C> {
     protected final BudgetingConfiguration configuration;
     protected final AccountDAO<C> accountDAO;
     protected final Hash hash;
-    protected final PasswordChecker passwordChecker;
+    protected final PasswordValidator passwordValidator;
 
     /**
      * Instantiate a new account service.
@@ -33,7 +33,7 @@ public abstract class AccountService<C> {
         this.configuration = configuration;
         this.accountDAO = accountDAO;
         this.hash = hash;
-        this.passwordChecker = new PasswordChecker(configuration);
+        this.passwordValidator = new PasswordValidator(configuration);
     }
 
     /**

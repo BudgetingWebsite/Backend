@@ -3,7 +3,7 @@ package org.amoseman.budgetingbackend.password;
 /**
  * Class for checking if a password contains bad features.
  */
-public class BadFeature {
+public class BadFeatureCalculator {
     /**
      * Calculate the feature score of a password.
      * The higher the number, the better.

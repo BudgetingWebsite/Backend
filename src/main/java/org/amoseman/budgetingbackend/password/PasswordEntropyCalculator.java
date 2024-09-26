@@ -5,7 +5,7 @@ import java.util.Optional;
 /**
  * A class for calculating the bit entropy of a password.
  */
-public class Entropy {
+public class PasswordEntropyCalculator {
     /**
      * Calculate the bit entropy of a password.
      * @param password the password.
@@ -13,7 +13,7 @@ public class Entropy {
      */
     public Optional<Double> entropy(String password) {
         int l = password.length();
-        Optional<Integer> pool = new PoolCalculator().pool(password);
+        Optional<Integer> pool = new CharacterPoolCalculator().pool(password);
         if (pool.isEmpty()) {
             return Optional.empty();
         }

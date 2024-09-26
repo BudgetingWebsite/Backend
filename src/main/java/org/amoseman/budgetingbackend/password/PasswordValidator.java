@@ -7,7 +7,7 @@ import java.util.Optional;
 /**
  * A class for checking the strength of passwords.
  */
-public class PasswordChecker {
+public class PasswordValidator {
     private final int minLength;
     private final int minEntropy;
     private final double minScore;
@@ -18,7 +18,7 @@ public class PasswordChecker {
      * Instantiate a password checker.
      * @param configuration the configuration to use.
      */
-    public PasswordChecker(BudgetingConfiguration configuration) {
+    public PasswordValidator(BudgetingConfiguration configuration) {
         minLength = configuration.getMinPasswordLength();
         minEntropy = configuration.getMinPasswordEntropy();
         minScore = configuration.getMinPasswordScore();
@@ -32,12 +32,12 @@ public class PasswordChecker {
      * @return the result of the check.
      */
     public PasswordValidationResult check(String password) {
-        Optional<Double> entropy = new Entropy().entropy(password);
+        Optional<Double> entropy = new PasswordEntropyCalculator().entropy(password);
         if (entropy.isEmpty()) {
             return new PasswordValidationResult(PasswordValidationType.INVALID_CHARACTER, 0, 0);
         }
         double entropyScore = entropy.get() / minEntropy;
-        double featureScore = new BadFeature().score(password);
+        double featureScore = new BadFeatureCalculator().score(password);
 
         if (password.length() < minLength) {
             return new PasswordValidationResult(PasswordValidationType.LESS_THAN_MIN_LENGTH, entropyScore, featureScore);
@@ -75,7 +75,7 @@ public class PasswordChecker {
      */
     private boolean containsSpecialCharacter(String password) {
         for (char c : password.toCharArray()) {
-            if (PoolCalculator.SPECIAL.contains("" + c)) {
+            if (CharacterPoolCalculator.SPECIAL.contains("" + c)) {
                 return true;
             }
         }

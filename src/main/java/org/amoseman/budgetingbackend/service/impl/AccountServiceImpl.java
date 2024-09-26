@@ -29,7 +29,7 @@ public class AccountServiceImpl<C> extends AccountService<C> {
 
     @Override
     public void addAccount(CreateAccount usernamePassword) throws AccountAlreadyExistsException, UsernameExceedsMaxLengthException, InvalidPasswordException {
-        PasswordValidationResult passwordValidationResult = passwordChecker.check(usernamePassword.getPassword());
+        PasswordValidationResult passwordValidationResult = passwordValidator.check(usernamePassword.getPassword());
         if (passwordValidationResult.type != PasswordValidationType.SUCCESS) {
             throw passwordValidationResult.asException();
         }
@@ -56,7 +56,7 @@ public class AccountServiceImpl<C> extends AccountService<C> {
 
     @Override
     public void changePassword(String username, String password) throws AccountDoesNotExistException, InvalidPasswordException {
-        PasswordValidationResult passwordValidationResult = passwordChecker.check(password);
+        PasswordValidationResult passwordValidationResult = passwordValidator.check(password);
         if (passwordValidationResult.type != PasswordValidationType.SUCCESS) {
             throw passwordValidationResult.asException();
         }

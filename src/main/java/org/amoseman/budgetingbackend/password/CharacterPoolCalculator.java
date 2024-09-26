@@ -5,7 +5,7 @@ import java.util.Optional;
 /**
  * A class for calculate the pool size of a password.
  */
-public class PoolCalculator {
+public class CharacterPoolCalculator {
     public static final String SPECIAL = "!@#$%^&*()-_=+{}[]<>?/,.|`~;:";
 
     /**
