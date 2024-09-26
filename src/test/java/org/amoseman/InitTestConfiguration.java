@@ -16,7 +16,11 @@ public class InitTestConfiguration {
             String contents =   "database-url: " + databaseLocation + "\n" +
                     "admin-username: " + username + "\n" +
                     "admin-password: " + password + "\n" +
-                    "max-username-length: 32";
+                    "min-password-length: 0\n" +
+                    "min-password-entropy: 0\n" +
+                    "min-password-score: 0\n" +
+                    "password-requires-uppercase: false\n" +
+                    "password-requires-special: false";
             writer.write(contents);
             writer.close();
         }

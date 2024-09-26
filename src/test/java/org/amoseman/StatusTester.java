@@ -21,7 +21,7 @@ public class StatusTester {
 
     private void test(StatusTest test, Response response) {
         if (!test.run(response.getStatus())) {
-            fail(String.format("%d %s", response.getStatus(), response.getStatusInfo().getReasonPhrase()));
+            fail(String.format("%d %s: %s", response.getStatus(), response.getStatusInfo().getReasonPhrase(), response.readEntity(String.class)));
         }
     }
 

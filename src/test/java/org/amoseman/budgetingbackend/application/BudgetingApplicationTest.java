@@ -94,7 +94,7 @@ class BudgetingApplicationTest {
                     .target(address)
                     .register(HttpAuthenticationFeature.basic("alice", "password"));
         StatusTester aliceTester = new StatusTester(alice);
-        aliceTester.put("/account/password", "{password: different}", successTest);
+        aliceTester.put("/account/password", "{password:Different!}", successTest);
 
         tester.put("/account/alice/roles", "USER,ADMIN", successTest);
         tester.delete("/account/alice", successTest);

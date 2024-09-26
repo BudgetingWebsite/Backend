@@ -97,6 +97,7 @@ public class BudgetingApplication extends Application<BudgetingConfiguration> {
         environment.jersey().register(new IllegalArgumentExceptionMapper());
         environment.jersey().register(new TotalBucketShareExceededExceptionMapper());
         environment.jersey().register(new DateTimeExceptionMapper());
+        environment.jersey().register(new InvalidPasswordExceptionMapper());
     }
 
     private void initializeAdminAccount(BudgetingConfiguration configuration, Hash hash, AccountDAO<?> accountDAO) {

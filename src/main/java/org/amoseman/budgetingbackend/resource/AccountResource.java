@@ -10,8 +10,10 @@ import org.amoseman.budgetingbackend.application.auth.Roles;
 import org.amoseman.budgetingbackend.application.auth.User;
 import org.amoseman.budgetingbackend.exception.AccountAlreadyExistsException;
 import org.amoseman.budgetingbackend.exception.AccountDoesNotExistException;
+import org.amoseman.budgetingbackend.exception.InvalidPasswordException;
 import org.amoseman.budgetingbackend.exception.UsernameExceedsMaxLengthException;
 import org.amoseman.budgetingbackend.model.account.op.CreateAccount;
+import org.amoseman.budgetingbackend.password.PasswordValidationType;
 import org.amoseman.budgetingbackend.service.AccountService;
 
 @Path("/account")
@@ -25,7 +27,7 @@ public class AccountResource<C> {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createAccount(CreateAccount account) throws AccountAlreadyExistsException, UsernameExceedsMaxLengthException {
+    public Response createAccount(CreateAccount account) throws AccountAlreadyExistsException, UsernameExceedsMaxLengthException, InvalidPasswordException {
         accountService.addAccount(account);
         return Response.ok().build();
     }
@@ -45,7 +47,7 @@ public class AccountResource<C> {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/password")
-    public Response changePassword(@Auth User user, String password) throws AccountDoesNotExistException {
+    public Response changePassword(@Auth User user, String password) throws AccountDoesNotExistException, InvalidPasswordException {
         accountService.changePassword(user.getName(), password);
         return Response.ok().build();
     }

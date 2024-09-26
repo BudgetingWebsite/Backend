@@ -7,9 +7,12 @@ import org.amoseman.budgetingbackend.dao.AccountDAO;
 import org.amoseman.budgetingbackend.exception.AccountAlreadyExistsException;
 import org.amoseman.budgetingbackend.exception.AccountDoesNotExistException;
 import org.amoseman.budgetingbackend.exception.UsernameExceedsMaxLengthException;
+import org.amoseman.budgetingbackend.exception.InvalidPasswordException;
 import org.amoseman.budgetingbackend.model.account.Account;
 import org.amoseman.budgetingbackend.model.account.op.CreateAccount;
 import org.amoseman.budgetingbackend.model.account.op.UpdateAccount;
+import org.amoseman.budgetingbackend.password.PasswordValidationResult;
+import org.amoseman.budgetingbackend.password.PasswordValidationType;
 import org.amoseman.budgetingbackend.service.AccountService;
 import org.amoseman.budgetingbackend.util.Now;
 import org.bouncycastle.util.encoders.Base64;
@@ -25,7 +28,12 @@ public class AccountServiceImpl<C> extends AccountService<C> {
     }
 
     @Override
-    public void addAccount(CreateAccount usernamePassword) throws AccountAlreadyExistsException, UsernameExceedsMaxLengthException {
+    public void addAccount(CreateAccount usernamePassword) throws AccountAlreadyExistsException, UsernameExceedsMaxLengthException, InvalidPasswordException {
+        PasswordValidationResult passwordValidationResult = passwordValidator.check(usernamePassword.getPassword());
+        if (passwordValidationResult.type != PasswordValidationType.SUCCESS) {
+            throw passwordValidationResult.asException();
+        }
+
         if (usernamePassword.getUsername().length() > configuration.getMaxUsernameLength()) {
             throw new UsernameExceedsMaxLengthException(configuration.getMaxUsernameLength() , usernamePassword.getUsername());
         }
@@ -47,7 +55,12 @@ public class AccountServiceImpl<C> extends AccountService<C> {
     }
 
     @Override
-    public void changePassword(String username, String password) throws AccountDoesNotExistException {
+    public void changePassword(String username, String password) throws AccountDoesNotExistException, InvalidPasswordException {
+        PasswordValidationResult passwordValidationResult = passwordValidator.check(password);
+        if (passwordValidationResult.type != PasswordValidationType.SUCCESS) {
+            throw passwordValidationResult.asException();
+        }
+
         LocalDateTime now = Now.get();
         Optional<Account> maybe = accountDAO.getAccount(username);
         if (maybe.isEmpty()) {

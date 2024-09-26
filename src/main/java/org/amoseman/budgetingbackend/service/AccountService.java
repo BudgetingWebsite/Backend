@@ -6,8 +6,10 @@ import org.amoseman.budgetingbackend.dao.AccountDAO;
 import org.amoseman.budgetingbackend.exception.AccountAlreadyExistsException;
 import org.amoseman.budgetingbackend.exception.AccountDoesNotExistException;
 import org.amoseman.budgetingbackend.exception.UsernameExceedsMaxLengthException;
+import org.amoseman.budgetingbackend.exception.InvalidPasswordException;
 import org.amoseman.budgetingbackend.model.account.Account;
 import org.amoseman.budgetingbackend.model.account.op.CreateAccount;
+import org.amoseman.budgetingbackend.password.PasswordValidator;
 
 import java.util.Optional;
 
@@ -19,6 +21,7 @@ public abstract class AccountService<C> {
     protected final BudgetingConfiguration configuration;
     protected final AccountDAO<C> accountDAO;
     protected final Hash hash;
+    protected final PasswordValidator passwordValidator;
 
     /**
      * Instantiate a new account service.
@@ -30,14 +33,16 @@ public abstract class AccountService<C> {
         this.configuration = configuration;
         this.accountDAO = accountDAO;
         this.hash = hash;
+        this.passwordValidator = new PasswordValidator(configuration);
     }
 
     /**
      * Add a new account.
      * @param usernamePassword the username and password of the new account.
      * @throws AccountAlreadyExistsException if the username is already in use.
+     * @throws InvalidPasswordException if the password is too weak.
      */
-    public abstract void addAccount(CreateAccount usernamePassword) throws AccountAlreadyExistsException, UsernameExceedsMaxLengthException;
+    public abstract void addAccount(CreateAccount usernamePassword) throws AccountAlreadyExistsException, UsernameExceedsMaxLengthException, InvalidPasswordException;
 
     /**
      * Remove an account.
@@ -57,8 +62,9 @@ public abstract class AccountService<C> {
      * @param username the username of the account.
      * @param password the new password of the account.
      * @throws AccountDoesNotExistException if the account does not exist.
+     * @throws InvalidPasswordException if the password is too weak.
      */
-    public abstract void changePassword(String username, String password) throws AccountDoesNotExistException;
+    public abstract void changePassword(String username, String password) throws AccountDoesNotExistException, InvalidPasswordException;
 
     /**
      * Change the roles of an account.
